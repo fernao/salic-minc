@@ -227,10 +227,6 @@ class Assinatura_Model_DbTable_TbAssinatura extends MinC_Db_Table_Abstract
             throw new Exception("Identificador do Ato Administrativo n&atilde;o informado.");
         }
 
-        if (is_null($this->modeloTbAssinatura->getIdAssinante())) {
-            throw new Exception("Identificador do Assinante n&atilde;o informado.");
-        }
-
         if (is_null($this->modeloTbAssinatura->getIdDocumentoAssinatura())) {
             throw new Exception("Identificador do Documento de Assinatura n&atilde;o informado.");
         }

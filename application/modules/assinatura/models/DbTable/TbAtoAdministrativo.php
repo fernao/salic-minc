@@ -16,7 +16,11 @@ class Assinatura_Model_DbTable_TbAtoAdministrativo extends MinC_Db_Table_Abstrac
         return $this;
     }
 
-    public function obterPerfilAssinante($idOrgaoDoAssinante, $idPerfilDoAssinante, $idTipoDoAto)
+    public function obterPerfilAssinante(
+        $idOrgaoDoAssinante,
+        $idPerfilDoAssinante,
+        $idTipoDoAto
+    )
     {
         $objQuery = $this->select();
         $objQuery->setIntegrityCheck(false);

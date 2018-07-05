@@ -137,17 +137,26 @@ class Assinatura_IndexController extends Assinatura_GenericController
             $this->view->moduleOrigin = $moduleAndControllerArray[0];
             $this->view->controllerOrigin = $moduleAndControllerArray[1];
             $objTbAtoAdministrativo = new Assinatura_Model_DbTable_TbAtoAdministrativo();
-
-            $this->view->perfilAssinante = $objTbAtoAdministrativo->obterPerfilAssinante(
+            $perfilAssinanteAtoAdministrativo = $objTbAtoAdministrativo->obterPerfilAssinante(
                 $this->grupoAtivo->codOrgao,
                 $this->grupoAtivo->codGrupo,
                 $this->view->documentoAssinatura['idTipoDoAtoAdministrativo']
             );
 
-            $this->view->isPermitidoAssinar = true;
-            if(!$this->view->perfilAssinante || $this->documentoAssinatura['cdSituacao'] != Assinatura_Model_TbDocumentoAssinatura::ST_ESTADO_DOCUMENTO_ATIVO) {
-                $this->view->isPermitidoAssinar = false;
+            $this->view->isPermitidoAssinar = false;
+            if(count($perfilAssinanteAtoAdministrativo) > 0) {
+                $objAssinatura->preencherModeloAssinatura([
+                    'idPronac' => $this->view->IdPRONAC,
+                    'idAtoAdministrativo' => $perfilAssinanteAtoAdministrativo['idAtoAdministrativo'],
+                    'idDocumentoAssinatura' => $idDocumentoAssinatura,
+                ]);
+
+                if(!$objAssinatura->isProjetoAssinado()
+                    && (int)$this->view->documentoAssinatura['cdSituacao'] == (int)Assinatura_Model_TbDocumentoAssinatura::ST_ESTADO_DOCUMENTO_ATIVO) {
+                    $this->view->isPermitidoAssinar = true;
+                }
             }
+
         } catch (Exception $objException) {
             parent::message($objException->getMessage(), "/{$this->moduleName}/index/visualizar-documento-assinado?idDocumentoAssinatura={$idDocumentoAssinatura}&origin={$this->view->origin}");
         }

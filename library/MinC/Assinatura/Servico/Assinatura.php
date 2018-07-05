@@ -92,7 +92,6 @@ class Assinatura implements IServico
 
         $dbTableTbAssinatura = $this->viewModelAssinatura->dbTableTbAssinatura;
         $dbTableTbAssinatura->preencherModeloAssinatura([
-            'idAssinante' => $modeloTbAssinatura->getIdAssinante(),
             'idPronac' => $modeloTbAssinatura->getIdPronac(),
             'idAtoAdministrativo' => $dadosAtoAdministrativoAtual['idAtoAdministrativo'],
             'idDocumentoAssinatura' => $modeloTbAssinatura->getIdDocumentoAssinatura()

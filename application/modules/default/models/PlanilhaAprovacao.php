@@ -2494,7 +2494,9 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         $stItemAvaliado = null,
         $codigoProduto = null,
         $idComprovantePagamento = null,
-        $cidade = null
+        $cidade = null,
+        $cdUF = null,
+        $cdEtapa = null
     ) {
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -2530,6 +2532,14 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
 
         if ($cidade) {
             $select->where('cdCidade = ?', $cidade);
+        }
+
+        if ($cdUF) {
+            $select->where('cdUF = ?', $cdUF);
+        }
+
+        if ($cdEtapa) {
+            $select->where('cdEtapa = ?', $cdEtapa);
         }
 
         $select->where('IdPRONAC = ?', $idpronac);

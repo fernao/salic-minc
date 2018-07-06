@@ -81,9 +81,11 @@ class PrestacaoContas_GerenciarController extends MinC_Controller_Action_Abstrac
                 null,
                 $cdproduto,
                 null,
-                $cdcidade
+                $valoresItem->cdCidade,
+                $valoresItem->cdUF,
+                $valoresItem->cdEtapa
             )->toArray();
-
+           
         array_walk($comprovantesDePagamento, function (&$comprovanteDePagamento) use ($fornecedorModel) {
             $comprovanteDePagamento = (object) $comprovanteDePagamento;
 

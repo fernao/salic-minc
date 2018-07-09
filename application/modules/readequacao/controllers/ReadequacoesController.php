@@ -3494,13 +3494,13 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
 
                 // complementacao
                 if ($TipoDeReadequacao[0]['TipoDeReadequacao'] == 'CO') {
-                    $TipoAprovacao = 2;
+                    $TipoAprovacao = Aprovacao::TIPO_APROVACAO_COMPLEMENTACAO;
                     $dadosPrj->Situacao = 'D28';
                     $dadosPrj->ProvidenciaTomada = 'Aguardando portaria de complementação';
                     $dadosPrj->Logon = $auth->getIdentity()->usu_codigo;
                 } elseif ($TipoDeReadequacao[0]['TipoDeReadequacao'] == 'RE') {
                     // reducao
-                    $TipoAprovacao = 4;
+                    $TipoAprovacao = Aprovacao::TIPO_APROVACAO_REDUCAO;
                     $dadosPrj->Situacao = 'D29';
                     $dadosPrj->ProvidenciaTomada = 'Aguardando portaria de redução';
                     $dadosPrj->Logon = $auth->getIdentity()->usu_codigo;
@@ -3535,7 +3535,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                     'IdPRONAC' => $read->idPronac,
                     'AnoProjeto' => $dadosPrj->AnoProjeto,
                     'Sequencial' => $dadosPrj->Sequencial,
-                    'TipoAprovacao' => 8,
+                    'TipoAprovacao' => Aprovacao::TIPO_APROVACAO_READEQUACAO,
                     'DtAprovacao' => new Zend_Db_Expr('GETDATE()'),
                     'ResumoAprovacao' => 'Parecer favorável para readequação',
                     'Logon' => $auth->getIdentity()->usu_codigo,
@@ -3627,7 +3627,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                             $novoLocalRead['idPais'] = $abg->idPais;
                             $novoLocalRead['idUF'] = $abg->idUF;
                             $novoLocalRead['idMunicipioIBGE'] = $abg->idMunicipioIBGE;
-                            $novoLocalRead['Usuario'] = $idUsuarioLogado;
+                            $novoLocalRead['Usuario'] = $this->idUsuario;
                             $novoLocalRead['stAbrangencia'] = 1;
                             $Abrangencia->salvar($novoLocalRead);
                         }
@@ -3649,7 +3649,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                     'IdPRONAC' => $read->idPronac,
                     'AnoProjeto' => $dadosPrj->AnoProjeto,
                     'Sequencial' => $dadosPrj->Sequencial,
-                    'TipoAprovacao' => 8,
+                    'TipoAprovacao' => Aprovacao::TIPO_APROVACAO_READEQUACAO,
                     'DtAprovacao' => new Zend_Db_Expr('GETDATE()'),
                     'ResumoAprovacao' => 'Parecer favorável para readequação',
                     'Logon' => $auth->getIdentity()->usu_codigo,
@@ -3666,7 +3666,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                     'IdPRONAC' => $read->idPronac,
                     'AnoProjeto' => $dadosPrj->AnoProjeto,
                     'Sequencial' => $dadosPrj->Sequencial,
-                    'TipoAprovacao' => 8,
+                    'TipoAprovacao' => Aprovacao::TIPO_APROVACAO_READEQUACAO,
                     'DtAprovacao' => new Zend_Db_Expr('GETDATE()'),
                     'ResumoAprovacao' => 'Parecer favorável para readequação',
                     'Logon' => $auth->getIdentity()->usu_codigo,
@@ -3734,7 +3734,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                     'IdPRONAC' => $read->idPronac,
                     'AnoProjeto' => $dadosPrj->AnoProjeto,
                     'Sequencial' => $dadosPrj->Sequencial,
-                    'TipoAprovacao' => 8,
+                    'TipoAprovacao' => Aprovacao::TIPO_APROVACAO_READEQUACAO,
                     'DtAprovacao' => new Zend_Db_Expr('GETDATE()'),
                     'ResumoAprovacao' => 'Parecer favorável para readequação',
                     'Logon' => $auth->getIdentity()->usu_codigo,
@@ -3802,7 +3802,7 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                 $tbSolicitacaoTransferenciaRecursosMapper = new Readequacao_Model_TbSolicitacaoTransferenciaRecursosMapper();
                 $projetos = new Projetos();
 
-                $projetosRecebedores = $TbSolicitacaoTransferenciaRecursos->obterProjetosRecebedores($idReadequacao);
+                $projetosRecebedores = $TbSolicitacaoTransferenciaRecursos->obterProjetosRecebedores($read->idReadequacao);
                 $projetoTransferidor = $projetos->buscarProjetoTransferidor($read->idPronac);
 
                 foreach($projetosRecebedores as $projetoRecebedor) {
@@ -3829,6 +3829,38 @@ class Readequacao_ReadequacoesController extends Readequacao_GenericController
                         throw new Exception("N&atilde;o foi poss&iacute;vel incluir os projetos recebedores da solicita&ccedil;&atilde;o");
                     }
                 }
+            } elseif ($read->idTipoReadequacao == Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_SALDO_APLICACAO) {
+                $Projetos = new Projetos();
+                $dadosPrj = $Projetos->find(array('IdPRONAC=?'=>$read->idPronac))->current();
+
+                $tbAprovacao = new Aprovacao();
+                $dadosAprovacao = array(
+                    'IdPRONAC' => $read->idPronac,
+                    'AnoProjeto' => $dadosPrj->AnoProjeto,
+                    'Sequencial' => $dadosPrj->Sequencial,
+                    'TipoAprovacao' => Aprovacao::TIPO_APROVACAO_COMPLEMENTACAO,
+                    'DtAprovacao' => new Zend_Db_Expr('GETDATE()'),
+                    'ResumoAprovacao' => $parecerTecnico->ResumoParecer,
+                    'Logon' => $auth->getIdentity()->usu_codigo,
+                    'idReadequacao' => $idReadequacao
+                );
+                $idAprovacao = $tbAprovacao->inserir($dadosAprovacao);
+
+                $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+                $dadosReadequacaoAnterior = ['stAtivo' => 'N'];
+                $whereReadequacaoAnterior = [
+                    'IdPRONAC = ?' => $read->idPronac,
+                    'stAtivo = ?' => 'S'
+                ];
+                $update = $tbPlanilhaAprovacao->update($dadosReadequacaoAnterior, $whereReadequacaoAnterior);
+
+                $dadosReadequacaoNova = ['stAtivo' => 'S'];
+                $whereReadequacaoNova = [
+                    'IdPRONAC = ?' => $read->idPronac,
+                    'stAtivo = ?' => 'N',
+                    'idReadequacao=?' => $idReadequacao
+                ];
+                $tbPlanilhaAprovacao->update($dadosReadequacaoNova, $whereReadequacaoNova);
             }
         }
 

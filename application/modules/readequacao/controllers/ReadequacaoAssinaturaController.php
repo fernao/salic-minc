@@ -47,9 +47,9 @@ class Readequacao_ReadequacaoAssinaturaController extends Readequacao_GenericCon
         $idTipoDoAtoAdministrativo = Readequacao_ReadequacaoAssinaturaController::obterIdTipoAtoAdministativoPorOrgaoSuperior($this->grupoAtivo->codOrgao);
         $this->validarPerfis();
         $this->view->idUsuarioLogado = $this->auth->getIdentity()->usu_codigo;
-        $documentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
 
-        $this->view->dados = $documentoAssinatura->obterProjetosComAssinaturasAbertas(
+        $tbAssinaturaDbTable = new Assinatura_Model_DbTable_TbAssinatura();
+        $this->view->dados = $tbAssinaturaDbTable->obterAssinaturasDisponiveis(
             $this->grupoAtivo->codOrgao,
             $this->grupoAtivo->codGrupo,
             $this->auth->getIdentity()->usu_org_max_superior,

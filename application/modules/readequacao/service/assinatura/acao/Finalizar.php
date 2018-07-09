@@ -20,10 +20,9 @@ class Finalizar implements IAcaoFinalizar
             'idParecer' => $assinatura->modeloTbDocumentoAssinatura->getIdAtoDeGestao()
         ]);
 
-        $siEncaminhamento = \Readequacao_Model_tbTipoEncaminhamento::SI_ENCAMINHAMENTO_SOLICITACAO_ENCAMINHADA_AO_PRESIDENTE_DA_VINCULADA;
-        $dados = ['siEncaminhamento' => $siEncaminhamento];
-        $where = "idReadequacao = {$tbReadequacaoXParecer['idReadequacao']}";
-        $tbReadequacao = new \Readequacao_Model_DbTable_TbReadequacao();
-        $tbReadequacao->update($dados, $where);
+        $objReadequacao_ReadequacoesController = new \Readequacao_ReadequacoesController();
+        $objReadequacao_ReadequacoesController->encaminharOuFinalizarReadequacaoChecklist(
+            $tbReadequacaoXParecer['idReadequacao']
+        );
     }
 }

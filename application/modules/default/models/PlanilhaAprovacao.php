@@ -2494,7 +2494,9 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         $stItemAvaliado = null,
         $codigoProduto = null,
         $idComprovantePagamento = null,
-        $cidade = null
+        $cidade = null,
+        $cdUF = null,
+        $cdEtapa = null
     ) {
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -2530,6 +2532,14 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
 
         if ($cidade) {
             $select->where('cdCidade = ?', $cidade);
+        }
+
+        if ($cdUF) {
+            $select->where('cdUF = ?', $cdUF);
+        }
+
+        if ($cdEtapa) {
+            $select->where('cdEtapa = ?', $cdEtapa);
         }
 
         $select->where('IdPRONAC = ?', $idpronac);
@@ -2700,11 +2710,11 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             i.NomeProjeto,
             ISNULL(d.Codigo,0) as cdProduto,
             ISNULL(d.Descricao,'Administra&ccedil;&atilde;o do Projeto') AS Produto,
+            a.idUFDespesa AS cdUF,
             b.tpCusto,
             b.idPlanilhaEtapa as cdEtapa,
             b.Descricao AS Etapa,
             b.Descricao AS descEtapa,
-            a.idUFDespesa AS cdUF,
             e.Sigla AS Uf,
             e.Sigla AS uf,
             a.idMunicipioDespesa as cdCidade,
@@ -2714,6 +2724,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             c.Descricao AS Item,
             c.Descricao AS descItem,
             d.Descricao ,
+            g.stItemAvaliado,
             CONVERT(DECIMAL(38,2), sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item
                    (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
                     a.idMunicipioDespesa,a.idPlanilhaItem)) as vlAprovado,

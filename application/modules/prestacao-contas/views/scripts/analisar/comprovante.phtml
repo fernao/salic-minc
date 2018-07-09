@@ -20,6 +20,43 @@
 </div>
 
 <script>
+    const formatValue = {
+        props: [
+            'value',
+        ],
+        template: `
+            <div>
+                R$  {{formatValue(value)}}
+            </div>
+        `,
+        methods: {
+            formatValue(value) {
+                if (value === undefined) {
+                    return '0,00';
+                }
+
+                if (value.indexOf('.') === -1) {
+                    return this.formatValueWithoutCents(value);
+                }
+
+                return this.formatValueWithCents(value);
+            },
+            formatValueWithoutCents(value) {
+                const valueWithCents = value.concat(',00');
+                const result = valueWithCents.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                return result;
+            },
+            formatValueWithCents(value) {
+                const valueParsedToFloat = parseFloat(value).toFixed(2);
+                const valueParsedToString = valueParsedToFloat.toString();
+                const valueChangedPointByComma = valueParsedToString.replace('.', ',');
+                const result = valueChangedPointByComma.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+                return result;
+            },
+        },
+    };
+
     const projeto = {
         template: `
             <div class="card">
@@ -37,17 +74,20 @@
                             </tr>
                             <tr>
                                 <th>Valor Aprovado:</th>
-                                <td>R$ {{ formatValue(projeto.vlAprovado) }}</td>
+                                <td><formatValue :value="projeto.vlAprovado"></formatValue></td>
                                 <th>Valor Comprovado:</th>
-                                <td>R$ {{ formatValue(projeto.vlComprovado) }}</td>
+                                <td><formatValue :value="projeto.vlComprovado"></formatValue></td>
                                 <th>Comprovação Validada:</th>
-                                <td>R$ {{ formatValue(projeto.ComprovacaoValidada) }}</td>
+                                <td><formatValue :value="projeto.ComprovacaoValidada"></formatValue></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         `,
+        components: {
+            'formatValue': formatValue,
+        },
         props: [
             'idpronac',
             'idplanilhaitem',
@@ -83,32 +123,6 @@
                 .fail(function (jqXHR) {
                     alert('error');
                 });
-        },
-        methods: {
-            formatValue(value) {
-                if (value === undefined) {
-                    return '0';
-                }
-
-                if (value.indexOf('.') === -1) {
-                    return this.formatValueWithoutCents(value);
-                }
-
-                return this.formatValueWithCents(value);
-            },
-            formatValueWithoutCents(value) {
-                const valueWithCents = value.concat(',00');
-                const result = valueWithCents.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                return result;
-            },
-            formatValueWithCents(value) {
-                const valueParsedToFloat = parseFloat(value).toFixed(2);
-                const valueParsedToString = valueParsedToFloat.toString();
-                const valueChangedPointByComma = valueParsedToString.replace('.', ',');
-                const result = valueChangedPointByComma.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-                return result;
-            },
         },
     }
 
@@ -230,7 +244,7 @@
                         </tr>
                         <tr>
                             <th>Valor</th>
-                            <td>R$  {{valor}}</td>
+                            <td><formatValue :value="valor"></formatValue></td>
                             <th>Arquivo</th>
                             <td colspan="5">
                                 <a :href="'/upload/abrir/id/' + dados.idArquivo">{{dados.nmArquivo}}</a>
@@ -244,6 +258,9 @@
                 </table>
             </div>
         `,
+        components: {
+            'formatValue': formatValue,
+        },
         computed: {
             CNPJCPF() {
                 CNPJCPF = null;
@@ -265,8 +282,8 @@
             valor() {
                 return parseFloat(this.dados.vlComprovacao).toFixed(2);
             }
-        }
-    }
+        },
+    };
 
     const comprovantes = {
         template: `
@@ -274,7 +291,8 @@
                 <ul class="collapsible" data-collapsible="accordion">
                     <li v-for="(dado, index) in dados">
                       <div class="collapsible-header">
-                          Fornecedor: {{dado.Descricao}} - {{formatValue(dado.vlComprovacao)}}
+                          <div style="margin-right:5px;">Fornecedor: {{dado.Descricao}} - </div>
+                          <div><formatValue :value="dado.vlComprovacao"></formatValue></div>
                           <span :class="['badge white-text', badgeCSS(dado.stItemAvaliado)]">
                             {{situacao(dado.stItemAvaliado)}}
                           </span>
@@ -300,7 +318,8 @@
         `,
         components: {
             'comprovante-form': comprovanteForm,
-            'comprovante-table': comprovanteTable
+            'comprovante-table': comprovanteTable,
+            'formatValue': formatValue,
         },
         props: ['dados'],
         methods: {
@@ -334,30 +353,6 @@
                         estado = 'N\xE3o avaliado';
                 }
                 return estado;
-            },
-            formatValue(value) {
-                if (value === undefined) {
-                    return '0,00';
-                }
-
-                if (value.indexOf('.') === -1) {
-                    return this.formatValueWithoutCents(value);
-                }
-
-                return this.formatValueWithCents(value);
-            },
-            formatValueWithoutCents(value) {
-                const valueWithCents = value.concat(',00');
-                const result = valueWithCents.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                return result;
-            },
-            formatValueWithCents(value) {
-                const valueParsedToFloat = parseFloat(value).toFixed(2);
-                const valueParsedToString = valueParsedToFloat.toString();
-                const valueChangedPointByComma = valueParsedToString.replace('.', ',');
-                const result = valueChangedPointByComma.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-                return result;
             },
         },
     }

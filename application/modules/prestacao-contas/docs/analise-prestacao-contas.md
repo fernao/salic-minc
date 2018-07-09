@@ -1,16 +1,16 @@
-#Prestação de Contas
+# PrestaÃ§Ã£o de Contas
 
-##Análise de Prestação de Contas
+## AnÃ¡lise de PrestaÃ§Ã£o de Contas
 
-A Análise de Prestação de Contas é acontece após o Proponente realizar a Comprovação Financeira de seu Projeto. Para análise ser feita é necessário ter acesso ao perfil de *Técnico de Prestação de contas*. Onde possui a tela *Analisar prestação de contas - Em análise* que em suma pode-se escolher o Projeto a ser analisado, escolher os tipos de Comprovantes e Realizar as diligências.
+A AnÃ¡lise de PrestaÃ§Ã£o de Contas Ã© acontece apÃ³s o Proponente realizar a ComprovaÃ§Ã£o Financeira de seu Projeto. Para anÃ¡lise ser feita Ã© necessÃ¡rio ter acesso ao perfil de *TÃ©cnico de PrestaÃ§Ã£o de contas*. Onde possui a tela *Analisar prestaÃ§Ã£o de contas - Em anÃ¡lise* que em suma pode-se escolher o Projeto a ser analisado, escolher os tipos de Comprovantes e Realizar as diligÃªncias.
 
-###Passos para Analisar Prestação de Contas   
-* Na tela onde será escolhido um Projeto para análise, pode-se ver o status (se possui Diligência ou não) e também conferir o histórico de Encaminhamento do Projeto.  
-* Escolher um Projeto que está em situação de Prestar Contas (E12, E13, E17).
-* Selecionar o Tipo de Avaliação Financeira (Todos Comprovantes, 90%, 95% e 99%).
+### Passos para Analisar PrestaÃ§Ã£o de Contas   
+* Na tela onde serÃ¡ escolhido um Projeto para anÃ¡lise, pode-se ver o status (se possui DiligÃªncia ou nÃ£o) e tambÃ©m conferir o histÃ³rico de Encaminhamento do Projeto.  
+* Escolher um Projeto que estÃ¡ em situaÃ§Ã£o de Prestar Contas (E12, E13, E17).
+* Selecionar o Tipo de AvaliaÃ§Ã£o Financeira (Todos Comprovantes, 90%, 95% e 99%).
 * Procurar um item, cujo tenha sido enviado um comprovante com valor Comprovado.
-* Ao escolher o item, existem 2 opções que podem ser feitas, Validar ou Recusar o item.
-* Após analisar o item, poderá ser realizada uma Diligência explicando o ponto do porquê  o item ser Validado ou Recusado.
-* A Diligência será enviada ao Proponente, onde terá um prazo para Vizualizar e Resolver a Diligência.
-* O Técnico pode Emitir Parecer sobre o Projeto.
-* Quando o Técnico julgar a Análise adequada sobre aquele Projeto, o mesmo pode Finalizar a Análise, na Tela após escolher o Tipo de Avaliação Financeira.
+* Ao escolher o item, existem 2 opÃ§Ãµes que podem ser feitas, Validar ou Recusar o item.
+* ApÃ³s analisar o item, poderÃ¡ ser realizada uma DiligÃªncia explicando o ponto do porquÃª  o item ser Validado ou Recusado.
+* A DiligÃªncia serÃ¡ enviada ao Proponente, onde terÃ¡ um prazo para Vizualizar e Resolver a DiligÃªncia.
+* O TÃ©cnico pode Emitir Parecer sobre o Projeto.
+* Quando o TÃ©cnico julgar a AnÃ¡lise adequada sobre aquele Projeto, o mesmo pode Finalizar a AnÃ¡lise, na Tela apÃ³s escolher o Tipo de AvaliaÃ§Ã£o Financeira.

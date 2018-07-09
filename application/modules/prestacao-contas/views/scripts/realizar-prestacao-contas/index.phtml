@@ -1,18 +1,21 @@
 <!-- vendor -->
 <script src="/public/js/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.4/numeral.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="/public/js/componentes/sl-btn-visualizar.js" ></script>
+<script type="text/javascript" src="/public/js/componentes/sl-collapse-visualizar.js" ></script>
+<script src="/public/scripts/diligencia/diligencia/cadastrar.vue.js"></script>
 <script src="/public/scripts/prestacao-contas/components/planilha/sl-planilha-produtos.vue.js"></script>
 <script src="/public/scripts/prestacao-contas/components/planilha/sl-planilha-etapas.vue.js"></script>
 <script src="/public/scripts/prestacao-contas/components/planilha/sl-planilha-ufs.vue.js"></script>
 <script src="/public/scripts/prestacao-contas/components/planilha/sl-planilha-cidades.vue.js"></script>
 <script src="/public/scripts/prestacao-contas/components/planilha/sl-planilha-itens.vue.js"></script>
-<script src="/public/scripts/prestacao-contas/views/comprovacao-financeira.vue.js"></script>
+<script src="/public/scripts/prestacao-contas/views/planilha-orcamentaria-comprovada.vue.js"></script>
 <!-- vendor -->
-<div class="container-fluid">
+<div class="container-fluid" id="app">
     <div class="page-title">
         <div class="row">
             <div class="col s12 m9 l10">
-                <h1>Prestação de Contas: Comprovação Financeira</h1>
+                <h1>Prestação de Contas: Planilha Orçamentária Comprovada</h1>
             </div>
             <div class="col s12 m3 l2 right-align">
                 <a href="javascript:voltar();" title="Página Anterior" class="btn small grey lighten-3 grey-text z-depth-0 chat-toggle">
@@ -21,43 +24,14 @@
             </div>
         </div>
     </div>
-    <div class="row" >
+    <div class="row">
         <div class="col s12 m12">
-            <div class="card horizontal">
-                <div class="card-stacked">
-                    <div class="center-align card-content  lighten-4">
-                        <span class="card-title"><?php echo $this->pronac . " - " . $this->nomeProjeto ?></span>
-                    </div>
-                    <div class="card-panel teal">
-                        <span class="white-text" style="font-weight: bold; font-size: medium">
-                             <table>
-                                <tbody>
-                                    <tr>
-                                        <td>Valor Aprovado</td>
-                                        <td>R$ <?php echo number_format($this->vlAprovado, 2, ',', '.') ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Valor Comprovado</td>
-                                        <td>R$ <?php echo number_format($this->vlComprovado, 2, ',', '.') ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Valor a Comprovar</td>
-                                        <td>R$ <?php echo number_format($this->vlTotalComprovar, 2, ',', '.') ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </span>
-                    </div>
-                    <div class="card-action">
-                    <a href="/consultardadosprojeto/index?idPronac=<?php echo $this->idpronac?>" target="_blank" class="btn waves-effect waves-dark white-text">Ver Projeto</a>
-                    </div>
-                </div>
-            </div>
+            <?php echo $this->partial('partials/card-projeto.phtml', 'prestacao-contas', $this); ?>
         </div>
     </div>
     <div class="row" id="app">
         <div class="col s12 m12">
-                        <comprovacao-financeira idpronac="<?php echo $this->idpronac ?>"></comprovacao-financeira>
+            <planilha-orcamentaria-comprovada idpronac="<?php echo $this->idPronac ?>"></planilha-orcamentaria-comprovada>
         </div>
     </div>
     <div class="row">
@@ -84,11 +58,41 @@
             </div>
         </div>
     </div>
-</div>
-<div class="fixed-action-btn">
-    <a id="ir-para-o-topo" class="btn-floating yellow darken-1 tooltipped" data-tooltip="Ir para o topo">
-        <i class="material-icons">arrow_upward</i>
-    </a>
+    <div class="fixed-action-btn">
+        <a class="btn-floating btn-large red">
+            <i class="large material-icons">menu</i>
+        </a>
+        <ul>
+            <li>
+                <a id="ir-para-o-topo" class="btn-floating yellow darken-1 tooltipped" data-tooltip="Ir para o topo">
+                    <i class="material-icons">arrow_upward</i>
+                </a>
+            </li>
+            <li>
+                <button <?php echo ($this->existeDiligenciaAberta  == true) ? 'disabled="true"': ''  ?>
+                        data-target="modal1" data-position="left" data-delay="50" data-tooltip="Diligenciar"
+                        class=" tooltipped btn-floating modal-trigger ">
+                    <i class="material-icons left">warning</i> Diligenciar
+                </button>
+            </li>
+            <li class="waves-effect waves-light">
+                <a data-position="left" data-delay="50" data-tooltip="Emitir Parecer"
+                   class=" tooltipped btn-floating " href="<?php echo $this->url(array('module' => 'default','controller' => 'realizarprestacaodecontas', 'action' => 'emitirparecertecnico')).'?idPronac=' . $this->idPronac; ?>" title="Ir para Emitir Parecer">
+                    <i class="material-icons">gavel</i>
+                </a>
+            </li>
+            <li class="waves-effect waves-light">
+                <a class=" tooltipped btn-floating green" data-position="left" data-tooltip="Finalizar Análise" target="_blank" href="#" id="lnkDespacho">
+                    <i class="material-icons">done</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="modal1" class="modal full">
+        <div class="modal-content">
+            <?php echo $this->partial("diligencia/cadastrar.phtml", 'diligencia', $this); ?>
+        </div>
+    </div>
 </div>
 
 <!-- views -->
@@ -128,6 +132,8 @@
         value = parseFloat(value);
         return numeral(value).format('0,0.00');
     }
+
+    var bus = new Vue({})
 
     var app = new Vue({
         el: '#app',
@@ -171,6 +177,10 @@
                 }, 700);
             });
         }
+    });
+
+    $(document).ready(function(){
+        $3('.modal').modal();
     });
 </script>
 <!-- views -->

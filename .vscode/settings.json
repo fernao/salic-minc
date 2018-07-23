@@ -1,4 +1,0 @@
-{
-    "phpcs.enable": true,
-    "phpcs.standard": "./phpcs.xml"
-}

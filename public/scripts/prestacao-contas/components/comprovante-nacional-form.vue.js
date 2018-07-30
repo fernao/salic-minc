@@ -121,11 +121,12 @@ Vue.component('sl-comprovante-nacional-form',
                             Valor do Item (atual: {{valorantigo}})(max: {{(valorMaxItem)}})
                             <span style='color:red'>*</span>
                         </label>
-                        <td style="white-space:nowrap">
-                            <label>
+                        <div class="form-group" style="white-space:nowrap">
+                            <label for="vlComprovado">
                                 R$
                             </label>
                             <input
+                                style="width: 330px;"
                                 type="text"
                                 name="vlComprovado"
                                 size="10" id="vlComprovado"
@@ -134,7 +135,7 @@ Vue.component('sl-comprovante-nacional-form',
                                 v-on:input="inputValor($event.target.value)"
                                 ref="valor"
                             />
-                        </td>
+                        </div>
                     </div>
                 </fieldset>
                 <fieldset>

@@ -81,38 +81,16 @@ abstract class MinC_Db_Table_Abstract extends Zend_Db_Table_Abstract
 
             if (!($this->_config instanceof Zend_Config_Ini)) {
 
-                $db = Zend_Db_Table::getDefaultAdapter();
-                $arrConfig = $db->getConfig();
-                $strDb = str_replace(array('.scAGENTES', '.scSAC', '.dbo', '.scdne', '.scsac', '.scQuiz'), '', $this->_schema);
-                $strDb = str_replace('.sccorp', '', strtolower($strDb));
-
-                $arrConfig['dbname'] = strtoupper($strDb);
-
                 $this->_config = new Zend_Config(
                     array_merge(
                         Zend_Registry::get('config')->toArray(),
-                        array(
-                            'db' => array(
-                                'adapter' => 'PDO_MSSQL',
-                                'params' => array(
-                                    'username' => $arrConfig['username'],
-                                    'password' => $arrConfig['password'],
-                                    'dbname' => $arrConfig['dbname'],
-                                    'host' => $arrConfig['host'],
-                                    'port' => $arrConfig['port'],
-                                    'charset' => $arrConfig['charset'],
-                                    'pdoType' => $arrConfig['pdoType'],
-                                )
-                            )
-                        )
+                        $this->getDatabaseConfigByEnvironmentVars()
                     )
                 );
 
                 Zend_Registry::getInstance()->set('config', $this->_config);
                 Zend_Db_Table::setDefaultAdapter(Zend_Db::factory($this->_config->db));
 
-                # Setar o campo texto maior que 4096 caracteres aceitaveis por padrao no PHP
-                //$db->query(' SET TEXTSIZE 2147483647 ');
                 ini_set('memory_limit', '-1');
             }
         } else if (is_int(strpos($this->_schema, 'scdne'))) {
@@ -126,25 +104,40 @@ abstract class MinC_Db_Table_Abstract extends Zend_Db_Table_Abstract
         }
     }
 
-    /**
-     * @param string $strName
-     * @return string
-     *
-     * @todo melhorar e amadurecer codigo
-     */
-    public function getBanco($strName = '')
+    private function getDatabaseConfigByEnvironmentVars() : array
     {
-        $db = Zend_Db_Table::getDefaultAdapter();
-//        if(!$strName) {
-//            $strName = 'dbo';
-//        }
+        $dataBaseConfig = [
+                'db'=> [
+                    'adapter' => getenv('DB_ADAPTER'),
+                    'params' => [
+                        'username' => getenv('DB_USERNAME'),
+                        'password' => getenv('DB_PASSWORD'),
+                        'dbname' => $this->getBanco()?:getenv('DB_DBNAME'),
+                        'host' => getenv('DB_HOST'),
+                        'port' => getenv('DB_PORT'),
+                        'charset' => getenv('DB_CHARSET'),
+                        'pdoType' => getenv('DB_PDOTYPE')
+                    ]
+                ]
+        ];
+        array_walk_recursive($dataBaseConfig, function($value, $key){
+            if(is_null($value) || $value == ''){
+                throw new Exception('Vari&aacute;vel de ambiente DB_' . strtoupper($key) . ' n&atilde;o foi definida.');
+            }
+        });
 
-        if (!($db instanceof Zend_Db_Adapter_Pdo_Mssql)) {
-            $arrayConfiguracaoes = $db->getConfig();
-            $strName = $arrayConfiguracaoes['dbname'];
-        }
+        return $dataBaseConfig;
+    }
 
-        return $strName;
+    /**
+     * @return string
+     */
+    public function getBanco(): string
+    {
+        $strDb = str_replace(array('.scAGENTES', '.scSAC', '.dbo', '.scdne', '.scsac', '.scQuiz'), '', $this->_schema);
+        $strDb = str_replace('.sccorp', '', strtolower($strDb));
+
+        return strtoupper($strDb);
     }
 
     /**

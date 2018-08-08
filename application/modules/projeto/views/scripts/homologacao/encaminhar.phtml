@@ -5,11 +5,11 @@
 </style>
 <div class="row">
     <form id="form-mensagem" class="materialize" data-ajax-form="true" method="post"
-          action="<?php echo $this->urlAction ?>">
+          action="<?= $this->urlAction ?>">
         <input type="hidden" name="idPronac" value="<?= $this->arrValue['idPronac'] ?>"/>
         <input type="hidden" name="IdEnquadramento" value="<?= $this->arrValue['enquadramentoProjeto']['IdEnquadramento'] ?>"/>
         <div class="modal-content">
-            <?php echo $this->partial('/homologacao/partials/documento-assinatura.phtml', ['arrValue' => $this->arrValue]); ?>
+            <?= $this->partial('/homologacao/partials/documento-assinatura.phtml', ['arrValue' => $this->arrValue]); ?>
         </div>
         <div class="modal-footer">
             <button class="btn waves-effect waves-light" type="submit" name="action">Encaminhar</button>

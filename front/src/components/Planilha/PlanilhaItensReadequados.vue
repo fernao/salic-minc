@@ -21,30 +21,24 @@
                 :key="row.idPlanilhaProposta"
                 :class="definirClasseItem(row)"
                 v-if="isObject(row)">
-                <td class="center-align">{{row.Seq}}</td>
-                <td class="left-align">{{row.Item}}</td>
-                <td class="center-align">{{row.Unidade}}</td>
-                <td class="center-align">{{row.QtdeDias}}</td>
-                <td class="center-align">{{row.Quantidade}}</td>
-                <td class="center-align">{{row.Ocorrencia}}</td>
-                <td class="right-align">
-                    <SalicFormatarValor :valor="row.vlUnitario"/>
-                </td>
-                <td class="right-align">
-                    <SalicFormatarValor :valor="row.vlAprovado"/>
-                </td>
-                <td class="right-align">
-                    <SalicFormatarValor :valor="row.VlComprovado"/>
-                </td>
+                <td class="center-align">{{ row.Seq }}</td>
+                <td class="left-align">{{ row.Item }}</td>
+                <td class="center-align">{{ row.Unidade }}</td>
+                <td class="center-align">{{ row.QtdeDias }}</td>
+                <td class="center-align">{{ row.Quantidade }}</td>
+                <td class="center-align">{{ row.Ocorrencia }}</td>
+                <td class="right-align">{{ row.vlUnitario | formatarParaReal }}</td>
+                <td class="right-align">{{ row.vlAprovado | formatarParaReal }}</td>
+                <td class="right-align">{{ row.VlComprovado | formatarParaReal }}</td>
                 <td class="justify" width="30%" v-html="row.JustProponente"></td>
-                <td class="justify" width="30%" v-html="row.DescAcao"></td>
+                <td class="center-align" v-html="row.DescAcao"></td>
             </tr>
             </tbody>
             <tfoot v-if="table && Object.keys(table).length > 0" style="opacity: 0.5">
             <tr>
                 <td colspan="7"><b>Totais</b></td>
-                <td class="right-align"><b>{{ formataValorAprovadoTotal }}</b></td>
-                <td class="right-align"><b>{{ formataValorComprovadoTotal }}</b></td>
+                <td class="right-align"><b>{{ obterValorAprovadoTotal(table) }}</b></td>
+                <td class="right-align"><b>{{ obterValorComprovadoTotal(table) }}</b></td>
                 <td colspan="2" class="right-align"></td>
             </tr>
             </tfoot>
@@ -53,45 +47,12 @@
 </template>
 
 <script>
-    import SalicFormatarValor from '@/components/SalicFormatarValor';
-    import * as planilhas from '@/mixins/planilhas';
+    import planilhas from '@/mixins/planilhas';
 
     export default {
-        name: 'PlanilhaListaDeItensReadequados',
-        data() {
-            return {
-                planilha: [],
-            };
-        },
+        mixins: [planilhas],
         props: {
             table: {},
-        },
-        components: {
-            SalicFormatarValor,
-        },
-        computed: {
-            formataValorComprovadoTotal() {
-                return planilhas.formataValorComprovadoTotal();
-            },
-            formataValorAprovadoTotal() {
-                return planilhas.formataValorAprovadoTotal();
-            },
-        },
-        methods: {
-            isObject(el) {
-                return typeof el === 'object';
-            },
-            converterParaReal(value) {
-                return planilhas.converterParaReal(value);
-            },
-            definirClasseItem(row) {
-                return {
-                    'orange lighten-2': row.stCustoPraticado === true,
-                    'linha-incluida': row.tpAcao === 'I',
-                    'linha-excluida': row.tpAcao === 'E',
-                    'linha-atualizada': row.tpAcao === 'A',
-                };
-            },
         },
     };
 </script>

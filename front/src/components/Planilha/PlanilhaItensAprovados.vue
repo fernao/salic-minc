@@ -17,14 +17,14 @@
             <tr v-for="row of table"
                 :key="row.idPlanilhaProposta"
                 v-if="isObject(row)"
-                v-bind:class="{'orange lighten-2': ultrapassaValor(row)}">
+                :class="definirClasseItem(row)">
                 <td>{{row.Seq}}</td>
                 <td>{{row.Item}}</td>
                 <td>{{row.QtdeDias}}</td>
                 <td>{{row.Quantidade}}</td>
                 <td>{{row.Ocorrencia}}</td>
-                <td>{{converterParaReal(row.vlUnitario)}}</td>
-                <td>{{converterParaReal(row.vlSolicitado)}}</td>
+                <td>{{ row.vlUnitario | formatarParaReal }}</td>
+                <td>{{ row.vlSolicitado | formatarParaReal }}</td>
                 <td>
                     <a v-if="row.JustProponente.length > 3"
                        class="tooltipped"
@@ -33,7 +33,6 @@
                        v-bind:data-tooltip="row.JustProponente"
                     ><i class="material-icons tiny">message</i>
                     </a>
-
                 </td>
             </tr>
             </tbody>
@@ -42,26 +41,12 @@
 </template>
 
 <script>
-    import * as planilhas from '@/mixins/planilhas';
+    import planilhas from '@/mixins/planilhas';
 
     export default {
-        name: 'PlanilhaListaDeItensAprovados',
-        data() {
-            return {
-                planilha: [],
-            };
-        },
-        props: ['table', 'full'],
-        methods: {
-            isObject(el) {
-                return typeof el === 'object';
-            },
-            ultrapassaValor(row) {
-                return planilhas.ultrapassaValor(row);
-            },
-            converterParaReal(value) {
-                return planilhas.converterParaReal(value);
-            },
+        mixins: [planilhas],
+        props: {
+            table: {},
         },
     };
 </script>

@@ -6,7 +6,8 @@ class PrestacaoContas_PrestacaoContasController extends MinC_Controller_Action_A
     {
         $PermissoesGrupo = [
             Autenticacao_Model_Grupos::TECNICO_PRESTACAO_DE_CONTAS,
-            Autenticacao_Model_Grupos::COORDENADOR_PRESTACAO_DE_CONTAS
+            Autenticacao_Model_Grupos::COORDENADOR_PRESTACAO_DE_CONTAS,
+            Autenticacao_Model_Grupos::COORDENADOR_GERAL_PRESTACAO_DE_CONTAS
         ];
 
         $auth = Zend_Auth::getInstance();
@@ -220,5 +221,118 @@ class PrestacaoContas_PrestacaoContasController extends MinC_Controller_Action_A
         }
 
         $this->_helper->json($planilhaJSON);
+    }
+
+    public function analiseFinanceiraVirtualAction(){
+        $this->view->areaEncaminhamento = (new Orgaos())->obterAreaParaEncaminhamentoPrestacao($this->codOrgao);
+    }
+
+    public function obterProjetosAnaliseFinanceiraVirtualAction(){
+        $situacaoEncaminhamentoPrestacao = $this->getRequest()->getParam('situacaoEncaminhamentoPrestacao');
+        $start = $this->getRequest()->getParam('start');
+        $length = $this->getRequest()->getParam('length');
+        $draw = (int)$this->getRequest()->getParam('draw');
+        $search = $this->getRequest()->getParam('search');
+        $order = $this->getRequest()->getParam('order');
+
+        $column = $order[0]['column']+1;
+        $orderType = $order[0]['dir'];
+        $order = $column.' '.$orderType;
+
+        $tbPlanilhaAplicacao = new tbPlanilhaAprovacao();
+        $projetos = $tbPlanilhaAplicacao->obterProjetosAnaliseFinanceiraVirtual(
+            $this->codOrgao,
+            $situacaoEncaminhamentoPrestacao,
+            $order,
+            $start,
+            $length,
+            $search
+        );
+
+
+        if (count($projetos) > 0) {
+            foreach($projetos->toArray() as $coluna => $item){
+                foreach($item as $key => $value){
+                    $projetosAnaliseFinanceiraVirtual[$coluna][] = utf8_encode($value);
+                }
+            }
+            $recordsTotal = $tbPlanilhaAplicacao->obterProjetosAnaliseFinanceiraVirtual(
+                $this->codOrgao,
+                $situacaoEncaminhamentoPrestacao,
+                null,
+                null,
+                null,
+                null
+            );
+            $recordsTotal = count($recordsTotal);
+
+
+            $recordsFiltered = $tbPlanilhaAplicacao->obterProjetosAnaliseFinanceiraVirtual(
+                $this->codOrgao,
+                $situacaoEncaminhamentoPrestacao,
+                null,
+                null,
+                null,
+                $search);
+            $recordsFiltered = count($recordsFiltered);
+
+        }
+
+        $this->_helper->json(
+            [
+                "data" => !empty($projetosAnaliseFinanceiraVirtual) ? $projetosAnaliseFinanceiraVirtual : 0,
+                'recordsTotal' => $recordsTotal ? $recordsTotal : 0,
+                'draw' => $draw,
+                'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0,
+            ]
+        );
+    }
+
+    public function obterHistoricoEncaminhamentoAction(){
+
+        $idPronac = Zend_Registry::get("post")->idPronac;
+
+        if (empty($idPronac)) {
+            $this->_helper->json([
+                'data' => []
+            ]);
+        }
+
+        $tblEncaminhamento = new tbEncaminhamentoPrestacaoContas();
+        $historicos = $tblEncaminhamento->HistoricoEncaminhamentoPrestacaoContas($idPronac);
+
+        foreach($historicos->toArray() as $index =>$historico){
+            foreach($historico as $key => $value){
+                $rsHistorico[$index][$key] = utf8_encode($value);
+            }
+        }
+
+        $this->_helper->json([
+            'data' => $rsHistorico
+        ]);
+
+    }
+
+    public function obterPrioridadesAction(){
+        $idPronac = Zend_Registry::get("post")->idPronac;
+
+        if (empty($idPronac)) {
+            $this->_helper->json([
+                'data' => []
+            ]);
+        }
+
+        $parecerControle = new PrestacaoContas_Model_DbTable_ParecerControle();
+        $prioridades = $parecerControle->obterPrioridadesOrgaosDeControle($idPronac);
+
+        foreach($prioridades as $index =>$prioridade){
+            foreach($prioridade as $key => $value){
+                $rsPrioridades[$index][$key] = utf8_encode($value);
+            }
+        }
+
+        $this->_helper->json([
+            'data' => $rsPrioridades
+        ]);
     }
 }

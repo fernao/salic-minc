@@ -1,9 +1,11 @@
 <template>
     <div id="planilha-congelada">
         <Carregando v-if="loading" :text="'Procurando planilha'"></Carregando>
-        <Planilha v-if="Object.keys(planilha).length > 0"
-                  :componenteTabelaItens="'PlanilhaItensAutorizados'"
-                  :arrayPlanilha="planilha"></Planilha>
+        <Planilha v-if="Object.keys(planilha).length > 0" :arrayPlanilha="planilha">
+            <template slot-scope="slotProps">
+                <PlanilhaItensAutorizados :table="slotProps.itens"></PlanilhaItensAutorizados>
+            </template>
+        </Planilha>
         <div v-if="semResposta" class="card-panel padding 20 center-align">{{ mensagem }}</div>
     </div>
 </template>
@@ -11,6 +13,7 @@
 <script>
     import Carregando from '@/components/Carregando';
     import Planilha from '@/components/Planilha/Planilha';
+    import PlanilhaItensAutorizados from '@/components/Planilha/PlanilhaItensAutorizados';
     import { mapGetters } from 'vuex';
 
     export default {
@@ -26,6 +29,7 @@
         components: {
             Carregando,
             Planilha,
+            PlanilhaItensAutorizados,
         },
         mounted() {
             if (typeof this.dadosProjeto !== 'undefined') {

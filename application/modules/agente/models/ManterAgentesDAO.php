@@ -286,7 +286,7 @@ class Agente_Model_ManterAgentesDAO extends MinC_Db_Table_Abstract
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
 
-        $insert = $db->insert(GenericModel::getStaticTableName('agentes', 'agentes'), $dados); // cadastra
+        $insert = $db->insert(MinC_Db_Table_Abstract::getStaticTableName('agentes', 'agentes'), $dados); // cadastra
 
         if ($insert) {
             return true;

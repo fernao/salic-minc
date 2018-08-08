@@ -2977,7 +2977,7 @@ class Projetos extends MinC_Db_Table_Abstract
 
 
         $db = Zend_Db_Table::getDefaultAdapter();
-        $sql = "exec " . $this->_banco . ".spDiligenciasEnviadasAoProjeto " . $idpronac;
+        $sql = "exec " . $this->_schema . ".spDiligenciasEnviadasAoProjeto " . $idpronac;
         $db->setFetchMode(Zend_DB :: FETCH_OBJ);
         $returnData['diligencias'] = $db->fetchAll($sql);
 

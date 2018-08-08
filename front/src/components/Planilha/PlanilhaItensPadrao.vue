@@ -17,18 +17,14 @@
             <tr v-for="row of table"
                 :key="row.idPlanilhaProposta"
                 v-if="isObject(row)"
-                v-bind:class="{'orange lighten-2': ultrapassaValor(row)}">
+                :class="definirClasseItem(row)">
                 <td class="center-align">{{row.Seq}}</td>
                 <td class="left-align">{{row.Item}}</td>
                 <td class="center-align">{{row.QtdeDias}}</td>
                 <td class="center-align">{{row.Quantidade}}</td>
                 <td class="center-align">{{row.Ocorrencia}}</td>
-                <td class="right-align">
-                    <SalicFormatarValor :valor="row.vlUnitario"/>
-                </td>
-                <td class="right-align">
-                    <SalicFormatarValor :valor="row.vlSolicitado"/>
-                </td>
+                <td class="right-align">{{ row.vlUnitario | formatarParaReal }}</td>
+                <td class="right-align">{{ row.vlSolicitado | formatarParaReal }}</td>
                 <td class="justify" width="30%" v-html="row.JustProponente"></td>
             </tr>
             </tbody>
@@ -36,7 +32,7 @@
             <tr>
                 <td colspan="6"><b>Totais</b></td>
                 <td class="right-align">
-                    <b>{{ formataValorSolicitadoTotal }}</b>
+                    <b>{{ obterValorSolicitadoTotal(table) }}</b>
                 </td>
                 <td class="right-align"></td>
             </tr>
@@ -47,37 +43,12 @@
 </template>
 
 <script>
-    import SalicFormatarValor from '@/components/SalicFormatarValor';
-    import * as planilhas from '@/mixins/planilhas';
+    import planilhas from '@/mixins/planilhas';
 
     export default {
-        name: 'PlanilhaListaDeItensPadrao',
-        data() {
-            return {
-                planilha: [],
-            };
-        },
+        mixins: [planilhas],
         props: {
             table: {},
-        },
-        components: {
-            SalicFormatarValor,
-        },
-        computed: {
-            formataValorSolicitadoTotal() {
-                return planilhas.formataValorSolicitadoTotal(this.table);
-            },
-        },
-        methods: {
-            isObject(el) {
-                return typeof el === 'object';
-            },
-            ultrapassaValor(row) {
-                return planilhas.ultrapassaValor(row);
-            },
-            converterParaReal(value) {
-                return planilhas.converterParaReal(value);
-            },
         },
     };
 </script>

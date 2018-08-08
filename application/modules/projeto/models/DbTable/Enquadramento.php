@@ -167,10 +167,20 @@ class Projeto_Model_DbTable_Enquadramento extends MinC_Db_Table_Abstract
             ],
             'TABELAS.dbo'
         );
+        $sql->joinInner(
+            ['j' => 'tbProjetoFase'],
+            'a.IdPRONAC = J.idPronac',
+            [],
+            $this->_schema
+        );
 
         if (!empty($search['value'])) {
             $sql->where('a.NomeProjeto like ? OR a.AnoProjeto+a.Sequencial like ? OR d.NrReuniao like ?', '%'.$search['value'].'%');
         }
+
+        $sql->where('j.idNormativo > 6');
+        $sql->where('j.stEstado = 1');
+        $sql->where('sac.dbo.fnDtPortariaAprovacao(a.AnoProjeto,a.Sequencial) IS NOT NULL');
 
         foreach ($where as $coluna => $valor) {
             $sql->where($coluna, $valor);
@@ -185,7 +195,6 @@ class Projeto_Model_DbTable_Enquadramento extends MinC_Db_Table_Abstract
             $limit = (int) $limit;
             $sql->limit($limit, $start);
         }
-
 
         return $this->fetchAll($sql);
     }

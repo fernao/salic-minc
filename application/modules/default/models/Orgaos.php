@@ -237,4 +237,18 @@ class Orgaos extends MinC_Db_Table_Abstract
         
         return (!in_array($idOrgao, $orgaos)) ? true : false;
     }
+
+    public function obterAreaParaEncaminhamentoPrestacao($codOrgao){
+        $idOrgaoDestino = $codOrgao;
+        $where = array();
+
+        if ($idOrgaoDestino == '177' || $idOrgaoDestino == '12') {
+            $where['Codigo = ?'] = $idOrgaoDestino;
+        } else {
+            $where['Vinculo = 1 OR Codigo = (' . $idOrgaoDestino . ')'] = '?';
+        }
+        $where['Codigo in (12,167,177,270,303)'] = '?';
+
+        return $this->buscar($where, array('Sigla'))->current();
+    }
 }

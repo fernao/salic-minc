@@ -1,15 +1,5 @@
 <?php
 
-/**
- * DAO tbReadequacao
- * @author jeffersonassilva@gmail.com - XTI
- * @since 19/11/2013
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2011 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
 {
     protected $_schema = "sac";
@@ -1618,5 +1608,45 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
         $retorno['PlanilhaAtivaTotal'] = $PlanilhaAtiva['Total'];
 
         return $retorno;
+    }
+
+    public function obterReadequacaoDetalhada($idReadequacao) : array
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array($this->_name),
+            new Zend_Db_Expr("
+                tbReadequacao.idReadequacao,
+                tbReadequacao.idPronac,
+                tbReadequacao.dtSolicitacao,
+                CAST(tbReadequacao.dsSolicitacao AS TEXT) AS dsSolicitacao,
+                CAST(tbReadequacao.dsJustificativa AS TEXT) AS dsJustificativa,
+                tbReadequacao.idSolicitante,
+                tbReadequacao.idAvaliador,
+                tbReadequacao.dtAvaliador,
+                CAST(tbReadequacao.dsAvaliacao AS TEXT) AS dsAvaliacao,
+                tbReadequacao.idTipoReadequacao,
+                tbReadequacao.stAtendimento,
+                tbReadequacao.siEncaminhamento,
+                tbReadequacao.stEstado,
+                tbReadequacao.dtEnvio
+            ")
+        );
+        $select->joinInner(
+            array('tbTipoReadequacao'),
+            'tbTipoReadequacao.idTipoReadequacao = tbReadequacao.idTipoReadequacao',
+            [
+                'dsTipoReadequacao' => new Zend_Db_Expr('CAST(tbTipoReadequacao.dsReadequacao AS TEXT)')
+            ],
+            $this->_schema
+        );
+
+        $select->where("tbReadequacao.idReadequacao = ?", $idReadequacao);
+
+        $resultado = $this->fetchRow($select);
+        if($resultado) {
+            return $resultado->toArray();
+        }
     }
 }

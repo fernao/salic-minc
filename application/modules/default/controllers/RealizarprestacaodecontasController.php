@@ -1674,7 +1674,11 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
                 //100: 12 CONJUR
                 //SE O ENCAMINHAMENTO FOR DO COORDENADOR PARA O TECNICO - ALTERA SITUACAO DO PROJETO
 
-                if (($this->codGrupo == 125 || $this->codGrupo == 126 || $this->codGrupo == 132) && $idGrupoDestino == 124) {
+
+                if (
+                    ($this->codGrupo == 125 || $this->codGrupo == 126 || $this->codGrupo == 132) &&
+                    ($idGrupoDestino == 124 || $idGrupoDestino == 125)
+                ) {
                     // altera a situacao do projeto AO ENCAMINHAR PARA O TECNICO
                     $tblProjeto = new Projetos();
                     $tblProjeto->alterarSituacao($idPronac, '', 'E27', 'Comprova&ccedil;&atilde;o Financeira do Projeto em Análise');
@@ -1912,7 +1916,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         }
         $where['e.stAtivo = ?'] = 1;
         $where['e.idAgenteDestino = ?'] = $this->getIdUsuario; //id Tecnico de Presta&ccedil;&atilde;o de Contas
-        $where['e.cdGruposDestino = ?'] = 124; //grupo do tecnico de prestacao de contas
+        $where['e.cdGruposDestino in (?)'] = [124, 125]; //grupo do tecnico de prestacao de contas
 
         // t�cnico s� visualiza projetos encaminhados para ele
         $where['p.Situacao in (?)'] = array('E17', 'E20', 'E27', 'E30');

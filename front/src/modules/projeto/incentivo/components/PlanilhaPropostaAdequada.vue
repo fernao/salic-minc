@@ -23,61 +23,56 @@
     import { mapGetters } from 'vuex';
 
     export default {
-        /* eslint-disable */
-        name: 'PlanilhaPropostaAdequada',
-        data: function () {
+        data() {
             return {
                 planilha: [],
                 loading: true,
                 semResposta: false,
-                mensagem: ""
+                mensagem: '',
+                idPronac: this.$route.params.idPronac,
             };
         },
         components: {
             Carregando,
-            Planilha
+            Planilha,
         },
         mounted() {
-            if (typeof this.dadosProjeto != 'undefined') {
+            if (typeof this.dadosProjeto !== 'undefined') {
                 this.fetch(this.dadosProjeto.idPreProjeto);
             }
         },
         watch: {
             dadosProjeto(value) {
-                if (typeof value != 'undefined') {
+                if (typeof value !== 'undefined') {
                     this.fetch(value.idPreProjeto);
                 }
-            }
+            },
         },
         computed: {
             ...mapGetters({
-                dadosProjeto: 'projeto/projeto'
-            })
+                dadosProjeto: 'projeto/projeto',
+            }),
         },
         methods: {
             fetch(id) {
-                if (typeof id == 'undefined') {
+                if (typeof id === 'undefined') {
                     return;
                 }
-
-                let self = this;
-                $3
-                    .ajax({
-                        url: '/proposta/visualizar/obter-planilha-proposta-adequada-ajax/',
-                        data: {
-                            idPreProjeto: id,
-                        },
-                    })
-                    .done((response) => {
-                        self.planilha = response.data;
-                    })
-                    .fail((response) => {
-                        self.semResposta = true;
-                        self.mensagem = response.responseJSON.msg;
-                    })
-                    .always(() => {
-                        self.loading = false;
-                    });
+                const self = this;
+                /* eslint-disable */
+                $3.ajax({
+                    url: '/proposta/visualizar/obter-planilha-proposta-adequada-ajax/',
+                    data: {
+                        idPreProjeto: id,
+                    },
+                }).done((response) => {
+                    self.planilha = response.data;
+                }).fail((response) => {
+                    self.semResposta = true;
+                    self.mensagem = response.responseJSON.msg;
+                }).always(() => {
+                    self.loading = false;
+                });
             },
         },
     };

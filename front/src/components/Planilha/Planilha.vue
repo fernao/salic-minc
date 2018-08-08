@@ -32,8 +32,9 @@
                                                         class="badge">R$ {{locais.total}}</span>
                                                     </div>
                                                     <div class="collapsible-body no-padding margin20 scroll-x">
-                                                        <component :is="componenteTabelaItens"
-                                                                   :table="locais"></component>
+                                                        <slot v-bind:itens="locais">
+                                                            <PlanilhaItensPadrao :table="locais"></PlanilhaItensPadrao>
+                                                        </slot>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -56,14 +57,8 @@
 <script>
     import numeral from 'numeral';
     import 'numeral/locales';
-    import moment from 'moment';
     import PlanilhaItensPadrao from '@/components/Planilha/PlanilhaItensPadrao';
-    import PlanilhaItensCurtos from '@/components/Planilha/PlanilhaItensCurtos';
-    import PlanilhaItensAutorizados from '@/components/Planilha/PlanilhaItensAutorizados';
-    import PlanilhaItensAprovados from '@/components/Planilha/PlanilhaItensAprovados';
-    import PlanilhaItensHomologados from '@/components/Planilha/PlanilhaItensHomologados';
-    import PlanilhaItensReadequados from '@/components/Planilha/PlanilhaItensReadequados';
-    import * as planilhas from '@/mixins/planilhas';
+    import planilhas from '@/mixins/planilhas';
 
     export default {
         /* eslint-disable */
@@ -73,13 +68,9 @@
                 planilha: []
             };
         },
+        mixins: [planilhas],
         components: {
             PlanilhaItensPadrao,
-            PlanilhaItensCurtos,
-            PlanilhaItensAprovados,
-            PlanilhaItensAutorizados,
-            PlanilhaItensHomologados,
-            PlanilhaItensReadequados
         },
         props: {
             arrayPlanilha: {},
@@ -170,27 +161,10 @@
             }
         },
         methods: {
-            formatar_data(date) {
-                date = moment(date).format('DD/MM/YYYY');
-
-                return date;
-            },
-            isObject(el) {
-                return typeof el === 'object';
-            },
             iniciarCollapsible() {
                 $3(".planilha-orcamentaria .collapsible").each(function () {
                     $3(this).collapsible();
                 });
-            },
-            converterStringParaClasseCss(text) {
-                return planilhas.converterStringParaClasseCss(text);
-            },
-            ultrapassaValor(row) {
-                return planilhas.ultrapassaValor(row);
-            },
-            converterParaReal(value) {
-                return planilhas.converterParaReal(value);
             },
         },
     };

@@ -1,6 +1,7 @@
 <template>
     <div id="planilha-proposta-original">
         <Carregando v-if="loading" :text="'Procurando planilha'"></Carregando>
+
         <Planilha v-if="Object.keys(planilha).length > 0"
                   :arrayPlanilha="planilha"></Planilha>
         <div v-if="semResposta" class="card-panel padding 20 center-align">{{ mensagem }}</div>

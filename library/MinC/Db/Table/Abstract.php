@@ -9,7 +9,6 @@ abstract class MinC_Db_Table_Abstract extends Zend_Db_Table_Abstract
     protected $_rowClass = "MinC_Db_Table_Row";
     protected $debugMode = false;
     protected $modelDatatable;
-    protected $_banco;
 
     public function __construct($config = array())
     {
@@ -22,7 +21,6 @@ abstract class MinC_Db_Table_Abstract extends Zend_Db_Table_Abstract
     public function init()
     {
         $this->_name = $this->getName($this->_name);
-        $this->_banco = $this->getBanco($this->_banco);
         $this->_schema = $this->getSchema($this->_schema);
     }
 

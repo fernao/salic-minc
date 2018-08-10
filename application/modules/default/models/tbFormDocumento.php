@@ -1,18 +1,8 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- * Description of tbFormDocumento
- *
- * @author tisomar
- */
 class tbFormDocumento extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = "BDCORPORATIVO";
-    protected $_schema  = "BDCORPORATIVO.scQuiz";
+    protected $_schema   = "BDCORPORATIVO";
     protected $_name = 'tbFormDocumento';
 
     public function buscaNrFormDocumento($idEdital)
@@ -34,7 +24,6 @@ class tbFormDocumento extends MinC_Db_Table_Abstract
 
     public function salvar($dados)
     {
-        //INSTANCIANDO UM OBJETO DE ACESSO AOS DADOS DA TABELA
         $tmpTbFormDocumento = new tbFormDocumento();
 
         if (isset($dados['nrFormDocumento'])) {
@@ -43,7 +32,6 @@ class tbFormDocumento extends MinC_Db_Table_Abstract
             $tmpRsTbFormDocumento = $tmpTbFormDocumento->createRow();
         }
 
-        //ATRIBUINDO VALORES AOS CAMPOS QUE FORAM PASSADOS
         if (isset($dados['nrVersaoDocumento'])) {
             $tmpRsTbFormDocumento->nrVersaoDocumento = $dados['nrVersaoDocumento'];
         }
@@ -78,8 +66,6 @@ class tbFormDocumento extends MinC_Db_Table_Abstract
             $tmpRsTbFormDocumento->idEdital = $dados['idEdital'];
         }
 
-
-        //SALVANDO O OBJETO CRIADO
         $id = $tmpRsTbFormDocumento->save();
 
         if ($id) {

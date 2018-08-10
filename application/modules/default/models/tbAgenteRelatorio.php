@@ -1,19 +1,11 @@
 <?php
-/**
- * DAO tbAgenteRelatorio
- * @since 16/03/2011
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 
 class tbAgenteRelatorio extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "SAC";
     protected $_schema = "SAC";
     protected $_name   = "tbAgenteRelatorio";
 
     /**
-     * M�todo para cadastrar
      * @access public
      * @param array $dados
      * @return integer (retorna o �ltimo id cadastrado)
@@ -21,11 +13,9 @@ class tbAgenteRelatorio extends MinC_Db_Table_Abstract
     public function cadastrarDados($dados)
     {
         return $this->insert($dados);
-    } // fecha m�todo cadastrarDados()
-
+    }
 
     /**
-     * M�todo para alterar
      * @access public
      * @param array $dados
      * @param integer $where
@@ -35,5 +25,5 @@ class tbAgenteRelatorio extends MinC_Db_Table_Abstract
     {
         $where = "idAgenteRelatorio = " . $where;
         return $this->update($dados, $where);
-    } // fecha m�todo alterarDados()
+    }
 }

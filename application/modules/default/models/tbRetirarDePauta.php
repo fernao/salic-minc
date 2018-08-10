@@ -1,8 +1,7 @@
 <?php
 class tbRetirarDePauta extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = "BDCORPORATIVO";
-    protected $_schema  = "BDCORPORATIVO.scSAC";
+    protected $_schema  = "BDCORPORATIVO";
     protected $_name    = "tbRetirarDePauta";
 
     public function buscarDados($where=array(), $order=array())

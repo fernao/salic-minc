@@ -2,7 +2,6 @@
 
 class tbVerificaProjeto extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
     protected $_name = 'tbVerificaProjeto';
     protected $_schema = 'SAC';
 

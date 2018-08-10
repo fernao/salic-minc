@@ -3,7 +3,6 @@ class GerarPagamentoParecerista extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbGerarPagamentoParecerista';
     protected $_schema = 'SAC';
-    protected $_banco = 'SAC';
 
     public function buscarDespachos($where=array(), $order=array(), $tamanho=-1, $inicio=-1, $qtdeTotal=false)
     {

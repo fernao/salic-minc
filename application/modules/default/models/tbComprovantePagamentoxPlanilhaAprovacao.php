@@ -2,9 +2,7 @@
 
 class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco   = "BDCORPORATIVO";
-    protected $_schema  = "bdcorporativo.scsac";
+    protected $_schema   = "BDCORPORATIVO";
     protected $_name    = "tbComprovantePagamentoxPlanilhaAprovacao";
 
 

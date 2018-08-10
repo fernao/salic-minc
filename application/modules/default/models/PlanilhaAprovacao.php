@@ -4,7 +4,6 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbPlanilhaAprovacao';
     protected $_schema = 'SAC';
-    protected $_banco = 'SAC';
 
     const TIPO_PLANILHA_APROVADA = 3;
     const TIPO_PLANILHA_REMANEJADA = 5;

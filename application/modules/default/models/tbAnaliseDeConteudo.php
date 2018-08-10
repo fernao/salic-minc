@@ -1,31 +1,22 @@
 <?php
-/**
- * DAO tbAnaliseDeConteudo
- * @since 01/08/2013
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 
 class tbAnaliseDeConteudo extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "SAC";
     protected $_schema = "SAC";
     protected $_name   = "tbAnaliseDeConteudo";
 
     /**
-     * Metodo para cadastrar
      * @access public
      * @param array $dados
-     * @return integer (retorna o �ltimo id cadastrado)
+     * @return integer (retorna o último id cadastrado)
      */
     public function cadastrarDados($dados)
     {
         return $this->insert($dados);
-    } // fecha metodo cadastrarDados()
+    }
 
 
     /**
-     * Metodo para alterar
      * @access public
      * @param array $dados
      * @param integer $where
@@ -35,7 +26,7 @@ class tbAnaliseDeConteudo extends MinC_Db_Table_Abstract
     {
         $where = "idAnaliseDeConteudo = " . $where;
         return $this->update($dados, $where);
-    } // fecha metodo alterarDados()
+    }
 
 
     public function buscarOutrasInformacoes($idPronac)

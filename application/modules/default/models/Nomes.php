@@ -1,23 +1,11 @@
 <?php
-/**
- * DAO Nomes
- * @author emanuel.sampaio - Politec
- * @since 19/02/2011
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2011 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 
 class Nomes extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "AGENTES";
     protected $_schema = "AGENTES";
     protected $_name   = "Nomes";
 
     /**
-     * M�todo para buscar o(s) nome(s) do agente
      * @access public
      * @param string $cpfcnpj
      * @param integer $idAgente
@@ -62,12 +50,9 @@ class Nomes extends MinC_Db_Table_Abstract
         }
 
         return $buscarTodos ? $this->fetchAll($select) : $this->fetchRow($select);
-    } // fecha m�todo buscarNomePorCPFCNPJ()
-
-
+    }
 
     /**
-     * M�todo para cadastrar
      * @access public
      * @param array $dados
      * @return integer (retorna o �ltimo id cadastrado)
@@ -75,12 +60,9 @@ class Nomes extends MinC_Db_Table_Abstract
     public function cadastrarNomeAgente($dados)
     {
         return $this->insert($dados);
-    } // fecha m�todo cadastrarNomeAgente()
-
-
+    }
 
     /**
-     * M�todo para excluir
      * @access public
      * @param integer $idAgente (excluir todos os nomes de um agente)
      * @param integer $idNome (excluir um determinado nome)
@@ -99,7 +81,7 @@ class Nomes extends MinC_Db_Table_Abstract
         }
 
         return $this->delete($where);
-    } // fecha m�todo excluirNomeAgente()
+    }
 
 
     public function buscarPareceristas($idOrgao = '')
@@ -135,4 +117,4 @@ class Nomes extends MinC_Db_Table_Abstract
 
         return $this->fetchAll($select);
     }
-} // fecha class
+}

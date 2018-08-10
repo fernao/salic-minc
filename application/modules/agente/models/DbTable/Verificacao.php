@@ -1,8 +1,7 @@
 <?php
 class Agente_Model_DbTable_Verificacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'agentes';
-    protected $_schema = 'agentes';
+    protected $_schema = 'AGENTES';
     protected $_name = 'verificacao';
 
     const PROPOSTA_PARA_ANALISE_INICIAL = 96;

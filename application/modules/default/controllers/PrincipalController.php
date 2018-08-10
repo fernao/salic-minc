@@ -42,31 +42,31 @@ class PrincipalController extends MinC_Controller_Action_Abstract
 
     public function abasAction()
     {
-    } // fecha metodo abasAction()
+    }
 
     public function textoAction()
     {
-    } // fecha metodo textoAction()
+    }
 
     public function gridAction()
     {
-    } // fecha metodo gridAction()
+    }
 
     public function caixadetextoAction()
     {
-    } // fecha metodo caixadetextoAction()
+    }
 
     public function modalAction()
     {
-    } // fecha metodo modalAction()
+    }
 
     public function botoesAction()
     {
-    } // fecha metodo botoesAction()
+    }
 
     public function exemplosAction()
     {
-    } // fecha metodo exemplosAction()
+    }
 
     /**
      * Metodo listarComunicados()

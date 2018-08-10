@@ -1,14 +1,9 @@
 <?php
-/**
- * Description of ArquivoFiscalizacao
- *
- * @author 01610881125
- */
+
 class ArquivoFiscalizacao extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbArquivoFiscalizacao';
     protected $_schema = 'SAC';
-    protected $_banco = 'SAC';
 
     public function buscarArquivo($where)
     {

@@ -1,9 +1,8 @@
 <?php
 class Cotacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'bdcorporativo';
     protected $_name    = 'tbCotacao';
-    protected $_schema  = 'bdcorporativo.scSAC';
+    protected $_schema  = 'bdcorporativo';
 
     public function inserirCotacao($data)
     {

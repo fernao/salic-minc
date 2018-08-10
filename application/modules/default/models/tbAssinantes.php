@@ -1,13 +1,7 @@
 <?php
-/**
- * Description of ArquivoPagamentoParecerista
- *
- * @author Tarcisio Angelo
- */
 
 class tbAssinantes extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
     protected $_schema = 'SAC';
     protected $_name = 'tbAssinantes';
     protected $_primary = 'idAssinantes';

@@ -1,26 +1,7 @@
 <?php
-/**
- * Class Agente_Model_DbTable_TbAusencia
- *
- * @name Agente_Model_DbTable_TbAusencia
- * @package Modules/Agente
- * @subpackage Models/DbTable
- *
- * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
- * @since 05/10/2016
- *
- * @link http://salic.cultura.gov.br
- */
+
 class Agente_Model_DbTable_TbAgenteFisico extends MinC_Db_Table_Abstract
 {
-
-    /**
-     * _banco
-     *
-     * @var bool
-     * @access protected
-     */
-    protected $_banco = 'agentes';
 
     /**
      * _name

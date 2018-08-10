@@ -2,7 +2,6 @@
 
 class Autenticacao_Model_DbTable_Usuario extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "tabelas";
     protected $_name = 'usuarios';
     protected $_schema = 'tabelas';
     protected $_primary = 'usu_codigo';

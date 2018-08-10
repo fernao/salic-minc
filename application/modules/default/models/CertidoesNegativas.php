@@ -1,8 +1,6 @@
 <?php
 class CertidoesNegativas extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco   = 'SAC';
     protected $_schema  = 'SAC';
     protected $_name    = 'CertidoesNegativas';
 
@@ -45,5 +43,5 @@ class CertidoesNegativas extends MinC_Db_Table_Abstract
         $select->order("c.idCertidoesnegativas DESC");
 
         return $this->fetchAll($select);
-    } // fecha metodo buscarDados()
+    }
 }

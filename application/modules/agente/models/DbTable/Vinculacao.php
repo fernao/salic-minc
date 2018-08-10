@@ -1,23 +1,9 @@
 <?php
 
-/**
- * Class Agente_Model_DbTable_Vinculacao
- *
- * @name Agente_Model_DbTable_Vinculacao
- * @package Modules/Agente
- * @subpackage Models/DbTable
- * @version $Id$
- *
- * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
- * @since 05/09/2016
- *
- * @link http://salic.cultura.gov.br
- */
 class Agente_Model_DbTable_Vinculacao extends MinC_Db_Table_Abstract
 {
     protected $_name = 'vinculacao';
-    protected $_schema = 'agentes';
-    protected $_banco = 'agentes';
+    protected $_schema = 'AGENTES';
 
     public function BuscarVinculos($idAgente)
     {

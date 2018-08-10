@@ -2,8 +2,8 @@
 
 class fnDtInicioRelatorioTrimestral extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
-    protected $_name = 'dbo.fnDtInicioRelatorioTrimestral';
+    protected $_schema = 'SAC';
+    protected $_name = 'fnDtInicioRelatorioTrimestral';
 
     public function dtInicioRelatorioTrimestral($idPronac)
     {

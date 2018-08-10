@@ -1,13 +1,7 @@
 <?php
 
-/**
- * Description of PlanilhaItens
- *
- * @author 01610881125
- */
 class PlanilhaItens extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "SAC";
     protected $_schema = "SAC";
     protected $_name = "tbPlanilhaItens";
 
@@ -369,7 +363,7 @@ class PlanilhaItens extends MinC_Db_Table_Abstract
 
                 
         return $this->fetchAll($select);
-    } // fecha m�todo combo()
+    }
 
     public function buscarItens()
     {

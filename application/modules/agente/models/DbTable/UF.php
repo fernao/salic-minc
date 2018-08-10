@@ -2,7 +2,6 @@
 
 class Agente_Model_DbTable_UF extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'AGENTES';
     protected $_name = 'uf';
     protected $_schema = 'AGENTES';
 

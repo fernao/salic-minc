@@ -1,9 +1,7 @@
 <?php
 class tbPedidoAlteracaoProjeto extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco   = "BDCORPORATIVO";
-    protected $_schema  = "BDCORPORATIVO.scSAC";
+    protected $_schema  = "BDCORPORATIVO";
     protected $_name    = "tbPedidoAlteracaoProjeto";
 
     public function buscarAtoresReadequacao($idPronac)

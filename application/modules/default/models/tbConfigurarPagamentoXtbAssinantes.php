@@ -1,13 +1,7 @@
 <?php
-/**
- * Description of tbConfigurarPagamentoXtbAssinantes
- *
- * @author Tarcisio Angelo
- */
 
 class tbConfigurarPagamentoXtbAssinantes extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
     protected $_schema = 'SAC';
     protected $_name = 'tbConfigurarPagamentoXtbAssinantes';
     protected $_primary = 'idAssinantes';

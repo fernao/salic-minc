@@ -15,14 +15,6 @@ class Agente_Model_DbTable_TbAusencia extends MinC_Db_Table_Abstract
 {
 
     /**
-     * _banco
-     *
-     * @var bool
-     * @access protected
-     */
-    protected $_banco = 'agentes';
-
-    /**
      * _name
      *
      * @var bool
@@ -36,7 +28,7 @@ class Agente_Model_DbTable_TbAusencia extends MinC_Db_Table_Abstract
      * @var string
      * @access protected
      */
-    protected $_schema = 'agentes';
+    protected $_schema = 'AGENTES';
 
     public function carregarAusencia($idAgente, $ano, $tipo, $mes)
     {

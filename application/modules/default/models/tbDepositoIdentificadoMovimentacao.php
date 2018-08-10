@@ -1,32 +1,9 @@
 <?php
-/**
- * DAO tbDepositoIdentificadoMovimentacao
- * @author emanuel.sampaio - Politec
- * @since 30/06/2011
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2011 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 
 class tbDepositoIdentificadoMovimentacao extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco   = "SAC";
-    protected $_schema  = "dbo";
+    protected $_schema  = "SAC";
     protected $_name    = "tbDepositoIdentificadoMovimentacao";
-
-
-
-    /**
-     * M�todo para ignorar a aus�ncia da chave prim�ria
-     */
-    /*public function _setupPrimaryKey()
-    {
-        $this->_primary = "";
-    }*/
-
 
 
     /**
@@ -38,7 +15,7 @@ class tbDepositoIdentificadoMovimentacao extends MinC_Db_Table_Abstract
     public function cadastrarDados($dados)
     {
         return $this->insert($dados);
-    } // fecha m�todo cadastrarDados()
+    }
         
         
         
@@ -56,4 +33,4 @@ class tbDepositoIdentificadoMovimentacao extends MinC_Db_Table_Abstract
 
         return $db->query($sql);
     }
-} // fecha class
+}

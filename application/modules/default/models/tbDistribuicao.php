@@ -1,13 +1,4 @@
 <?php
-/**
- * DAO tbDistribuicaoProduto
- * @since 16/03/2011
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2011 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 
 class tbDistribuicao extends MinC_Db_Table_Abstract
 {
@@ -39,7 +30,6 @@ class tbDistribuicao extends MinC_Db_Table_Abstract
         foreach ($where as $coluna => $valor) {
             $slct->where($coluna, $valor);
         }
-
 
         return $this->fetchAll($slct);
     }

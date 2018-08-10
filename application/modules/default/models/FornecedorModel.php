@@ -1,7 +1,6 @@
 <?php
 class FornecedorModel extends Minc_Db_Table_Abstract
 {
-    protected $_banco = 'agentes';
     protected $_name = 'agentes';
     protected $_schema = 'agentes';
     protected $_primary = 'idAgente';

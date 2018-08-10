@@ -1,22 +1,12 @@
 <?php
-/**
- * DAO tbComprovanteTrimestral
- * @since 16/03/2011
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2011 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
+
 
 class tbComprovanteTrimestral extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "SAC";
     protected $_schema = "SAC";
     protected $_name = "tbComprovanteTrimestral";
 
     /**
-     * M�todo para cadastrar
      * @access public
      * @param array $dados
      * @return integer (retorna o �ltimo id cadastrado)
@@ -24,11 +14,9 @@ class tbComprovanteTrimestral extends MinC_Db_Table_Abstract
     public function cadastrarDados($dados)
     {
         return $this->insert($dados);
-    } // fecha m�todo cadastrarDados()
-
+    }
 
     /**
-     * M�todo para alterar
      * @access public
      * @param array $dados
      * @param integer $where
@@ -38,7 +26,7 @@ class tbComprovanteTrimestral extends MinC_Db_Table_Abstract
     {
         $where = "idComprovanteTrimestral = " . $where;
         return $this->update($dados, $where);
-    } // fecha m�todo alterarDados()
+    }
 
 
     public function buscarComprovantes($where, $all = false, $order = array())
@@ -71,5 +59,5 @@ class tbComprovanteTrimestral extends MinC_Db_Table_Abstract
         } else {
             return $this->fetchRow($slct);
         }
-    } // fecha m�todo alterarDados()
+    }
 }

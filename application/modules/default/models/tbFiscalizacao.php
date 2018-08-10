@@ -9,7 +9,6 @@ class tbFiscalizacao extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbFiscalizacao';
     protected $_schema = 'SAC';
-    protected $_banco = 'SAC';
 
     public function buscarAtoresFiscalizacao($idPronac, $idusuario=null)
     {

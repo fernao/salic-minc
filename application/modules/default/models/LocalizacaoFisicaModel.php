@@ -6,17 +6,11 @@ class LocalizacaoFisicaModel extends MinC_Db_Table_Abstract
      */
     const MOSTRAR_APENAS_ULTIMA_LOCALIZACAO = true;
 
-    /**
-     *
-     * @var unknown
-     */
-    protected $_banco = "SAC";
+
     protected $_schema = "SAC";
     protected $_name = "LocalizacaoFisica";
 
-    /**
-     *
-     */
+
     public function getTecnicos($orgaos)
     {
         $tecnicos = array();
@@ -31,9 +25,6 @@ class LocalizacaoFisicaModel extends MinC_Db_Table_Abstract
         return $tecnicos;
     }
 
-    /**
-     *
-     */
     public function getVinculadas($orgaosUsuario)
     {
         $orgaoModel = new Orgaos();
@@ -80,9 +71,6 @@ class LocalizacaoFisicaModel extends MinC_Db_Table_Abstract
         return Zend_Paginator::factory($select);
     }
 
-    /**
-     *
-     */
     public function pesquisar($idPronac, $showOnlyLast = false)
     {
         $select = $this->select();
@@ -102,9 +90,6 @@ class LocalizacaoFisicaModel extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    /**
-     *
-     */
     private function pesquisarProjeto($showOnlyLast = false)
     {
         $fields = array(

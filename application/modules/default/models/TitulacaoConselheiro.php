@@ -2,8 +2,7 @@
 
 class TitulacaoConselheiro extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'agentes';
-    protected $_schema = 'agentes';
+    protected $_schema = 'AGENTES';
     protected $_name = 'tbTitulacaoConselheiro';
 
     public function buscarTitulacaoConselheiro($where = null, $order = array())

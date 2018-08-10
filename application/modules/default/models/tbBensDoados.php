@@ -1,19 +1,11 @@
 <?php
-/**
- * DAO tbBensDoados
- * @since 26/12/2012
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 
 class tbBensDoados extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "SAC";
     protected $_schema = "SAC";
     protected $_name   = "tbBensDoados";
 
     /**
-     * M�todo para cadastrar
      * @access public
      * @param array $dados
      * @return integer (retorna o �ltimo id cadastrado)
@@ -21,11 +13,10 @@ class tbBensDoados extends MinC_Db_Table_Abstract
     public function cadastrarDados($dados)
     {
         return $this->insert($dados);
-    } // fecha m�todo cadastrarDados()
+    }
 
 
     /**
-     * M�todo para alterar
      * @access public
      * @param array $dados
      * @param integer $where
@@ -35,7 +26,7 @@ class tbBensDoados extends MinC_Db_Table_Abstract
     {
         $where = "idBensDoados = " . $where;
         return $this->update($dados, $where);
-    } // fecha m�todo alterarDados()
+    }
 
 
     public function buscarBensCadastrados($where, $order = array())

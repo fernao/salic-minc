@@ -1,16 +1,8 @@
 <?php
-/**
- * DeslocamentoDAO
- *
- * @uses Zend
- * @uses _Db_Table
- * @author 01129075125
- * @author wouerner <wouerner@gmail.com>
- */
+
 class DeslocamentoDAO extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'sac';
-    protected $_schema = 'sac';
+    protected $_schema = 'SAC';
     protected $_name = 'tbdeslocamento';
 
     public function __construct()
@@ -50,16 +42,6 @@ class DeslocamentoDAO extends MinC_Db_Table_Abstract
         return $resultado;
     }
 
-    /**
-     * buscarDeslocamentos
-     *
-     * @param mixed $idProjeto
-     * @param bool $idDeslocamento
-     * @static
-     * @access public
-     * @return void
-     * @author wouerner <wouerner@gmail.com>
-     */
     public static function buscarDeslocamentos($idProjeto, $idDeslocamento = null)
     {
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -99,16 +81,6 @@ class DeslocamentoDAO extends MinC_Db_Table_Abstract
         return $resultado;
     }
 
-    /**
-     * buscarDeslocamentos
-     *
-     * @param mixed $idProjeto
-     * @param bool $idDeslocamento
-     * @static
-     * @access public
-     * @return void
-     * @author wouerner <wouerner@gmail.com>
-     */
     public function buscarDeslocamento($idProjeto, $idDeslocamento = null)
     {
         $db = Zend_Db_Table::getDefaultAdapter();

@@ -2,8 +2,7 @@
 
 class tbDistribuicaoProjetoComissao extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "BDCORPORATIVO";
-    protected $_schema = "BDCORPORATIVO.scSAC";
+    protected $_schema = "BDCORPORATIVO";
     protected $_name = "tbDistribuicaoProjetoComissao";
 
     public function buscarProjetoEmPauta_ORIGINAL($where = array(), $order = array(), $tamanho = -1, $inicio = -1, $count = false)

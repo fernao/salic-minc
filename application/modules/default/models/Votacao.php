@@ -1,19 +1,8 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of Votacao
- *
- * @author augusto
- */
 class Votacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'BDCORPORATIVO';
-    protected $_schema = 'BDCORPORATIVO.scSAC';
+    protected $_schema = 'BDCORPORATIVO';
     protected $_name = 'tbVotacao';
 
     public function resultadovotacao($idNrReuniao, $idPRONAC, $stvoto = null, $tipoReadequacao = null)

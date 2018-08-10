@@ -2,8 +2,8 @@
 
 class Autenticacao_Model_FnVerificarPermissao extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
-    protected $_name = 'dbo.fnVerificarPermissao';
+    protected $_schema = 'SAC';
+    protected $_name = 'fnVerificarPermissao';
 
     public function verificarPermissaoProjeto($idPronac, $idUsuarioLogado)
     {

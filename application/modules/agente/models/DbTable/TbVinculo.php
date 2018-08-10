@@ -1,22 +1,8 @@
 <?php
 
-/**
- * Class Agente_Model_DbTable_TbVinculo
- *
- * @name Agente_Model_DbTable_TbVinculo
- * @package Modules/Agente
- * @subpackage Models/DbTable
- * @version $Id$
- *
- * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
- * @since 21/09/2016
- *
- * @link http://salic.cultura.gov.br
- */
 class Agente_Model_DbTable_TbVinculo extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'agentes';
-    protected $_schema = 'agentes';
+    protected $_schema = 'AGENTES';
     protected $_name = 'tbvinculo';
     protected $_primary = 'idVinculo';
 

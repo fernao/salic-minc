@@ -1,19 +1,9 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- * Description of Vinculo
- *
- * @author tisomar
- */
 class Inabilitado extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "SAC";
     protected $_name = "Inabilitado";
-    protected $_schema = "sac";
+    protected $_schema = "SAC";
 
     public function salvar($dados)
     {

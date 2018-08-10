@@ -2,7 +2,7 @@
 
 class HistoricoDocumento extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
+    protected $_schema = 'SAC';
     protected $_name = 'tbHistoricoDocumento';
 
     public function pesquisarOrgaosPorAcao($acaoA=null, $acaoB=null, $usu_codigo=null, $orgao=null)

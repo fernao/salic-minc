@@ -3,8 +3,7 @@ class ComprovantePagamentoInvoice extends ComprovantePagamento
 {
     protected $nif;
 
-    protected $_banco = 'bdcorporativo';
-    protected $_schema = 'bdcorporativo.scSAC';
+    protected $_schema = 'bdcorporativo';
     protected $_name = 'tbComprovantePagamento';
 
     public function __construct(

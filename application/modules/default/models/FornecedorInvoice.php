@@ -6,8 +6,7 @@ class FornecedorInvoice extends MinC_Db_Table_Abstract
     private $endereco = null;
     private $pais = null;
 
-    protected $_banco = 'bdcorporativo';
-    protected $_schema = 'bdcorporativo.scSAC';
+    protected $_schema = 'BDCORPORATIVO';
     protected $_name = 'tbFonecedorExterior';
 
     public function __construct($id = null, $nome = null, $endereco = null, $pais = null)

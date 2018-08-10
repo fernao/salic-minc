@@ -1,24 +1,13 @@
 <?php
-/**
- * DAO tbArquivoImagem
- * @author emanuel.sampaio - Politec
- * @since 19/02/2011
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2011 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 
 class tbArquivoImagem extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "BDCORPORATIVO";
-    protected $_schema = "BDCORPORATIVO.scCorp";
+    protected $_schema = "BDCORPORATIVO";
     protected $_name   = "tbArquivoImagem";
 
 
     /**
-     * M�todo para buscar um arquivo bin�rio pelo seu id
+     * M�todo para buscar um arquivo binário pelo seu id
      * @access public
      * @param integer $idArquivo
      * @return array
@@ -32,11 +21,10 @@ class tbArquivoImagem extends MinC_Db_Table_Abstract
         $select->where("idArquivo = ?", $idArquivo);
 
         return $this->fetchRow($select);
-    } // fecha m�todo buscarDados()
+    }
 
 
     /**
-     * M�todo para cadastrar
      * @access public
      * @param array $dados
      * @return integer (retorna o �ltimo id cadastrado)
@@ -44,7 +32,7 @@ class tbArquivoImagem extends MinC_Db_Table_Abstract
     public function cadastrarDados($dados)
     {
         return $this->insert($dados);
-    } // fecha m�todo cadastrarDados()
+    }
 
     
     
@@ -58,7 +46,6 @@ class tbArquivoImagem extends MinC_Db_Table_Abstract
 
 
     /**
-     * M�todo para alterar
      * @access public
      * @param array $dados
      * @param integer $where
@@ -68,11 +55,10 @@ class tbArquivoImagem extends MinC_Db_Table_Abstract
     {
         $where = "idArquivo = " . $where;
         return $this->update($dados, $where);
-    } // fecha m�todo alterarDados()
+    }
 
 
     /**
-     * M�todo para excluir
      * @access public
      * @param integer $where
      * @return integer (quantidade de registros exclu�dos)
@@ -81,7 +67,7 @@ class tbArquivoImagem extends MinC_Db_Table_Abstract
     {
         $where = "idArquivo = " . $where;
         return $this->delete($where);
-    } // fecha m�todo excluirDados()
+    }
 
 
     public function buscarArquivoMarca($where=array(), $order=array(), $tamanho=-1, $inicio=-1)
@@ -288,4 +274,4 @@ class tbArquivoImagem extends MinC_Db_Table_Abstract
 
         return $this->fetchAll($slct);
     }
-} // fecha class
+}

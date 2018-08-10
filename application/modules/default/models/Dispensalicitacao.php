@@ -1,19 +1,9 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- * Description of Dispensalicitacao.php
- *
- * @author guilherme
- */
 class Dispensalicitacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'bdcorporativo';
     protected $_name    = 'tbDispensaLicitacao';
-    protected $_schema  = 'bdcorporativo.scSAC';
+    protected $_schema  = 'BDCORPORATIVO';
 
     public function inserirDispensaLicitacao($data)
     {

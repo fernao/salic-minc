@@ -2,8 +2,6 @@
 
 class Natureza extends MinC_Db_Table_Abstract
 {
-    //protected $_name = 'AGENTE.dbo.Natureza';
-    protected $_banco = 'AGENTES';
     protected $_name  = 'Natureza';
     protected $_schema = 'AGENTES';
 
@@ -29,7 +27,6 @@ class Natureza extends MinC_Db_Table_Abstract
     }
 
     /**
-     * M�todo para alterar
      * @access public
      * @param array $dados
      * @param integer $where
@@ -39,7 +36,7 @@ class Natureza extends MinC_Db_Table_Abstract
     {
         $where = "idNatureza = " . $idNatureza;
         return $this->update($dados, $where);
-    } // fecha m�todo alterarDados()
+    }
 
     public function pesquisaCEPIM($cnpjcpf)
     {

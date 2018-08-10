@@ -1,8 +1,7 @@
 <?php
 class tbPauta extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "BDCORPORATIVO";
-    protected $_schema = "BDCORPORATIVO.scSAC";
+    protected $_schema = "BDCORPORATIVO";
     protected $_name = "tbPauta";
 
     public function buscarProjetosAvaliados($where=array(), $order=array(), $tamanho=-1, $inicio=-1, $count=false, $bln_readequacao=false)

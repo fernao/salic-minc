@@ -1,14 +1,7 @@
 <?php
-/**
- * DAO tbDistribuicaoProduto
- * @since 16/03/2011
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 
 class tbDistribuicaoProduto extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "SAC";
     protected $_schema = "SAC";
     protected $_name   = "tbDistribuicaoProduto";
 

@@ -1,19 +1,10 @@
 <?php
-/*
- * Classe: EditalComposi��o
- * Modulo: Editais
- * Criado por: Emanuel Melo
- */
+
 class tbCriteriosAvaliacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
     protected $_name = 'tbCriteriosAvaliacao';
     protected $_schema  = 'SAC';
-    /*
-     * Metodo: buscarComposicaoEdital
-     * Entrada: void
-     * Saida: Array de Composi��es
-    */
+
     public function buscarCriteriosAvaliacao($where=array())
     {
         $select = $this->select();

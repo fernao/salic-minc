@@ -1,9 +1,9 @@
 <?php
+
 class ConfigurarPagamentoParecerista extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbConfigurarPagamento';
     protected $_schema = 'SAC';
-    protected $_banco = 'SAC';
 
     public function buscarConfiguracoes($where = array())
     {

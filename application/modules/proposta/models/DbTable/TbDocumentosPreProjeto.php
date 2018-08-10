@@ -1,21 +1,8 @@
 <?php
 
-/**
- * Class Proposta_Model_DbTable_TbDocumentosPreProjeto
- *
- * @name Proposta_Model_DbTable_TbDocumentosPreProjeto
- * @package Modules/Agente
- * @subpackage Models/DbTable
- *
- * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
- * @since 26/09/2016
- *
- * @link http://salic.cultura.gov.br
- */
 class Proposta_Model_DbTable_TbDocumentosPreProjeto extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = "sac";
-    protected $_schema  = "sac";
+    protected $_schema  = "SAC";
     protected $_name = 'tbdocumentospreprojeto';
     protected $_primary = 'idDocumentosPreprojetos';
 

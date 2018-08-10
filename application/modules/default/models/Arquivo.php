@@ -4,16 +4,10 @@
  * and open the template in the editor.
  */
 
-/**
- * Description of Arquivo
- *
- * @author 01610881125
- */
 class Arquivo extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbArquivo';
-    protected $_schema = 'BDCORPORATIVO.scCorp';
-    protected $_banco = 'BDCORPORATIVO';
+    protected $_schema = 'BDCORPORATIVO';
 
     /**
      * Insere arquvos de Marca

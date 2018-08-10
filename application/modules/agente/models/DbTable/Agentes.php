@@ -1,37 +1,7 @@
 <?php
 
-/**
- * Class Agente_Model_DbTable_Agentes
- *
- * @name Agente_Model_DbTable_Agentes
- * @package Modules/Agente
- * @subpackage Models/DbTable
- * @version $Id$
- *
- * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
- * @since 01/09/2016
- *
- * @link http://salic.cultura.gov.br
- *
-    idAgente
-    CNPJCPF
-    CNPJCPFSuperior
-    TipoPessoa
-    DtCadastro
-    DtAtualizacao
-    DtValidade
-    Status
-    Usuario
- */
 class Agente_Model_DbTable_Agentes extends MinC_Db_Table_Abstract
 {
-    /**
-     * _banco
-     *
-     * @var bool
-     * @access protected
-     */
-    protected $_banco = 'agentes';
 
     /**
      * _name

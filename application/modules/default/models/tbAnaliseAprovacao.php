@@ -1,15 +1,7 @@
 <?php
-/**
- * DAO tbAnaliseAprovacao
- * @author jefferson.silva - XTI
- * @since 18/09/2013
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 
 class tbAnaliseAprovacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "SAC";
     protected $_schema = "SAC";
     protected $_name   = "tbAnaliseAprovacao";
 

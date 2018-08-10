@@ -1,9 +1,8 @@
 <?php
 class Cotacaoxplanilhaaprovacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'bdcorporativo';
     protected $_name    = 'tbCotacaoxPlanilhaAprovacao';
-    protected $_schema  = 'scSAC';
+    protected $_schema  = 'bdcorporativo';
 
     public function inserirCotacaoxPlanilhaAprovacao($data)
     {

@@ -3,7 +3,6 @@ class PagarParecerista extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbPagarParecerista';
     protected $_schema = 'SAC';
-    protected $_banco = 'SAC';
 
     public function buscarPagamentos($where = array())
     {

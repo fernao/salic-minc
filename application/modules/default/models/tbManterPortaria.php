@@ -1,19 +1,11 @@
 <?php
-/**
- * DAO tbManterPortaria
- * @since 08/10/2014
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 
 class tbManterPortaria extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "SAC";
     protected $_schema = "SAC";
     protected $_name = "tbManterPortaria";
 
     /**
-     * M�todo para cadastrar
      * @access public
      * @param array $dados
      * @return integer (retorna o �ltimo id cadastrado)
@@ -23,9 +15,7 @@ class tbManterPortaria extends MinC_Db_Table_Abstract
         return $this->insert($dados);
     }
 
-
     /**
-     * M�todo para alterar
      * @access public
      * @param array $dados
      * @param integer $where
@@ -69,7 +59,6 @@ class tbManterPortaria extends MinC_Db_Table_Abstract
             $select->limit($tamanho, $tmpInicio);
         }
 
-        
         return $this->fetchAll($select);
     }
 }

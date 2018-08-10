@@ -1,19 +1,9 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- * Description of Licitacao
- *
- * @author guilherme
- */
 class Licitacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'bdcorporativo';
     protected $_name    = 'tbLicitacao';
-    protected $_schema  = 'bdcorporativo.scSAC';
+    protected $_schema  = 'BDCORPORATIVO';
 
     public function inserirLicitacao($data)
     {

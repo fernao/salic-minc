@@ -6,9 +6,8 @@
  */
 class Arquivocotacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'BDCORPORATIVO';
     protected $_name    = 'tbArquivoCotacao';
-    protected $_schema  = 'BDCORPORATIVO.scSAC';
+    protected $_schema  = 'BDCORPORATIVO';
 
     public function buscarArquivos($idcotacao)
     {

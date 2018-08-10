@@ -2,7 +2,7 @@
 
 class TbTipoEncaminhamento extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
+    protected $_schema = 'SAC';
     protected $_name = 'tbTipoEncaminhamento';
 
     const DESISTENCIA_DO_PRAZO_RECURSAL = 0;

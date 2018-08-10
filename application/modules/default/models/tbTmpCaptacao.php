@@ -1,17 +1,7 @@
 <?php
-/**
- * DAO tbTmpCaptacao
- * @author emanuel.sampaio - Politec
- * @since 17/02/2011
- * @package application
- * @subpackage application.model
- * @link http://www.cultura.gov.br
- */
 
 class tbTmpCaptacao extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco   = "SAC";
     protected $_schema  = "SAC";
     protected $_name    = "tbTmpCaptacao";
 

@@ -8,7 +8,6 @@ class AvaliacaoFiscalizacao extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbAvaliacaoFiscalizacao';
     protected $_schema = 'SAC';
-    protected $_banco = 'SAC';
 
     public function buscaAvaliacaoFiscalizacao($idRelatorioFiscalizacao)
     {

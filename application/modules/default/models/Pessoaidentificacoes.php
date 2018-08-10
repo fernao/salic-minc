@@ -1,13 +1,7 @@
 <?php
 
-/**
- * Description of Pessoa_Identificacoes
- *
- * @author tisomar
- */
 class Pessoaidentificacoes extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "TABELAS";
     protected $_name = "Pessoa_Identificacoes";
     protected $_schema = 'TABELAS';
 

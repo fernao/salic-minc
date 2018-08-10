@@ -1,30 +1,12 @@
 <?php
 
-/**
- * Class Agente_Model_DbTable_TbCredenciamentoParecerista
- *
- * @name Agente_Model_DbTable_TbCredenciamentoParecerista
- * @package Modules/Agente
- * @subpackage Models/DbTable
- *
- * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
- * @since 05/10/2016
- *
- * @link http://salic.cultura.gov.br
- */
 class Agente_Model_DbTable_TbCredenciamentoParecerista extends MinC_Db_Table_Abstract
 {
     /**
      * @var string
      * @access protected
      */
-    protected $_banco = 'agentes';
-
-    /**
-     * @var string
-     * @access protected
-     */
-    protected $_schema = 'agentes';
+    protected $_schema = 'AGENTES';
 
     /**
      * @var string

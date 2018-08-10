@@ -1,12 +1,7 @@
 <?php
 
-/**
- * DAO tbReadequacaoXParecer
- * @since 13/03/2014
- */
 class Readequacao_Model_DbTable_TbReadequacaoXParecer extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "SAC";
     protected $_schema = "SAC";
     protected $_name = "tbReadequacaoXParecer";
 

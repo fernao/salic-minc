@@ -3,8 +3,7 @@
 class PlanoDeDivulgacao extends MinC_Db_Table_Abstract
 {
 
-    //protected $_name = 'SAC.dbo.PlanoDeDivulgacao';
-    protected $_banco = 'sac';
+    protected $_schema = 'SAC';
     protected $_name = 'PlanoDeDivulgacao';
 
     public function buscarPlanoDivulgacao($idprojeto)

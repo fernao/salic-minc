@@ -1,7 +1,7 @@
 <?php
+
 class Proponente extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
     protected $_name = 'Projetos';
     protected $_schema = 'SAC';
     protected $_primary = 'idProjeto';

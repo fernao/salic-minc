@@ -1,15 +1,9 @@
 <?php
 
-/**
- * Description of Arquivolicitacao
- *
- * @author 01610881125
- */
 class Arquivolicitacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'BDCORPORATIVO';
     protected $_name    = 'tbArquivoLicitacao';
-    protected $_schema  = 'BDCORPORATIVO.scSAC';
+    protected $_schema  = 'BDCORPORATIVO';
 
     public function buscarArquivos($idlicitacao)
     {

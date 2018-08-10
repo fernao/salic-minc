@@ -1,18 +1,8 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of VerificarSolicitacaodeReadequacoesDAO
- *
- * @author 01373930160
- */
 class VerificarSolicitacaodeReadequacoesDAO extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "SAC";
+    protected $_schema = "SAC";
     protected $_name = "Projetos";
     
 

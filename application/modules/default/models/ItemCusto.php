@@ -1,19 +1,9 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- * Description of ItemCusto
- *
- * @author 01610881125
- */
 class ItemCusto extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'bdcorporativo';
     protected $_name    = 'tbItemCusto';
-    protected $_schema  = 'scSAC';
+    protected $_schema  = 'BDCORPORATIVO';
 
     public function inserirItemCusto($data)
     {

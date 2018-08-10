@@ -2,8 +2,8 @@
 
 class fnUsuariosDoPerfil extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
-    protected $_name = 'dbo.fnUsuariosDoPerfil';
+    protected $_schema = 'SAC';
+    protected $_name = 'fnUsuariosDoPerfil';
 
     public function usuariosDoPerfil($perfilLogado, $idUsuarioLogado)
     {

@@ -1,18 +1,8 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of Vinculo
- *
- * @author tisomar
- */
 class Vinculo extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "AGENTES";
+    protected $_schema = "AGENTES";
     protected $_name = "tbVinculo";
 
     /**

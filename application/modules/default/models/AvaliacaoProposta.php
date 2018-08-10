@@ -6,7 +6,6 @@ class AvaliacaoProposta extends MinC_Db_Table_Abstract
     const CONFORMIDADE_OK_APROVADO = 1;
     const CONFORMIDADE_OK_PRE_ENVIADO = 9;
 
-    protected $_banco = "SAC";
     protected $_schema = "SAC";
     protected $_name = "tbAvaliacaoProposta";
 

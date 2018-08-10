@@ -1,27 +1,10 @@
 <?php
-/**
- * DAO tbAvaliacaoSubItemPlanoDistribuicao
- * @author emanuel.sampaio <emanuelonline@gmail.com>
- * @since 11/04/2012
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2012 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://salic.cultura.gov.br
- */
 
 class tbAvaliacaoSubItemPlanoDistribuicao extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco   = "BDCORPORATIVO";
-    protected $_schema  = "BDCORPORATIVO.scSAC";
+    protected $_schema  = "BDCORPORATIVO";
     protected $_name    = "tbAvaliacaoSubItemPlanoDistribuicao";
 
-
-    /**
-     * Busca as avali��es dos itens
-     * @access public
-     */
     public function buscarAvaliacao($idPlano, $idAvaliacao)
     {
         $select = $this->select();
@@ -40,5 +23,5 @@ class tbAvaliacaoSubItemPlanoDistribuicao extends MinC_Db_Table_Abstract
         $select->where('b.idAvaliacaoItemPedidoAlteracao = ?', $idAvaliacao);
 
         return $this->fetchRow($select);
-    } // fecha m�todo buscarLocaisAprovados()
-} // fecha class
+    }
+}

@@ -1,19 +1,8 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of Analisedeconteudo
- *
- * @author augusto
- */
 class Analisedeconteudo extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'sac';
-    protected $_schema = 'sac';
+    protected $_schema = 'SAC';
     protected $_name = 'tbAnaliseDeConteudo';
 
     public function dadosAnaliseconteudo($idpronac, $where = array())

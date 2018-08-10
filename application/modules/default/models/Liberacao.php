@@ -1,16 +1,9 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- * Description of Liberacao
- * @author 01610881125
- */
+
 class Liberacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
     protected $_schema = 'SAC';
     protected $_name = 'Liberacao';
-    protected $_base = 'SAC.dbo.Liberacao';
 
     public function liberacaoPorProjeto($idPronac)
     {

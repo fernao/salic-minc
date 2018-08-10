@@ -1,14 +1,7 @@
 <?php
-/**
- * DAO tbDocumentoAceitacao
- * @since 16/03/2011
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 
 class tbDocumentoAceitacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "SAC";
     protected $_schema = "SAC";
     protected $_name   = "tbDocumentoAceitacao";
 
@@ -21,16 +14,8 @@ class tbDocumentoAceitacao extends MinC_Db_Table_Abstract
     public function cadastrarDados($dados)
     {
         return $this->insert($dados);
-    } // fecha m�todo cadastrarDados()
+    }
 
-
-    /**
-     * M�todo para consultar os arquivos anexados
-     * @access public
-     * @param array $dados
-     * @param integer $where
-     * @return integer (quantidade de registros alterados)
-     */
     public function buscarDocumentosPronac($idpronac)
     {
         $select = $this->select();

@@ -7,8 +7,7 @@
  */
 class tbComunicados extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = 'sac';
-    protected $_schema = 'sac';
+    protected $_schema = 'SAC';
     protected $_name   = 'tbComunicados';
 
     public function init()

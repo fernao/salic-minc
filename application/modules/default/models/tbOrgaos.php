@@ -1,8 +1,7 @@
 <?php
 class tbOrgaos extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "tabelas";
-    protected $_schema = "tabelas";
+    protected $_schema = "TABELAS";
     protected $_name   = "Orgaos";
 
     public function orgaosXprojetos($idOrgao)

@@ -1,14 +1,9 @@
 <?php
-/**
- * Description of tbEncaminhamentoPrestacaoContas
- *
- * @author Emerson Silva
- */
+
 class tbEncaminhamentoPrestacaoContas extends MinC_Db_Table_Abstract
 {
     protected $_name   = 'tbEncaminhamentoPrestacaoContas';
-    protected $_schema = 'BDCORPORATIVO.scSAC';
-    protected $_banco  = 'BDCORPORATIVO';
+    protected $_schema  = 'BDCORPORATIVO';
 
     public function EncaminhamentoPrestacaoContas($idPronac)
     {

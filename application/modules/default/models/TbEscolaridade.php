@@ -7,9 +7,8 @@
  */
 class TbEscolaridade extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'Agentes';
     protected $_name = 'tbEscolaridade';
-    protected $_schema  = 'Agentes';
+    protected $_schema  = 'AGENTES';
 
 
     public function BuscarEscolaridades($idAgente)

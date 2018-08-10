@@ -3,8 +3,6 @@
 class vwDespacharProjeto extends MinC_Db_Table_Abstract
 {
 
-    /* dados da tabela */
-    protected $_banco = 'SAC';
     protected $_schema = 'SAC';
     protected $_name = 'vwDespacharProjeto';
 

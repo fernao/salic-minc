@@ -1,19 +1,9 @@
 <?php
-/**
- * DAO tbDistribuirParecer
- * @author pedro.gomes - XTI
- * @since 17/02/2011
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @link http://www.cultura.gov.br
- */
+
 
 
 class VerificacaoAGENTES extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco   = "AGENTES";
     protected $_schema  = "AGENTES";
     protected $_name    = "Verificacao";
 

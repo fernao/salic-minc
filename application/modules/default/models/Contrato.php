@@ -2,9 +2,8 @@
 
 class Contrato extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'bdcorporativo';
+    protected $_schema   = 'BDCORPORATIVO';
     protected $_name    = 'tbContrato';
-    protected $_schema  = 'bdcorporativo.scSAC';
 
     public function inserirContrato($data)
     {

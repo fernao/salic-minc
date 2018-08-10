@@ -1,22 +1,8 @@
 <?php
-/**
- * Class Proposta_Model_DbTable_PlanoDeDivulgacao
- *
- * @name Proposta_Model_DbTable_PlanoDeDivulgacao
- * @package Modules/Agente
- * @subpackage Models/DbTable
- * @version $Id$
- *
- * @link http://salic.cultura.gov.br
- *
- * @author  wouerner <wouerner@gmail.com>
- * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
- * @since 21/09/2016
- */
+
 class Proposta_Model_DbTable_PlanoDeDivulgacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'sac';
-    protected $_schema = 'sac';
+    protected $_schema = 'SAC';
     protected $_name  = 'planodedivulgacao';
     protected $_primary  = 'idPlanoDivulgacao';
 

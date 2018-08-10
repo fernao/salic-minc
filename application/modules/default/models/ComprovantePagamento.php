@@ -16,8 +16,7 @@ class ComprovantePagamento extends MinC_Db_Table_Abstract
     protected $comprovanteNumero;
     protected $comprovanteJustificativa;
 
-    protected $_banco = 'bdcorporativo';
-    protected $_schema = 'bdcorporativo.scSAC';
+    protected $_schema = 'BDCORPORATIVO';
     protected $_name = 'tbComprovantePagamento';
 
     public function __construct(

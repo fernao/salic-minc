@@ -3,7 +3,6 @@ class RelatorioFiscalizacao extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbRelatorioFiscalizacao';
     protected $_schema = 'SAC';
-    protected $_banco = 'SAC';
 
     public function buscaRelatorioFiscalizacao($idFiscalizacao)
     {

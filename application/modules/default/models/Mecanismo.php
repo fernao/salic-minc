@@ -1,17 +1,7 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- * Description of Mecanismo
- *
- * @author 01610881125
- */
 class Mecanismo extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'SAC';
     protected $_name    = 'Mecanismo';
     protected $_schema  = 'SAC';
 

@@ -11,9 +11,8 @@
  */
 class Dispensalicitacaoxplanilhaaprovacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'bdcorporativo';
     protected $_name    = 'tbDispensaLicitacaoxPlanilhaAprovacao';
-    protected $_schema  = 'scSAC';
+    protected $_schema  = 'BDCORPORATIVO';
 
     public function inserirDispensaLicitacaoxPlanilhaAprovacao($data)
     {

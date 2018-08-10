@@ -1,18 +1,11 @@
 <?php
-/**
- * Description of Vinculo
- *
- * @author tisomar
- */
+
 class tbDocumento extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "BDCORPORATIVO";
-    protected $_schema = 'BDCORPORATIVO.scCorp';
+    protected $_schema = 'BDCORPORATIVO';
     protected $_name = "tbDocumento";
 
-
     /**
-     * Metodo para cadastrar
      * @access public
      * @param array $dados
      * @return integer (retorna o ultimo id cadastrado)
@@ -20,7 +13,7 @@ class tbDocumento extends MinC_Db_Table_Abstract
     public function cadastrarDados($dados)
     {
         return $this->insert($dados);
-    } // fecha metodo cadastrarDados()
+    }
 
 
     /**

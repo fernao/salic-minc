@@ -1,12 +1,10 @@
 <?php
 class tbDiligencia extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = "SAC";
     protected $_schema  = "SAC";
     protected $_name    = "tbDiligencia";
 
     /**
-    * M�todo para cadastrar
     * @access public
     * @param array $dados
     * @return integer (retorna o �ltimo id cadastrado)
@@ -17,7 +15,6 @@ class tbDiligencia extends MinC_Db_Table_Abstract
     }
 
     /**
-     * M�todo para buscarDados
      * @access public
      * @param array $dados
      * @return array
@@ -35,7 +32,7 @@ class tbDiligencia extends MinC_Db_Table_Abstract
         $select->where("stEstado = 0");
         $select->where("DtResposta IS NULL");
         return $this->fetchAll($select);
-    } // fecha m�todo buscarDados()
+    }
 
     public function buscaDiligencia($idPronac=null, $idProduto=null, $idSolicitante=null, $idDiligencia=null)
     {
@@ -109,9 +106,7 @@ class tbDiligencia extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-
     /**
-     * M�todo para alterar
      * @access public
      * @param array $dados
      * @param integer $where
@@ -125,7 +120,6 @@ class tbDiligencia extends MinC_Db_Table_Abstract
 
 
     /**
-     * M�todo para excluir
      * @access public
      * @param integer $where
      * @return integer (quantidade de registros exclu�dos)
@@ -134,11 +128,10 @@ class tbDiligencia extends MinC_Db_Table_Abstract
     {
         $where = "idDistribuirParecer = " . $where;
         return $this->delete($where);
-    } // fecha m�todo excluirDados()
-
+    }
 
     /**
-     * Fun��o para checar o status da dilig�ncia
+     * Função para checar o status da diligência
      */
     public function fnChecarDiligencia($idPronac)
     {
@@ -147,5 +140,5 @@ class tbDiligencia extends MinC_Db_Table_Abstract
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo fnChecarDiligencia()
+    }
 }

@@ -1,13 +1,7 @@
 <?php
 
-/**
- * Modelo que representa a tabela SAC.dbo.tbComunicados
- *
- * @author PEDRO GOMES
- */
 class tbAgentesxVerificacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = 'AGENTES';
     protected $_schema = 'AGENTES';
     protected $_name   = 'tbAgentesxVerificacao';
 

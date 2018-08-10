@@ -1,19 +1,7 @@
 <?php
-/**
- * DAO tbProposta
- * @author emanuel.sampaio <emanuelonline@gmail.com>
- * @since 17/04/2012
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2012 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://salic.cultura.gov.br
- */
 
 class tbProposta extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco   = "SAC";
     protected $_schema  = "SAC";
     protected $_name    = "tbProposta";
 

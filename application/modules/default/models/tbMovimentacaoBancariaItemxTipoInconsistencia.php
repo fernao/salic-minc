@@ -2,13 +2,10 @@
 
 class tbMovimentacaoBancariaItemxTipoInconsistencia extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco   = "SAC";
-    protected $_schema  = "dbo";
+    protected $_schema  = "SAC";
     protected $_name    = "tbMovimentacaoBancariaItemxTipoInconsistencia";
 
     /**
-     * M�todo para cadastrar
      * @access public
      * @param array $dados
      * @return integer (retorna o �ltimo id cadastrado)
@@ -19,7 +16,6 @@ class tbMovimentacaoBancariaItemxTipoInconsistencia extends MinC_Db_Table_Abstra
     } 
 
     /**
-     * M�todo para excluir
      * @access public
      * @param integer $where
      * @return integer (quantidade de registros exclu�dos)

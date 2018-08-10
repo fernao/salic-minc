@@ -1,13 +1,7 @@
 <?php
 
-/**
- * Description of aprovacao
- *
- * @author augusto
- */
 class Aprovacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
     protected $_name = 'Aprovacao';
     protected $_schema = 'SAC';
 

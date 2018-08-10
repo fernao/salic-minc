@@ -1,12 +1,8 @@
 <?php 
-/*
- * Classe: Edital x Fluxo
- * Modulo: Editais
- * Criado por: Emanuel Melo
- */
+
 class tbEditalFluxo extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'SAC';
+    protected $_schema = 'SAC';
     protected $_name = 'tbEditalFluxo';
 
     public function salvarFluxoEdital($dados)

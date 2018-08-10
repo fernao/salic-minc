@@ -2,15 +2,10 @@
 
 class tbMovimentacaoBancaria extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco   = "SAC";
-    protected $_schema  = "dbo";
+    protected $_schema  = "SAC";
     protected $_name    = "tbMovimentacaoBancaria";
 
-
-
     /**
-     * M�todo para buscar
      * @access public
      * @param string $pronac
      * @param boolean $conta_rejeitada
@@ -335,7 +330,6 @@ class tbMovimentacaoBancaria extends MinC_Db_Table_Abstract
     } 
 
     /**
-     * M�todo para cadastrar
      * @access public
      * @param array $dados
      * @return integer (retorna o �ltimo id cadastrado)
@@ -356,10 +350,9 @@ class tbMovimentacaoBancaria extends MinC_Db_Table_Abstract
     {
         $where = "idMovimentacaoBancaria = " . $where;
         return $this->update($dados, $where);
-    } // fecha m�todo alterarDados()
+    }
 
     /**
-     * M�todo para excluir
      * @access public
      * @param integer $where
      * @return integer (quantidade de registros exclu�dos)

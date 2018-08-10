@@ -1,22 +1,12 @@
 <?php
 
-/**
- * DAO tbTmpInconsistenciaCaptacao
- * @author emanuel.sampaio - Politec
- * @since 17/02/2011
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 class tbTmpInconsistenciaCaptacao extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
-    protected $_banco = "SAC";
     protected $_schema = "SAC";
     protected $_name = "tbTmpInconsistenciaCaptacao";
     protected $_primary = "idTipoInconsistencia";
 
     /**
-     * M�todo para cadastrar
      * @access public
      * @param array $dados
      * @return integer (retorna o �ltimo id cadastrado)
@@ -28,7 +18,6 @@ class tbTmpInconsistenciaCaptacao extends MinC_Db_Table_Abstract
 
 
     /**
-     * M�todo para excluir
      * @access public
      * @param integer $where
      * @return integer (quantidade de registros exclu�dos)
@@ -39,9 +28,6 @@ class tbTmpInconsistenciaCaptacao extends MinC_Db_Table_Abstract
         return $this->delete($where);
     }
 
-    /**
-     *
-     */
     public function buscarInconsistenciasPorCaptacao($idCaptacao)
     {
         $sqlClone = $this->select()->setIntegrityCheck(false)->from($this->_name, array(new Zend_Db_Expr('MAX(idTipoInconsistencia)')))

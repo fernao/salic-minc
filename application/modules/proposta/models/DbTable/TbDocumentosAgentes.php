@@ -14,15 +14,6 @@
  */
 class Proposta_Model_DbTable_TbDocumentosAgentes extends MinC_Db_Table_Abstract
 {
-
-    /**
-     * _banco
-     *
-     * @var bool
-     * @access protected
-     */
-    protected $_banco = 'sac';
-
     /**
      * _name
      *

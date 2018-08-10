@@ -1,14 +1,9 @@
 <?php
-/**
- * Description of Mensagemprojeto
- *
- * @author augusto
- */
+
 class Mensagemprojeto extends MinC_Db_Table_Abstract
 {
-    protected $_banco = 'BDCORPORATIVO';
-    protected $_name = 'BDCORPORATIVO.tbmensagemprojeto';
-    protected $_schema = 'scSAC';
+    protected $_name = 'tbmensagemprojeto';
+    protected $_schema = 'BDCORPORATIVO';
 
     public function buscarMensagemProjeto($where = array(), $orwhere=array())
     {

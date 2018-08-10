@@ -1,18 +1,7 @@
 <?php
 
-/**
- * Classe Usu�rio DAO
- * @author Equipe RUP - Politec
- * @since 12/07/2010
- * @version 1.0
- * @package application
- * @subpackage application.model.DAO
- * @copyright � 2010 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 class UsuarioDAO extends MinC_Db_Table_Abstract
 {
-    protected $_banco = "tabelas";
     protected $_name = 'usuarios';
     protected $_schema = 'tabelas';
 

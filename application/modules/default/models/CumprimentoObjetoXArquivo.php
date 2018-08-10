@@ -6,7 +6,6 @@ class CumprimentoObjetoXArquivo extends MinC_Db_Table_Abstract
     const FRUICAO_DE_DEMOCRATIZACAO_AO_ACESSO_PUBLICO = 1;
     const IMPACTOS_AMBIENTAIS = 2;
 
-    protected $_banco = "SAC";
     protected $_schema = "SAC";
     protected $_name = "tbCumprimentoObjetoXArquivo";
 

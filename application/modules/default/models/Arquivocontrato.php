@@ -1,14 +1,9 @@
 <?php
-/**
- * Description of Arquivocontrato
- *
- * @author 01610881125
- */
+
 class Arquivocontrato extends MinC_Db_Table_Abstract
 {
-    protected $_banco   = 'BDCORPORATIVO';
     protected $_name    = 'tbArquivoContrato';
-    protected $_schema  = 'BDCORPORATIVO.scSAC';
+    protected $_schema  = 'BDCORPORATIVO';
 
     public function buscarArquivos($idcontrato)
     {

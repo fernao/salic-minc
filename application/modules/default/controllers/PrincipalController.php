@@ -142,7 +142,7 @@ class PrincipalController extends MinC_Controller_Action_Abstract
      */
     public function buscarprojetoAction()
     {
-        $Pronac = (int)$this->_request->getParam("Pronac");
+        $Pronac = $this->_request->getParam("Pronac");
 
         if (empty($Pronac)) {
             parent::message("Informe o Pronac.", "principal/index", "ERROR");

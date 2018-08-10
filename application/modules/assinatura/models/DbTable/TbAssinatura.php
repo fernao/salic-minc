@@ -316,6 +316,13 @@ class Assinatura_Model_DbTable_TbAssinatura extends MinC_Db_Table_Abstract
         );
 
         $query->joinInner(
+            array('Orgaos'),
+            "Orgaos.Codigo = Projetos.Orgao",
+            [],
+            $this->_schema
+        );
+
+        $query->joinInner(
             array('tbDocumentoAssinatura' => 'tbDocumentoAssinatura'),
             "tbDocumentoAssinatura.IdPRONAC = Projetos.IdPRONAC",
             array("tbDocumentoAssinatura.idTipoDoAtoAdministrativo"),
@@ -335,7 +342,10 @@ class Assinatura_Model_DbTable_TbAssinatura extends MinC_Db_Table_Abstract
              AND TbAtoAdministrativo.idPerfilDoAssinante = {$this->modeloTbAtoAdministrativo->getIdPerfilDoAssinante()}
              AND TbAtoAdministrativo.idOrgaoSuperiorDoAssinante = {$this->modeloTbAtoAdministrativo->getIdOrgaoSuperiorDoAssinante()}
              AND TbAtoAdministrativo.idTipoDoAto = tbDocumentoAssinatura.idTipoDoAtoAdministrativo",
-            array('idOrdemDaAssinatura'),
+            [
+                'idOrdemDaAssinatura',
+                'idAtoAdministrativo'
+            ],
             $this->_schema
         );
 
@@ -354,6 +364,7 @@ class Assinatura_Model_DbTable_TbAssinatura extends MinC_Db_Table_Abstract
         if ($this->modeloTbAtoAdministrativo->getIdTipoDoAto()) {
             $query->where("tbDocumentoAssinatura.idTipoDoAtoAdministrativo in (?)", $this->modeloTbAtoAdministrativo->getIdTipoDoAto());
         }
+        $query->where("Orgaos.idSecretaria = ?", $this->modeloTbAtoAdministrativo->getIdOrgaoSuperiorDoAssinante());
 
         return $query;
     }

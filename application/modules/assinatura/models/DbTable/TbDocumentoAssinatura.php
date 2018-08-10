@@ -194,6 +194,13 @@ class Assinatura_Model_DbTable_TbDocumentoAssinatura extends MinC_Db_Table_Abstr
         );
 
         $query->joinInner(
+            array('Orgaos'),
+            "Orgaos.Codigo = Projetos.Orgao",
+            [],
+            $this->_schema
+        );
+
+        $query->joinInner(
             array('tbDocumentoAssinatura' => 'tbDocumentoAssinatura'),
             "tbDocumentoAssinatura.IdPRONAC = Projetos.IdPRONAC",
             array(
@@ -235,6 +242,7 @@ class Assinatura_Model_DbTable_TbDocumentoAssinatura extends MinC_Db_Table_Abstr
         if ($idTipoDoAtoAdministrativos) {
             $query->where("tbDocumentoAssinatura.idTipoDoAtoAdministrativo in (?)", $idTipoDoAtoAdministrativos);
         }
+        $query->where("Orgaos.idSecretaria = ?", $idOrgaoSuperiorDoAssinante);
 
         $ordenacao[] = 'possuiAssinatura asc';
         $query->order($ordenacao);

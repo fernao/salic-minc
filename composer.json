@@ -39,6 +39,11 @@
             "Application\\Modules\\Foo\\": "./application/modules/foo/",
             "Application\\Modules\\Foo\\Service\\": "./application/modules/foo/service/",
             "Application\\Modules\\Foo\\Service\\Foo\\": "./application/modules/foo/service/foo/",
+            "Application\\Modules\\Parecer\\": "./application/modules/parecer/",
+            "Application\\Modules\\Parecer\\Service\\": "./application/modules/parecer/service/",
+            "Application\\Modules\\Parecer\\Service\\Assinatura\\": "./application/modules/parecer/service/assinatura/",
+            "Application\\Modules\\Parecer\\Service\\Assinatura\\AnaliseInicial\\": "./application/modules/parecer/service/assinatura/analise-inicial/",
+            "Application\\Modules\\Parecer\\Service\\Assinatura\\AnaliseInicial\\Acao\\": "./application/modules/parecer/service/assinatura/analise-inicial/acao/",
             "MinC\\Assinatura\\": "./library/MinC/Assinatura/",
             "MinC\\Db\\Model\\": "./library/MinC/Db/Model/"
         }

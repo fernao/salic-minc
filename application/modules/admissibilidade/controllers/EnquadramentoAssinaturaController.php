@@ -4,6 +4,7 @@ class Admissibilidade_EnquadramentoAssinaturaController extends Assinatura_Gener
 {
     private $idTipoDoAtoAdministrativo;
     private $grupoAtivo;
+    private $codOrgaoSuperior;
 
     private function validarPerfis()
     {
@@ -27,6 +28,10 @@ class Admissibilidade_EnquadramentoAssinaturaController extends Assinatura_Gener
         $this->auth = Zend_Auth::getInstance();
         $this->grupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         $this->idTipoDoAtoAdministrativo = Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ENQUADRAMENTO;
+
+        $orgao = new Orgaos();
+        $dadosOrgao = $orgao->obterOrgaoSuperior($this->grupoAtivo->codOrgao);
+        $this->codOrgaoSuperior = $dadosOrgao['Codigo'];
     }
 
     public function indexAction()
@@ -39,21 +44,51 @@ class Admissibilidade_EnquadramentoAssinaturaController extends Assinatura_Gener
     {
         $this->validarPerfis();
         $this->view->idUsuarioLogado = $this->auth->getIdentity()->usu_codigo;
-        $documentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
 
-        $this->view->dados = $documentoAssinatura->obterProjetosComAssinaturasAbertas(
-            $this->grupoAtivo->codOrgao,
-            $this->grupoAtivo->codGrupo,
-            $this->auth->getIdentity()->usu_org_max_superior,
-            $this->idTipoDoAtoAdministrativo
+
+//        $start = $this->getRequest()->getParam('start');
+//        $length = $this->getRequest()->getParam('length');
+//        $draw = (int)$this->getRequest()->getParam('draw');
+//        $search = $this->getRequest()->getParam('search');
+//        $order = $this->getRequest()->getParam('order');
+//        $columns = $this->getRequest()->getParam('columns');
+//
+//        $get = Zend_Registry::get('get');
+
+        $tbAssinaturaDbTable = new Assinatura_Model_DbTable_TbAssinatura(
+//            [
+//            'search' => $search,
+//            'start' => $start,
+//            'length' => $length,
+//            'order' => $order,
+//            'columns' => $columns
+//            ]
         );
+
+        $tbAssinaturaDbTable->preencherModeloAtoAdministrativo([
+            'idOrgaoDoAssinante' => $this->grupoAtivo->codOrgao,
+            'idPerfilDoAssinante' => $this->grupoAtivo->codGrupo,
+            'idOrgaoSuperiorDoAssinante' => $this->auth->getIdentity()->usu_org_max_superior,
+            'idTipoDoAto' => $this->idTipoDoAtoAdministrativo
+        ]);
+
+        $this->view->dados = $tbAssinaturaDbTable->obterAssinaturasDisponiveis();
+
+//        $documentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
+
+//        $this->view->dados = $documentoAssinatura->obterProjetosComAssinaturasAbertas(
+//            $this->grupoAtivo->codOrgao,
+//            $this->grupoAtivo->codGrupo,
+//            $this->codOrgaoSuperior,
+//            $this->idTipoDoAtoAdministrativo
+//        );
 
         $this->view->codGrupo = $this->grupoAtivo->codGrupo;
 
         $objTbAtoAdministrativo = new Assinatura_Model_DbTable_TbAtoAdministrativo();
         $this->view->quantidade_minima_assinaturas = $objTbAtoAdministrativo->obterQuantidadeMinimaAssinaturas(
             $this->idTipoDoAtoAdministrativo,
-            $this->auth->getIdentity()->usu_org_max_superior
+            $this->codOrgaoSuperior
         );
         $this->view->idTipoDoAtoAdministrativo = $this->idTipoDoAtoAdministrativo;
     }

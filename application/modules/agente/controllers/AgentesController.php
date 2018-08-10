@@ -129,6 +129,9 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
         //Perfis incluidos para cadastro de Agentes no ato do cadastro do projeto FNC.
         $PermissoesGrupo[] = 103; // Coordenador de Analise
         $PermissoesGrupo[] = 142; // Coordenador de Convenios
+        $PermissoesGrupo[] = Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE;
+        $PermissoesGrupo[] = Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE;
+        $PermissoesGrupo[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE;
 
         $params = $this->getRequest()->getParams();
         $params = array_change_key_case($params);
@@ -3118,8 +3121,6 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
 
     public function formUsuarioAgenteAction()
     {
-        $this->view->menuLateral = true;
-
         $idAgente = $this->_request->getParam("id");
 
         try {
@@ -3131,6 +3132,8 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
             if ($this->GrupoAtivoSalic == Autenticacao_Model_Grupos::PROPONENTE) {
                 throw new Exception("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar esta funcionalidade");
             }
+
+            $this->autenticacao();
 
             $dados = Agente_Model_ManterAgentesDAO::buscarAgentes(null, null, $idAgente);
 
@@ -3148,19 +3151,19 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
                 $this->view->responsaveis = $dirigentes;
             } else {
                 $sgcAcesso = new Autenticacao_Model_Sgcacesso();
-                $responsavel = $sgcAcesso->buscarUsuario(['Cpf = ?' => $dados[0]->cnpjcpf])->current();
+                $objResponsavel = $sgcAcesso->buscarUsuario(['Cpf = ?' => $dados[0]->cnpjcpf])->current();
 
                 $responsaveis = [];
                 $responsavel = new stdClass();
-                $responsavel->idResponsavel = $responsavel->IdUsuario;
-                $responsavel->cpfResponsavel = $responsavel->cpf;
-                $responsavel->nomeResponsavel = $responsavel->nome;
+                $responsavel->idResponsavel = $objResponsavel->IdUsuario;
+                $responsavel->cpfResponsavel = $objResponsavel->cpf;
+                $responsavel->nomeResponsavel = $objResponsavel->nome;
                 $responsaveis[]  = $responsavel;
                 $this->view->responsaveis = $responsaveis;
             }
             $this->view->dados = $dados;
         } catch (Exception $e) {
-            parent::message($e->getMessage(), "agente/agentes/agentes/id/" . $idAgente, "ERROR");
+            parent::message($e->getMessage(), "/default/principal/", "ERROR");
         }
     }
 
@@ -3197,9 +3200,9 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
             $dados['Usuario'] = $idResponsavel;
             $dbTableAgentes->update($dados, $where);
 
-            parent::message("Agente atualizado com sucesso!", "agente/agentes/form-usuario-agente/id/" . $idAgente, "CONFIRM");
+            parent::message("Agente atualizado com sucesso!", "/agente/agentes/form-usuario-agente/id/" . $idAgente, "CONFIRM");
         } catch (Exception $e) {
-            parent::message($e->getMessage(), "agente/agentes/incluiragente", "ERROR");
+            parent::message($e->getMessage(), "/agente/agentes/form-usuario-agente/id/" . $idAgente, "ERROR");
         }
     }
 }

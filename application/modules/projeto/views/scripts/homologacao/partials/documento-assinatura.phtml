@@ -8,7 +8,7 @@
             MINIST&Eacute;RIO DA CULTURA
         </div>
         <div class="center-align" style="font-size: 23px;">
-            <?php if ($this->arrValue['idOrgaoSuperior'] == Orgaos::ORGAO_SUPERIOR_SAV) : ?>
+            <?php if ((int)$this->orgaoSuperior == (int)\Orgaos::ORGAO_SUPERIOR_SEFIC): ?>
                 <b>SECRETARIA DO AUDIOVISUAL</b>
             <?php else : ?>
                 <b>SECRETARIA DE FOMENTO E INCENTIVO &Agrave; CULTURA</b>

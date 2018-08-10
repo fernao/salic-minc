@@ -123,8 +123,9 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
         $dadoPortaria = $db->fetchRow($NrPortaria);
 
         # Verificar Percentual de capta��o
-        $PercentualCaptado = new Zend_Db_Expr("SELECT SAC.dbo.fnPercentualCaptado ($dadosProjeto->AnoProjeto,$dadosProjeto->Sequencial) AS dado");
+        $PercentualCaptado = new Zend_Db_Expr("SELECT SAC.dbo.fnPercentualCaptado ('$dadosProjeto->AnoProjeto','$dadosProjeto->Sequencial') AS dado");
         $PercentualCaptado = $db->fetchRow($PercentualCaptado);
+        
 
         $PercentualCaptado = ($PercentualCaptado->dado) ? $PercentualCaptado->dado : 0;
         $Readequacao_Model_DbTable_TbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
@@ -159,7 +160,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
             }            
         }
         // Future Flag
-        $ReadequacaoTransferenciaRecursos = false;
+        $ReadequacaoTransferenciaRecursos = 0;
         
         # Verificar se h� dilig�ncia para responder
         $vDiligencia = $db->select()

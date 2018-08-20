@@ -15,6 +15,12 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
      * @param array $data_credito
      * @return object
      */
+
+    public function _setupPrimaryKey()
+    {
+        $this->_primary = "";
+    }
+
     public function buscarDadosItens($idPronac, $idPlanilhaAprovacao)
     {
         $select = $this->select();

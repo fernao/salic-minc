@@ -74,28 +74,28 @@ class Autenticacao_Model_FnVerificarPermissao extends MinC_Db_Table_Abstract
             return 0;
         }
 
-        if ($cpfLogado == $proposta['cnpjcpf'] || $proposta['idUsuario'] == $idUsuarioLogado) {
+        if ($cpfLogado == $proposta->cnpjcpf || $proposta->idUsuario == $idUsuarioLogado) {
             $permissao = 1;
         }
 
-        if ($proposta['tipopessoa'] == 1) {
+        if ($proposta->tipopessoa == 1) {
 
 
 
-            if (!empty($proposta['cnpjcpf'])) {
+            if (!empty($proposta->cnpjcpf)) {
                 $queryDirigente = $db->select()
                     ->from(array('a' => 'vinculacao'), null, $this->getSchema('agentes'))
                     ->join(array('b' => 'agentes'), '(a.idagente = b.idagente)', 'b.cnpjcpf', $this->getSchema('agentes'))
                     ->join(array('c' => 'agentes'), '(a.idvinculoprincipal = c.idagente)', null, $this->getSchema('agentes'))
                     ->join(array('d' => 'visao'), '(d.idagente = a.idagente)', null, $this->getSchema('agentes'))
                     ->where('b.cnpjcpf = ?', $cpfLogado)
-                    ->where('c.cnpjcpf = ?', $proposta['cnpjcpf'])
+                    ->where('c.cnpjcpf = ?', $proposta->cnpjcpf)
                     ->where('d.visao = 198');
                 $dirigenteCpf = $db->fetchOne($queryDirigente);
 
                 if (!empty($dirigenteCpf)) {
 
-                    if ($cpfLogado == $dirigenteCpf || $proposta['idUsuario'] == $idUsuarioLogado) {
+                    if ($cpfLogado == $dirigenteCpf || $proposta->idUsuario == $idUsuarioLogado) {
                         $permissao = 1;
                     }
                 }

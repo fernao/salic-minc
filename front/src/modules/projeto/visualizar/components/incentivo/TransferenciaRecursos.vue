@@ -5,7 +5,7 @@
                 class="cursor"
                 @click="abrirModal('transferencia-recursos');"
             >
-                {{formatValue(valor)}}
+                {{formatarValor(valor)}}
             </a>
         </div>
         <ModalTemplate v-if="modalVisible === 'transferencia-recursos'" @close="fecharModal();">
@@ -37,13 +37,13 @@
                             <td>{{informacoesTransferencia.PronacRecebedor}}</td>
                             <td>{{informacoesTransferencia.NomeProjetoRecedor}}</td>
                             <td>{{informacoesTransferencia.dtRecebimento}}</td>
-                            <td>R${{ formatValue(informacoesTransferencia.vlRecebido) }}</td>
+                            <td>R${{ formatarValor(informacoesTransferencia.vlRecebido) }}</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td colspan="1">Total</td>
-                            <td style="text-align: right" colspan="5">R${{ formatValue(somaValoresRecebidos) }}</td>
+                            <td style="text-align: right" colspan="5">R${{ formatarValor(somaValoresRecebidos) }}</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -56,6 +56,7 @@
 <script>
     import { mapActions, mapGetters } from 'vuex';
     import ModalTemplate from '@/components/modal';
+    import { utils } from '@/mixins/utils';
     import planilhas from '@/mixins/planilhas';
 
     export default {
@@ -78,7 +79,7 @@
         components: {
             ModalTemplate,
         },
-        mixins: [planilhas],
+        mixins: [planilhas, utils],
         methods: {
             ...mapActions({
                 modalOpen: 'modal/modalOpen',
@@ -95,32 +96,6 @@
                 // eslint-disable-next-line
                 $3('#modalTemplate').modal('close');
                 this.modalClose();
-            },
-            formatValue(value) {
-                value = value.toString();
-
-                if (value === undefined) {
-                    return '0,00';
-                }
-
-                if (value.indexOf('.') === -1) {
-                    return this.formatValueWithoutCents(value);
-                }
-
-                return this.formatValueWithCents(value);
-            },
-            formatValueWithoutCents(value) {
-                const valueWithCents = value.concat(',00');
-                const result = valueWithCents.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-                return result;
-            },
-            formatValueWithCents(value) {
-                const valueParsedToFloat = parseFloat(value).toFixed(2);
-                const valueParsedToString = valueParsedToFloat.toString();
-                const valueChangedPointByComma = valueParsedToString.replace('.', ',');
-                const result = valueChangedPointByComma.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-                return result;
             },
         },
         computed: {

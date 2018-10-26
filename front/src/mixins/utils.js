@@ -58,10 +58,6 @@ export const utils = {
         mensagemAlerta: function (msg) {
             Materialize.toast(msg, 8000, 'mensagem1 orange darken-3 white-text');
         },
-        formatarValor: function (valor) {
-            valor = parseFloat(valor);
-            return numeral(valor).format();
-        },
         label_sim_ou_nao: function (valor) {
             if (valor == 1) {
                 return 'Sim';
@@ -71,6 +67,32 @@ export const utils = {
         },
         isDataExpirada(date) {
             return moment().diff(date, 'days') > 0;
+        },
+        formatarValor(value) {
+            value = value.toString();
+
+            if (value === undefined) {
+                return '0,00';
+            }
+
+            if (value.indexOf('.') === -1) {
+                return this.formatarValorSemCentavos(value);
+            }
+
+            return this.formatarValorComCentavos(value);
+        },
+        formatarValorSemCentavos(value) {
+            const valueWithCents = value.concat(',00');
+            const result = valueWithCents.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return result;
+        },
+        formatarValorComCentavos(value) {
+            const valueParsedToFloat = parseFloat(value).toFixed(2);
+            const valueParsedToString = valueParsedToFloat.toString();
+            const valueChangedPointByComma = valueParsedToString.replace('.', ',');
+            const result = valueChangedPointByComma.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+            return result;
         },
     },
     filters: {

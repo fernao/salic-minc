@@ -5,17 +5,29 @@
         hide-overlay
         scrollable
     >
-        <v-btn slot="activator" color="success" dark>CONSOLIDAÇÃO</v-btn>
+        <v-btn
+            slot="activator"
+            color="success"
+            dark>CONSOLIDAÇÃO</v-btn>
         <v-card>
             <v-card-text>
                 <h2>{{ nomeProjeto }}</h2>
-                <div class="mt-3">
+                <div
+                    v-if="Object.keys(getConsolidacaoAnalise).length > 0"
+                    class="mt-3">
                     <v-expansion-panel>
                         <v-expansion-panel-content
                             v-for="(consolidacao, i) in getConsolidacaoAnalise"
                             :key="i"
                         >
-                            <div slot="header" v-text="consolidacao.title"></div>
+                            <v-layout
+                                slot="header"
+                                class="blue--text">
+                                <v-icon class="mr-3 blue--text" >{{ consolidacao.icon }}</v-icon>
+                                <span v-text="consolidacao.title"/>
+                                <v-spacer/>
+                            </v-layout>
+
                             <v-card>
                                 <v-card-text>
                                     <v-data-table
@@ -24,12 +36,14 @@
                                         hide-actions
                                         no-data-text="Não há dados disponíveis."
                                     >
-                                        <template slot="items" slot-scope="props">
+                                        <template
+                                            slot="items"
+                                            slot-scope="props">
                                             <td
-                                                v-for="(celula, i) in props.item" 
+                                                v-for="(celula, i) in props.item"
                                                 :key="i"
                                                 v-html="celula"
-                                            ></td>
+                                            />
                                         </template>
                                     </v-data-table>
                                 </v-card-text>
@@ -37,50 +51,64 @@
                         </v-expansion-panel-content>
                     </v-expansion-panel>
                 </div>
+                <Carregando
+                    v-else
+                    :text="'Carregando dados da consolidação ...'" />
             </v-card-text>
-            <v-btn color="red" @click="dialog = false" flat>FECHAR</v-btn>
+            <v-btn
+                color="red"
+                flat
+                @click="dialog = false">FECHAR</v-btn>
         </v-card>
     </v-dialog>
 </template>
 
 <script>
-    import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import Carregando from '@/components/CarregandoVuetify';
 
-    export default {
-        name: 'ConsolidacaoAnalise',
-        data() {
-            return {
-                dialog: false,
-            };
+export default {
+    name: 'ConsolidacaoAnalise',
+    components: { Carregando },
+    props: {
+        idPronac: { type: String, default: '' },
+        nomeProjeto: { type: String, default: '' },
+    },
+    data() {
+        return {
+            dialog: false,
+        };
+    },
+    computed: {
+        ...mapGetters({
+            getConsolidacaoAnalise: 'avaliacaoResultados/consolidacaoAnalise',
+        }),
+    },
+    watch: {
+        dialog(value) {
+            if (value) {
+                this.setConsolidacaoAnalise(this.idPronac);
+            }
         },
-        props: {
-            idPronac: String,
-            nomeProjeto: String,
+    },
+    mounted() {
+    },
+    methods: {
+        ...mapActions({
+            setConsolidacaoAnalise: 'avaliacaoResultados/consolidacaoAnalise',
+        }),
+        consolidacaoHeaders: (cols) => {
+            const headerKeys = Object.keys(cols);
+            const headers = headerKeys.map(item => (
+                {
+                    text: cols[item].name,
+                    value: item,
+                    sortable: false,
+                    class: cols[item].class,
+                }
+            ));
+            return headers;
         },
-        computed: {
-            ...mapGetters({
-                getConsolidacaoAnalise: 'avaliacaoResultados/consolidacaoAnalise',
-            }),
-        },
-        mounted() {
-            this.setConsolidacaoAnalise(this.idPronac);
-        },
-        methods: {
-            ...mapActions({
-                setConsolidacaoAnalise: 'avaliacaoResultados/consolidacaoAnalise',
-            }),
-            consolidacaoHeaders: (cols) => {
-                const headerKeys = Object.keys(cols);
-                const headers = headerKeys.map(item => (
-                    {
-                        text: cols[item].name,
-                        value: item,
-                        sortable: false,
-                        class: cols[item].class,
-                    }
-                ));
-                return headers;
-            },
-        },
-    };
+    },
+};
 </script>

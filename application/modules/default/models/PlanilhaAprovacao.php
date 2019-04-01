@@ -2719,15 +2719,18 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
             e.Sigla AS uf,
             a.idMunicipioDespesa as cdCidade,
             f.Descricao AS Cidade,
-            f.Descricao AS cidade,               
+            f.Descricao AS cidade,
             c.idPlanilhaItens,
             c.Descricao AS Item,
             c.Descricao AS descItem,
             d.Descricao ,
             g.stItemAvaliado,
-            CONVERT(DECIMAL(38,2), sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item
-                   (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
-                    a.idMunicipioDespesa,a.idPlanilhaItem)) as vlAprovado,
+
+            -- CONVERT(DECIMAL(38,2), sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item
+                   -- (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
+                    -- a.idMunicipioDespesa,a.idPlanilhaItem)) as vlAprovado,
+
+            CONVERT(DECIMAL(38,2), ISNULL((qtItem * nrOcorrencia * vlUnitario),0) ) as vlAprovado,
             CONVERT(DECIMAL(38,2), sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item
                    (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
                     a.idMunicipioDespesa,a.idPlanilhaItem)) as vlComprovado,
@@ -2736,7 +2739,10 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
                     a.idMunicipioDespesa,a.idPlanilhaItem))  as ComprovacaoValidada,
             CONVERT(DECIMAL(38,2), sac.dbo.fnVlComprovado_Fonte_Produto_Etapa_Local_Item_Validado
                    (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
-                    a.idMunicipioDespesa,a.idPlanilhaItem)) as Total
+                    a.idMunicipioDespesa,a.idPlanilhaItem)) as Total,
+            a.QtItem as quantidade,
+            a.nrOcorrencia as numeroOcorrencias,
+            a.VlUnitario as valor
         ");
 
         $select = $this->select()->distinct();
@@ -2805,11 +2811,11 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         );
 
         /* $select->where('a.tpplanilha = ?', 'SR'); */
-        $select->where(new Zend_Db_Expr('
-            sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item
-                (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa,
-                a.idMunicipioDespesa,a.idPlanilhaItem) > 0
-            '));
+        /* $select->where(new Zend_Db_Expr(' */
+        /*     sac.dbo.fnVlAprovado_Fonte_Produto_Etapa_Local_Item */
+        /*         (a.idPronac,a.nrFonteRecurso,a.idProduto,a.idEtapa,a.idUFDespesa, */
+        /*         a.idMunicipioDespesa,a.idPlanilhaItem) > 0 */
+        /*     ')); */
         $select->where("a.tpacao <> 'E' OR a.tpacao is null");
         $select->where('a.IdPRONAC = ?', $idpronac);
         $select->where('a.nrFonteRecurso = 109');
@@ -3090,5 +3096,48 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         $select->order(['Produto DESC', 'e.Sigla', 'f.Descricao', 'b.nrOrdenacao', 'c.Descricao']);
 
         return $this->fetchAll($select);
+    }
+
+    public function consolidacaoValoresProjeto($idPronac){
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+
+        $cols = new Zend_Db_Expr(
+                'a.IdPRONAC
+                , SUM(convert(DECIMAL(38, 2), (a.QtItem * a.nrOcorrencia * a.VlUnitario))) as valorAprovadoProjeto
+                , g.valorComprovado'
+        );
+
+        $select->from(
+            ['a' => 'tbplanilhaaprovacao'],
+            $cols,
+            'SAC.dbo'
+        );
+
+        $subQuery = new Zend_Db_Expr('
+            (SELECT tbpa.IdPRONAC , sum(vlComprovado) as valorComprovado
+            FROM BDCORPORATIVO.scSAC.tbComprovantePagamentoxPlanilhaAprovacao cXp
+            inner join BDCORPORATIVO.scSAC.tbComprovantePagamento as c ON
+            c.idComprovantePagamento = cXp.idComprovantePagamento
+            left JOIN SAC.DBO.tbPlanilhaAprovacao as tbpa on
+            (cXp.idPlanilhaAprovacao = tbpa.idPlanilhaAprovacao)
+            group by tbpa.IdPRONAC)
+            '
+        );
+
+        $select->joinLeft(
+            ['g' => $subQuery],
+            "(a.idpronac = g.idpronac)",
+            [],
+           null
+        );
+
+        $select->where('a.nrFonteRecurso = 109');
+        $select->where('a.stAtivo = ? ', 'S');
+        $select->where("(a.tpacao <> 'E' OR a.tpacao is null)");
+        $select->where('a.IdPRONAC = ?', $idPronac);
+        $select->group(['a.IdPRONAC', 'g.valorComprovado']);
+
+        return $this->fetchRow($select);
     }
 }

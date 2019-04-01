@@ -9,7 +9,7 @@
 <script src="/public/scripts/prestacao-contas/components/comprovante-table.vue.js"></script>
 <script src="/public/scripts/prestacao-contas/components/comprovante-internacional-table.vue.js"></script>
 <script src="/public/scripts/prestacao-contas/components/comprovantes.vue.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/v-mask/dist/v-mask.min.js"></script>
+<script src="/public/js/v-mask.min.js"></script>
 <script src="/public/js/moment.js"></script>
 <script src="/public/js/v-money.js"></script>
 
@@ -40,6 +40,7 @@
         item="<?php echo $this->idPlanilhaItens ?>"
         idplanilhaitem="<?php echo $this->idPlanilhaItens ?>"
         uf="<?php echo $this->uf ?>"
+        id-uf="<?php echo $this->idUf ?>"
         idmunicipio="<?php echo $this->cdcidade ?>"
         etapa="<?php echo $this->cdetapa ?>"
         tipo="nacional"
@@ -58,6 +59,7 @@
         idplanilhaitem="<?php echo $this->idPlanilhaItens ?>"
         item="<?php echo $this->idPlanilhaItens ?>"
         uf="<?php echo $this->uf ?>"
+        id-uf="<?php echo $this->idUf ?>"
         idmunicipio="<?php echo $this->cdcidade ?>"
         etapa="<?php echo $this->cdetapa ?>"
         tipo="internacional"

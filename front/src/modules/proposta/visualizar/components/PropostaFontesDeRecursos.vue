@@ -1,8 +1,8 @@
 <template>
     <div class="tabelas">
-            <div class="row">
-                <slTabelaSimples v-bind:dados="dado"></slTabelaSimples>
-            </div>
+        <div class="row">
+            <slTabelaSimples :dados="dado"/>
+        </div>
     </div>
 </template>
 <script>
@@ -11,24 +11,29 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'PropostaFontesDeRecursos',
-    props: ['idpreprojeto'],
     components: {
         slTabelaSimples,
     },
-    mounted() {
-        if (typeof this.idpreprojeto !== 'undefined') {
-            this.buscaFontesDeRecursos(this.idpreprojeto);
-        }
-    },
-    watch: {
-        idpreprojeto(value) {
-            this.buscaFontesDeRecursos(value);
+    props: {
+        idpreprojeto: {
+            type: null,
+            default: null,
         },
     },
     computed: {
         ...mapGetters({
             dado: 'proposta/fontesDeRecursos',
         }),
+    },
+    watch: {
+        idpreprojeto(value) {
+            this.buscaFontesDeRecursos(value);
+        },
+    },
+    mounted() {
+        if (typeof this.idpreprojeto !== 'undefined') {
+            this.buscaFontesDeRecursos(this.idpreprojeto);
+        }
     },
     methods: {
         ...mapActions({

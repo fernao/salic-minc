@@ -45,7 +45,7 @@ export const projetoAnalise = params => api.getRequest(`/avaliacao-resultados/pr
 
 export const consolidacaoAnalise = params => api.getRequest(`/prestacao-contas/visualizar-projeto/dados-projeto?idPronac=${params}`);
 
-export const obterDestinatarios = () => api.getRequest('/avaliacao-resultados/tecnicos');
+export const obterDestinatarios = params => api.getRequest(`/avaliacao-resultados/tecnicos/${params}`);
 
 export const alterarEstado = params => api.postRequest('/avaliacao-resultados/estado/', buildData(params));
 
@@ -56,7 +56,13 @@ export const criarParecerLaudoFinal = params => api.postRequest('/avaliacao-resu
 
 export const obterProjetosParaDistribuir = () => api.getRequest('/avaliacao-resultados/projeto-inicio');
 
+/** DILIGENCIA */
+
 export const criarDiligencia = params => api.postRequest('/diligencia/diligencia', buildData(params));
+
+export const listarDiligencias = params => api.getRequest(`/avaliacao-resultados/diligencia?idPronac=${params}&situacao=E17&tpDiligencia=147`);
+
+/** FIM DILIGENCIA */
 
 /**  PARECER TECNICO */
 
@@ -64,8 +70,8 @@ export const parecerConsolidacao = params => api.getRequest(`/avaliacao-resultad
 
 export const criarParecer = (params) => {
     const parametro = params.idPronac;
-    delete params.idPronac;
     const data = params;
+    delete data.idPronac;
 
     return api.postRequest(`/avaliacao-resultados/emissao-parecer-rest/idPronac/${parametro}`, buildData(data));
 };
@@ -119,3 +125,9 @@ export const projetosPorEstado = (params) => {
 };
 
 export const salvarAvaliacaoComprovante = params => api.postRequest('/avaliacao-resultados/avaliacao-comprovante/', buildData(params));
+
+export const dashboardQuantidade = () => api.getRequest('/avaliacao-resultados/dashboard');
+
+const ax = api.HTTP({ baseURL: 'http://localhost:81' });
+
+export const projetosSimilares = params => ax.get(`/avaliacao-resultados/projetos-similares/${params}`);

@@ -1,88 +1,54 @@
 <template>
-    <div id="conteudo">
-        <div v-if="loading">
-            <Carregando :text="'Carregando Dados Complementares do Projeto'"></Carregando>
-        </div>
-        <div v-else-if="dados.Proposta && dados.CustosVinculados">
-            <IdentificacaoProjeto :pronac="dadosProjeto.Pronac"
-                                  :nomeProjeto="dadosProjeto.NomeProjeto">
-            </IdentificacaoProjeto>
-            <TabelaDadosComplementares dadoComplementar="Objetivos"
-                                       :dsDadoComplementar="dados.Proposta.Objetivos">
-            </TabelaDadosComplementares>
-            <TabelaDadosComplementares dadoComplementar="Justificativa"
-                                       :dsDadoComplementar="dados.Proposta.Justificativa">
-            </TabelaDadosComplementares>
-            <TabelaDadosComplementares dadoComplementar="Custos Vinculados"
-                                       :custosVinculados="dados.CustosVinculados">
-            </TabelaDadosComplementares>
-            <TabelaDadosComplementares dadoComplementar="Acessibilidade"
-                                       :dsDadoComplementar="dados.Proposta.Acessibilidade">
-            </TabelaDadosComplementares>
-            <TabelaDadosComplementares dadoComplementar="Democratiza&ccedil;&atilde;o de Acesso"
-                                       :dsDadoComplementar="dados.Proposta.DemocratizacaoDeAcesso">
-            </TabelaDadosComplementares>
-            <TabelaDadosComplementares dadoComplementar="Etapa de Trabalho"
-                                       :dsDadoComplementar="dados.Proposta.EtapaDeTrabalho">
-            </TabelaDadosComplementares>
-            <TabelaDadosComplementares dadoComplementar="Ficha T&eacute;cnica"
-                                       :dsDadoComplementar="dados.Proposta.FichaTecnica">
-            </TabelaDadosComplementares>
-            <TabelaDadosComplementares dadoComplementar="Sinopse da Obra"
-                                       :dsDadoComplementar="dados.Proposta.Sinopse">
-            </TabelaDadosComplementares>
-            <TabelaDadosComplementares dadoComplementar="Impacto Ambiental"
-                                       :dsDadoComplementar="dados.Proposta.ImpactoAmbiental">
-            </TabelaDadosComplementares>
-            <TabelaDadosComplementares dadoComplementar="Especifica&ccedil;&otilde;es t&eacute;cnicas do produto"
-                                       :dsDadoComplementar="dados.Proposta.EspecificacaoTecnica">
-            </TabelaDadosComplementares>
-            <TabelaDadosComplementares dadoComplementar="Outras Informa&ccedil;&otilde;es"
-                                       :dsDadoComplementar="dados.Proposta.OutrasInformacoes">
-            </TabelaDadosComplementares>
-
-        </div>
-    </div>
+    <v-expansion-panel
+        popout
+        focusable>
+        <v-expansion-panel-content class="elevation-1">
+            <v-layout
+                slot="header"
+                class="primary--text">
+                <v-icon class="mr-3 primary--text">{{ icon }}</v-icon>
+                <span v-html="label"/>
+            </v-layout>
+            <v-card>
+                <v-card-text>
+                    <slot
+                        :texto="texto"
+                        :itens="itens"
+                    >
+                        <tabela-dados-complementares
+                            :texto="texto"/>
+                    </slot>
+                </v-card-text>
+            </v-card>
+        </v-expansion-panel-content>
+    </v-expansion-panel>
 </template>
+
 <script>
-    import { mapActions, mapGetters } from 'vuex';
-    import Carregando from '@/components/Carregando';
-    import IdentificacaoProjeto from './IdentificacaoProjeto';
-    import TabelaDadosComplementares from './TabelaDadosComplementares';
+import { utils } from '@/mixins/utils';
+import TabelaDadosComplementares from './TextoDadosComplementares';
 
-    export default {
-        name: 'DadosComplementares',
-        data() {
-            return {
-                loading: true,
-            };
+export default {
+    name: 'DadosComplementares',
+    components: { TabelaDadosComplementares },
+    mixins: [utils],
+    props: {
+        label: {
+            type: String,
+            default: '',
         },
-        components: {
-            Carregando,
-            IdentificacaoProjeto,
-            TabelaDadosComplementares,
+        icon: {
+            type: String,
+            default: 'subject',
         },
-        mounted() {
-            if (typeof this.dadosProjeto.idPronac !== 'undefined') {
-                this.buscarDadosComplementares(this.dadosProjeto.idPronac);
-            }
+        itens: {
+            type: [Array],
+            default: () => [],
         },
-        watch: {
-            dados() {
-                this.loading = false;
-            },
+        texto: {
+            type: String,
+            default: 'subject',
         },
-        computed: {
-            ...mapGetters({
-                dadosProjeto: 'projeto/projeto',
-                dados: 'projeto/dadosComplementares',
-            }),
-        },
-        methods: {
-            ...mapActions({
-                buscarDadosComplementares: 'projeto/buscarDadosComplementares',
-            }),
-        },
-    };
+    },
+};
 </script>
-

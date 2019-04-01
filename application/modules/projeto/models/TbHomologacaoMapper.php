@@ -5,11 +5,6 @@
  * @package Modules/Admissibilidade
  * @subpackage Models
  *
- * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
- * @since 01/10/2017
- *
- * @copyright © 2012 - Ministerio da Cultura - Todos os direitos reservados.
- * @link http://salic.cultura.gov.br
  */
 class Projeto_Model_TbHomologacaoMapper extends MinC_Db_Mapper
 {
@@ -95,7 +90,7 @@ class Projeto_Model_TbHomologacaoMapper extends MinC_Db_Mapper
             }
 
             $dbTableHomologacao = new Projeto_Model_DbTable_TbHomologacao();
-            $parecerHomolog = $dbTableHomologacao->getBy(['idPronac' => $idPronac, 'tpHomologacao' => '1']);
+            $parecerHomolog = $dbTableHomologacao->getBy(['idPronac' => $idPronac]);
 
             if (empty($parecerHomolog['dsHomologacao'])) {
                 throw new Exception('Parecer de homologa&ccedil;&atilde;o n&atilde;o encontrado.');
@@ -111,10 +106,13 @@ class Projeto_Model_TbHomologacaoMapper extends MinC_Db_Mapper
                 $situacao['mensagem']
             );
 
+
             if ($updated) {
+                $retorno['close'] = 1;
                 if ($situacao['codigo'] == Projeto_Model_Situacao::PROJETO_ENCAMINHADO_PARA_HOMOLOGACAO) {
                     $idDocumentoAssinatura = $this->iniciarFluxoAssinatura($idPronac);
                     $retorno['data'] = ['idDocumentoAssinatura' => $idDocumentoAssinatura];
+                    $retorno['close'] = 0;
                 }
 
                 $this->setMessage($situacao['mensagem']);

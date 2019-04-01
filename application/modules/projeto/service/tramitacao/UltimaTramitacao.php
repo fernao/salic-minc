@@ -30,8 +30,15 @@ class UltimaTramitacao implements \MinC\Servico\IServicoRestZend
             $idPronac = Seguranca::dencrypt($idPronac);
         }
 
-        $tblProjetos = new \Projetos();
-        $rst = $tblProjetos->buscarDadosUC75($idPronac);
+
+        $tblProjetos = new \tbHistoricoDocumento();
+        $rst = $tblProjetos->buscarHistoricoTramitacaoProjeto(
+            [
+                'h.idPronac = ?' => $idPronac,
+                'h.idDocumento = ?' => 0,
+                ' h.stEstado = ?' => 1
+            ]
+        );
 
         $tramitacoes = $this->obterUltimaTramitacao($rst);
 
@@ -47,24 +54,13 @@ class UltimaTramitacao implements \MinC\Servico\IServicoRestZend
             $Emissor = $tramitacao['Emissor'];
             $Receptor = $tramitacao['Receptor'];
             $meDespacho = $tramitacao['meDespacho'];
-            $objDateTimeDtTramitacaoEnvio = ' ';
-            $objDateTimedtTramitacaoRecebida = ' ';
-
-            if (!empty($tramitacao['DtTramitacaoEnvio'])) {
-                $objDateTimeDtTramitacaoEnvio = new \DateTime($tramitacao['DtTramitacaoEnvio']);
-                $objDateTimeDtTramitacaoEnvio = $objDateTimeDtTramitacaoEnvio->format('d/m/Y H:i:s');
-            }
-            if (!empty($tramitacao['dtTramitacaoRecebida'])) {
-                $objDateTimedtTramitacaoRecebida = new \DateTime($tramitacao['dtTramitacaoRecebida']);
-                $objDateTimedtTramitacaoRecebida = $objDateTimedtTramitacaoRecebida->format('d/m/Y H:i:s');
-            }
 
             $resultArray[] = [
                 'Emissor' => $Emissor,
-                'dtTramitacaoEnvio' => $objDateTimeDtTramitacaoEnvio,
+                'dtTramitacaoEnvio' => $tramitacao['dtTramitacaoEnvio'],
                 'Receptor' => $Receptor,
-                'dtTramitacaoRecebida' => $objDateTimedtTramitacaoRecebida,
-                'Estado' => $tramitacao['Estado'],
+                'dtTramitacaoRecebida' => $tramitacao['dtTramitacaoRecebida'],
+                'Situacao' => $tramitacao['Situacao'],
                 'Destino' => $tramitacao['Destino'],
                 'meDespacho' => $meDespacho,
             ];

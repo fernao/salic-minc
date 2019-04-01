@@ -2,17 +2,8 @@
     <div class="text-xs-center">
         <v-dialog
             v-model="dialog"
-            width="750"
+            width="90%"
         >
-            <v-btn
-                @click="buscar()"
-                slot="activator"
-                color="blue lighten-2"
-                dark
-            >
-                <v-icon dark>visibility</v-icon>
-            </v-btn>
-
             <v-card>
                 <v-card-title
                     class="headline grey lighten-2"
@@ -20,57 +11,15 @@
                 >
                     Visualizar Comprovantes
                 </v-card-title>
-                <v-subheader>Item de custo: {{item}}</v-subheader>
+                <v-subheader>Item de custo: {{ item }}</v-subheader>
 
-                <v-card-text v-if="Object.keys(currentComprovantes).length > 0">
-                    <v-expansion-panel>
-                        <v-expansion-panel-content v-for="(comprovante, index) in currentComprovantes" :key="index">
-                            <div slot="header">
-                                <div style="display:inline-block;">
-                                    Fornecedor: {{comprovante.nmFornecedor}}
-                                </div>
-                                <v-chip
-                                    style="display: inline-block; float: right; margin-right: 20px;"
-                                    :color="badgeCSS(comprovante.stItemAvaliado)"
-                                    text-color="white"
-                                >
-                                    {{situacao(comprovante.stItemAvaliado)}}
-                                </v-chip>
-                            </div>
-                            <v-card>
-                                <v-card-text>
-                                    <b>Valor: </b>R$ {{comprovante.vlComprovacao | filtroFormatarParaReal}}
-                                </v-card-text>
-                                <v-card-text>
-                                    <b>Arquivo: </b>
-                                    <a :href="'/upload/abrir/id/' + comprovante.arquivo.id">
-                                        {{comprovante.arquivo.nome}}
-                                    </a>
-                                </v-card-text>
-                            </v-card>
-                        </v-expansion-panel-content>
-                    </v-expansion-panel>
+                <v-card-text>
+                    <lista-de-comprovantes :comprovantes="comprovantes"/>
                 </v-card-text>
-                <v-card-text v-else>
-                    <div style="align: center" class="text-xs-center">
-                        <div style="padding-top: 25px">
-                            <v-progress-circular
-                                :size="50"
-                                color="primary"
-                                indeterminate
-                            ></v-progress-circular>
-                        </div>
-                        <br>
-                        <div style="padding-top: 20px">
-                            Carregando...
-                        </div>
-                    </div>
-                </v-card-text>
-
-                <v-divider></v-divider>
+                <v-divider/>
 
                 <v-card-actions>
-                    <v-spacer></v-spacer>
+                    <v-spacer/>
                     <v-btn
                         color="red lighten-2"
                         flat
@@ -85,94 +34,70 @@
 </template>
 
 <script>
-    import { mapActions, mapGetters } from 'vuex';
-    import numeral from 'numeral';
+import { mapActions, mapGetters } from 'vuex';
+import ListaDeComprovantes from './ListaDeComprovantes';
 
-    export default {
-        name: 'ModalDetalheItens',
-        props: {
-            item: String,
-            idPronac: String,
-            uf: String,
-            codigoCidade: Number,
-            codigoProduto: Number,
-            stItemAvaliado: String,
-            codigoEtapa: Number,
-            idPlanilhaItens: Number,
+export default {
+    name: 'ModalDetalheItens',
+    components: { ListaDeComprovantes },
+    props: {
+        item: { type: String, default: '' },
+        idPronac: { type: String, default: '' },
+        uf: { type: String, default: '' },
+        codigoCidade: { type: Number, default: 0 },
+        codigoProduto: { type: Number, default: 0 },
+        stItemAvaliado: { type: String, default: '' },
+        codigoEtapa: { type: Number, default: 0 },
+        idPlanilhaItens: { type: Number, default: 0 },
+    },
+    data() {
+        return {
+            dialog: false,
+            currentComprovantes: [],
+        };
+    },
+    computed: {
+        ...mapGetters({
+            comprovantes: 'avaliacaoResultados/comprovantes',
+            isModalVisible: 'modal/default',
+        }),
+    },
+    watch: {
+        comprovantes(value) {
+            this.currentComprovantes = value;
         },
-        data() {
-            return {
-                dialog: false,
-                currentComprovantes: {},
+        isModalVisible(value) {
+            if (value === 'visualizar-comprovantes') {
+                this.dialog = true;
+                this.buscar();
+            }
+        },
+        dialog(value) {
+            if (value === false) {
+                this.modalClose();
+            }
+        },
+    },
+    methods: {
+        ...mapActions({
+            buscarComprovantes: 'avaliacaoResultados/buscarComprovantes',
+            modalClose: 'modal/modalClose',
+        }),
+        buscar() {
+            this.currentComprovantes = [];
+
+            const params = {
+                uf: this.uf,
+                idPronac: this.idPronac,
+                codigoCidade: this.codigoCidade,
+                codigoProduto: this.codigoProduto,
+                stItemAvaliado: this.stItemAvaliado,
+                codigoEtapa: this.codigoEtapa,
+                idPlanilhaItens: this.idPlanilhaItens,
             };
+
+            this.buscarComprovantes(params);
         },
-        computed: {
-            ...mapGetters({
-                comprovantes: 'avaliacaoResultados/comprovantes',
-            }),
-        },
-        watch: {
-            comprovantes(value) {
-                this.currentComprovantes = value;
-            },
-        },
-        methods: {
-            ...mapActions({
-                buscarComprovantes: 'avaliacaoResultados/buscarComprovantes',
-            }),
-            buscar() {
-                this.currentComprovantes = {};
-
-                const params = {
-                    uf: this.uf,
-                    idPronac: this.idPronac,
-                    codigoCidade: this.codigoCidade,
-                    codigoProduto: this.codigoProduto,
-                    stItemAvaliado: this.stItemAvaliado,
-                    codigoEtapa: this.codigoEtapa,
-                    idPlanilhaItens: this.idPlanilhaItens,
-                };
-
-                this.buscarComprovantes(params);
-            },
-            badgeCSS(id) {
-                const currentId = parseInt(id, 10);
-
-                if (currentId === 1) {
-                    return 'green';
-                }
-
-                if (currentId === 3) {
-                    return 'red';
-                }
-                if (currentId === 4) {
-                    return 'grey';
-                }
-
-                return 'white';
-            },
-            situacao(id) {
-                let estado = '';
-
-                switch (parseInt(id, 10)) {
-                case 1:
-                    estado = 'Aprovado';
-                    break;
-                case 3:
-                    estado = 'Recusado';
-                    break;
-                default:
-                    estado = 'N\xE3o avaliado';
-                }
-                return estado;
-            },
-        },
-        filters: {
-            filtroFormatarParaReal(value) {
-                const parsedValue = parseFloat(value);
-                return numeral(parsedValue)
-                    .format('0,0.00');
-            },
-        },
-    };
+    },
+};
 </script>

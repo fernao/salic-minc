@@ -1,67 +1,104 @@
 <template>
-    <div v-if="dados">
-        <table class="tabela" v-if="Object.keys(dados).length > 0">
-            <thead>
-            <tr class="destacar">
-                <th align="center">
-                    <b>Origem</b>
-                </th>
-                <th align="center">
-                    <b>Dt.Envio</b>
-                </th>
-                <th align="center">
-                    <b>Destino</b>
-                </th>
-                <th align="center">
-                    <b>Dt.Recebimento</b>
-                </th>
-                <th align="center">
-                    <b>Estado</b>
-                </th>
-                <th align="center">
-                    <b>Despacho</b>
-                </th>
-            </tr>
-            </thead>
-            <tbody v-for="(dado, index) in dados" :key="index">
-
-            <tr>
-                <td align="center">{{ dado.Origem }}</td>
-                <td align="center">{{ dado.dtTramitacaoEnvio }}</td>
-                <td align="center">{{ dado.Destino }}</td>
-                <td align="center">{{ dado.dtTramitacaoRecebida }}</td>
-                <td align="center">{{ dado.Situacao }}</td>
-                <td align="center">{{ dado.meDespacho}}</td>
-            </tr>
-            </tbody>
-        </table>
-        <div v-else class="center">
-            <em>Dados n&atilde;o informado.</em>
-        </div>
+    <div>
+        <v-card>
+            <v-card-title>
+                <h6>Tramita&ccedil;&atilde;o do Projeto</h6>
+            </v-card-title>
+            <v-data-table
+                :pagination.sync="pagination"
+                :headers="headers"
+                :items="dados"
+                class="elevation-1 container-fluid mb-2"
+            >
+                <template
+                    slot="items"
+                    slot-scope="props">
+                    <td class="text-xs-left">{{ props.item.Origem }}</td>
+                    <td class="text-xs-center pl-5">{{ props.item.dtTramitacaoEnvio | formatarData }}</td>
+                    <td class="text-xs-left">{{ props.item.Destino }}</td>
+                    <td class="text-xs-center pl-5">{{ props.item.dtTramitacaoRecebida | formatarData }}</td>
+                    <td class="text-xs-left">{{ props.item.Situacao }}</td>
+                    <td class="text-xs-left">{{ props.item.meDespacho }}</td>
+                </template>
+                <template
+                    slot="pageText"
+                    slot-scope="props">
+                    Items {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
+                </template>
+            </v-data-table>
+        </v-card>
     </div>
 </template>
 
 <script>
-    import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import { utils } from '@/mixins/utils';
 
-    export default {
-        name: 'TramitacaoProjeto',
-        props: ['idPronac'],
-        mounted() {
-            if (typeof this.idPronac !== 'undefined') {
-                this.buscarTramitacaoProjeto(this.idPronac);
-            }
+export default {
+    name: 'TramitacaoProjeto',
+    mixins: [utils],
+    props: {
+        idPronac: {
+            type: String,
+            default: '',
         },
-        computed: {
-            ...mapGetters({
-                dados: 'projeto/tramitacaoProjeto',
-            }),
-        },
-        methods: {
-            ...mapActions({
-                buscarTramitacaoProjeto: 'projeto/buscarTramitacaoProjeto',
-            }),
-        },
-    };
+    },
+    data() {
+        return {
+            search: '',
+            pagination: {
+                sortBy: 'dtTramitacaoEnvio',
+                descending: true,
+            },
+            selected: [],
+            headers: [
+                {
+                    text: 'ORIGEM',
+                    align: 'left',
+                    value: 'Origem',
+                },
+                {
+                    text: 'DT.ENVIO',
+                    align: 'center',
+                    value: 'dtTramitacaoEnvio',
+                },
+                {
+                    text: 'DESTINO',
+                    align: 'left',
+                    value: 'Destino',
+                },
+                {
+                    text: 'DT.RECEBIMENTO',
+                    align: 'center',
+                    value: 'dtTramitacaoRecebida',
+                },
+                {
+                    text: 'ESTADO',
+                    align: 'left',
+                    value: 'Situacao',
+                },
+                {
+                    text: 'DESPACHO',
+                    align: 'left',
+                    value: 'meDespacho',
+                },
+            ],
+        };
+    },
+    computed: {
+        ...mapGetters({
+            dados: 'outrasInformacoes/tramitacaoProjeto',
+        }),
+    },
+    mounted() {
+        if (typeof this.idPronac !== 'undefined') {
+            this.buscarTramitacaoProjeto(this.idPronac);
+        }
+    },
+    methods: {
+        ...mapActions({
+            buscarTramitacaoProjeto: 'outrasInformacoes/buscarTramitacaoProjeto',
+        }),
+    },
+};
 </script>
-

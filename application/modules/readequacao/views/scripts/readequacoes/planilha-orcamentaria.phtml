@@ -20,7 +20,7 @@
              resizable: false,
              title: 'Alerta!',
              width:360,
-             height:170,
+             height:200,
              modal: true,
              buttons : {
 		 'N\xE3o' : function(){
@@ -517,7 +517,8 @@
                      $('#campoTotalSolicitado').html(data.dadosPlanilhaAtiva.TotalSolicitado);
                      
                      $('#campoValorComprovado').html(data.valoresDoItem.vlComprovadoDoItem);
-
+		     
+		     $('#modalFonteRecurso').val(data.dadosPlanilhaEditavel.nrFonteRecurso);
                      $('#modalUnidade').val(data.dadosPlanilhaEditavel.idUnidade);
                      $('#modalQuantidade').val(data.dadosPlanilhaEditavel.Quantidade);
                      $('#modalOcorrencia').val(data.dadosPlanilhaEditavel.Ocorrencia);
@@ -548,6 +549,7 @@
                              'Salvar' : function(){
                                  var Unidade = $('#modalUnidade').val(),
                                      Quantidade = $('#modalQuantidade').val(),
+				     nrFonteRecurso = $('#modalFonteRecurso').val(),
                                      Ocorrencia = $('#modalOcorrencia').val(),
                                      ValorUnitario = $('#modalValorUnitario').val(),
                                      QtdeDias = $('#modalDias').val(),
@@ -604,6 +606,7 @@
                                          url: '<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'salvar-avaliacao-do-item'), '', true); ?>?idPronac=<?php echo $this->idPronac; ?>',
                                          data: {
                                              idPlanilha: idPlanilhaAprovacao,
+					     nrFonteRecurso: nrFonteRecurso,
                                              Unidade: Unidade,
                                              Quantidade: Quantidade,
                                              Ocorrencia: Ocorrencia,
@@ -613,291 +616,325 @@
                                              valorSolicitado: valorParaMsgErro
                                          },
                                          success: function(data){
-                                             $("#modalItem").dialog("destroy");
-                                             atualizarDadosPlanilha();
+                                             if (!data.resposta) {
+                                                 $("#msgAlerta").dialog("destroy");
+                                                 $("#msgAlerta").html(data.mensagem);
+                                                 $("#msgAlerta").dialog({
+                                                     resizable: false,
+                                                     title: 'Alerta!',
+                                                     width:400,
+                                                     height:200,
+                                                     modal: true,
+                                                     buttons : {
+                                                         'OK' : function(){
+                                                             $(this).dialog('close');
+                                                         }
+                                                     }
+                                                 });
+                                             } else {                                                 
+                                                 $("#modalItem").dialog("destroy");
+                                                 atualizarDadosPlanilha();
+                                             }
                                          }
                                      });
+                                     }
                                  }
                              }
-                         }
-                     });
-                     $('.ui-dialog-titlebar-close').remove();
-                 }
-             },
-             dataType : 'json'
-         });
-
-         return false;
-     });
-     
-     $('.excluirItemPlanilha').live('click', function(){
-         var idPlanilhaAprovacao = $(this).attr('idPlanilhaAprovacao'),
-             itemClicado = $(this);
-         
-         //ABRE O MODAL DE CONFIRMA��O DA A��O REALIZADA
-         $("#msgAlerta").dialog("destroy");
-         $("#msgAlerta").html('Tem certeza que deseja excluir o item da planilha?');
-         $("#msgAlerta").dialog({
-             resizable: false,
-             title: 'Alerta!',
-             width:380,
-             height:170,
-             modal: true,
-             buttons : {
-                 'Cancelar' : function(){
-                     itemClicado.parent().parent().removeClass('fundo_linha4');
-                     $(this).dialog('close');
+                         });
+                         $('.ui-dialog-titlebar-close').remove();
+                     }
                  },
-                 'Sim' : function(){
-                     //BUSCA OS DADOS DO ITEM PARA VISUALIZA��O DOS NA MODAL
-                     $.ajax({
-                         type: 'POST',
-                         url: '<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'excluir-item-solicitacao'), '', true); ?>?idPronac=<?php echo $this->idPronac; ?>',
-                         data: {
-                             idPlanilha: idPlanilhaAprovacao
-                         },
-                         success: function(data){
-                             $("#msgAlerta").dialog("destroy");
-                             atualizarDadosPlanilha();
-                         },
-                         dataType : 'json'
-                     });
-                 }
-             }
+                 dataType : 'json'
+             });
+
+             return false;
          });
-         $('.ui-dialog-titlebar-close').remove();
-     });
-     
-     $('.multiplicarValores').keyup(function(){
-         // recebe os valores do formul�rio
-         var qtd = $('#modalQuantidade').val(),
-             ocorrencia = $('#modalOcorrencia').val(),
-             valor = $('#modalValorUnitario').val();
-
-         // retira os pontos e as v�rgulas, deixando somente n�meros
-         valor = valor.replace(/\D/g, "")
-		      .replace(/(\d{0})(\d)/, "$1$2")
-         // adiciona o ponto na casa decimal
-		      .replace(/(\d)(\d{2})$/, "$1.$2");
-
-         // converte para float e adiciona precis�o decimal
-         qtd        = parseFloat(qtd).toFixed(2);
-         ocorrencia = parseFloat(ocorrencia).toFixed(2);
-         valor      = parseFloat(valor).toFixed(2);
-
-         // vari�vel com o resultado
-         resultado = parseFloat(qtd * ocorrencia * valor).toFixed(2); // armazena o resultado
-
-         // se n�o for n�mero
-         if (isNaN(resultado))
-             {
-                 resultado = '';
-             }
-         // caso seja n�mero
-         else
-             {
-                 // formata para real
-                 resultado = resultado.replace(/\D/g, "");
-                 resultado = resultado.replace(/(\d)(\d{2})$/, "$1,$2");
-                 resultado = resultado.replace(/(\d+)(\d{3},\d{2})$/g, "$1.$2");
-
-                 var q = (resultado.length - 3) / 3; // quantidade caracteres
-                 var c = 0; // contador
-                 while (q > c)
-                     {
-			 c++;
-			 resultado = resultado.replace(/(\d+)(\d{3}.*)/, "$1.$2");
-                     }
-                 resultado = resultado.replace(/^(0+)(\d)/g, "$2");
-                 resultado = 'R$ ' + resultado;
-             } // fecha else
-
-         $('#TotalCalculado').html(resultado);
-     });
-     
-     $('.newMultiplicarValores').keyup(function(){
-         // recebe os valores do formul�rio
-         var qtd = $('#newQuantidade').val(),
-             ocorrencia = $('#newOcorrencia').val(),
-             valor = $('#newValorUnitario').val();
-
-         // retira os pontos e as v�rgulas, deixando somente n�meros
-         valor = valor.replace(/\D/g, "")
-		      .replace(/(\d{0})(\d)/, "$1$2")
-         // adiciona o ponto na casa decimal
-		      .replace(/(\d)(\d{2})$/, "$1.$2");
-
-         // converte para float e adiciona precis�o decimal
-         qtd        = parseFloat(qtd).toFixed(2);
-         ocorrencia = parseFloat(ocorrencia).toFixed(2);
-         valor      = parseFloat(valor).toFixed(2);
-
-         // vari�vel com o resultado
-         resultado = parseFloat(qtd * ocorrencia * valor).toFixed(2); // armazena o resultado
-
-         // se n�o for n�mero
-         if (isNaN(resultado))
-             {
-                 resultado = '';
-             }
-         // caso seja n�mero
-         else
-             {
-                 // formata para real
-                 resultado = resultado.replace(/\D/g, "");
-                 resultado = resultado.replace(/(\d)(\d{2})$/, "$1,$2");
-                 resultado = resultado.replace(/(\d+)(\d{3},\d{2})$/g, "$1.$2");
-
-                 var q = (resultado.length - 3) / 3; // quantidade caracteres
-                 var c = 0; // contador
-                 while (q > c)
-                     {
-			 c++;
-			 resultado = resultado.replace(/(\d+)(\d{3}.*)/, "$1.$2");
-                     }
-                 resultado = resultado.replace(/^(0+)(\d)/g, "$2");
-                 resultado = 'R$ ' + resultado;
-             } // fecha else
-
-         $('#newTotalCalculado').html(resultado);
-     });
-
-     $("#modalValorUnitario").priceFormat();
-     $("#newValorUnitario").priceFormat();
-     
-     CKEDITOR.replace( 'descJustificativa', { toolbar: [] } );
-     
-     
-     <?php if($this->idPerfil == 1111){ ?>
-         $('.restaurarItem').live('click', function(){
-             var idPlanilha = $(this).attr('idPlanilha'),
-                 tpAcao = $(this).attr('tipo'),
-                 msg = 'Tem certeza que deseja restaurar o item exclu&iacute;do?';
-
+         
+         $('.excluirItemPlanilha').live('click', function(){
+             var idPlanilhaAprovacao = $(this).attr('idPlanilhaAprovacao'),
+                 itemClicado = $(this);
+             
+             //ABRE O MODAL DE CONFIRMA��O DA A��O REALIZADA
              $("#msgAlerta").dialog("destroy");
-             $("#msgAlerta").html(msg);
+             $("#msgAlerta").html('Tem certeza que deseja excluir o item da planilha?');
              $("#msgAlerta").dialog({
                  resizable: false,
-                 width:320,
-                 modal: true,
                  title: 'Alerta!',
+                 width:380,
+                 height:170,
+                 modal: true,
                  buttons : {
-                     'N&atilde;o' : function(){
+                     'Cancelar' : function(){
+                         itemClicado.parent().parent().removeClass('fundo_linha4');
                          $(this).dialog('close');
                      },
                      'Sim' : function(){
-                         $("#msgAlerta").dialog('close');
+                         //BUSCA OS DADOS DO ITEM PARA VISUALIZA��O DOS NA MODAL
                          $.ajax({
                              type: 'POST',
-                             url: '<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'alteracoes-tecnicas-no-item'), '', true); ?>?idPronac=<?php echo $this->idPronac; ?>',
+                             url: '<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'excluir-item-solicitacao'), '', true); ?>?idPronac=<?php echo $this->idPronac; ?>',
                              data: {
-                                 idPlanilha: idPlanilha,
-                                 tpAcao: tpAcao
+                                 idPlanilha: idPlanilhaAprovacao
                              },
                              success: function(data){
-                                 $("#msgAlerta").dialog("destroy");
-                                 atualizarDadosPlanilha();
-                             }
+                                 if (!data.resposta) {
+                                     $("#msgAlerta").dialog("destroy");
+                                     $("#msgAlerta").html(data.mensagem);
+                                     $("#msgAlerta").dialog({
+                                         resizable: false,
+                                         title: 'Alerta!',
+                                         width:400,
+                                         height:200,
+                                         modal: true,
+                                         buttons : {
+                                             'OK' : function(){
+                                                 $(this).dialog('close');
+                                             }
+                                         }
+                                     });
+                                 } else {
+                                     $("#msgAlerta").dialog("destroy");
+                                     atualizarDadosPlanilha();
+                                 }
+                             },                         
+                             dataType : 'json'
                          });
                      }
                  }
              });
              $('.ui-dialog-titlebar-close').remove();
          });
-         <?php } ?>
- });
- 
- function enviarformulario(){
-     var descJustificativa = CKEDITOR.instances['descJustificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,''),
-         texto = CKEDITOR.instances['descJustificativa'].getData(),
-         erro = 0,
-         msg = 'Favor preencher os dados obrigat&oacute;rios!';
-     
-     if (descJustificativa == ''){
-         erro++;
-     }
-     
-     if(texto.length > 6000){
-         erro++;
-         msg = 'O campo s&oacute; permite 5.000 caracteres!';
-     }
-     if (erro > 0) {
-         $("#msgAlerta").dialog("destroy");
-         $("#msgAlerta").html(msg);
-         $("#msgAlerta").dialog({
-             resizable: false,
-             title: 'Alerta!',
-             width:340,
-             height:170,
-             modal: true,
-             buttons : {
-                 'OK' : function(){
-                     $(this).dialog('close');
+         
+         $('.multiplicarValores').keyup(function(){
+             // recebe os valores do formul�rio
+             var qtd = $('#modalQuantidade').val(),
+                 ocorrencia = $('#modalOcorrencia').val(),
+                 valor = $('#modalValorUnitario').val();
+
+             // retira os pontos e as v�rgulas, deixando somente n�meros
+             valor = valor.replace(/\D/g, "")
+		          .replace(/(\d{0})(\d)/, "$1$2")
+             // adiciona o ponto na casa decimal
+		          .replace(/(\d)(\d{2})$/, "$1.$2");
+
+             // converte para float e adiciona precis�o decimal
+             qtd        = parseFloat(qtd).toFixed(2);
+             ocorrencia = parseFloat(ocorrencia).toFixed(2);
+             valor      = parseFloat(valor).toFixed(2);
+
+             // vari�vel com o resultado
+             resultado = parseFloat(qtd * ocorrencia * valor).toFixed(2); // armazena o resultado
+
+             // se n�o for n�mero
+             if (isNaN(resultado))
+                 {
+                     resultado = '';
                  }
-             }
+             // caso seja n�mero
+             else
+                 {
+                     // formata para real
+                     resultado = resultado.replace(/\D/g, "");
+                     resultado = resultado.replace(/(\d)(\d{2})$/, "$1,$2");
+                     resultado = resultado.replace(/(\d+)(\d{3},\d{2})$/g, "$1.$2");
+
+                     var q = (resultado.length - 3) / 3; // quantidade caracteres
+                     var c = 0; // contador
+                     while (q > c)
+                         {
+			     c++;
+			     resultado = resultado.replace(/(\d+)(\d{3}.*)/, "$1.$2");
+                         }
+                     resultado = resultado.replace(/^(0+)(\d)/g, "$2");
+                     resultado = 'R$ ' + resultado;
+                 } // fecha else
+
+             $('#TotalCalculado').html(resultado);
          });
-         $('.ui-dialog-titlebar-close').remove();
-     } else {           
-	 $('#formReadequacao').submit();
-     }
- }
- 
- function finalizarformulario(){
-     var idReadequacao = $('#idReadequacao').val();
-     
-     window.location = "<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'finalizar-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>&idReadequacao=" + idReadequacao;
- }
- 
- function excluirReadequacao(){
-     var idReadequacao = $('#idReadequacao').val();
-     
-     window.location = "<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'excluir-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>&idReadequacao="+idReadequacao;
- }
+         
+         $('.newMultiplicarValores').keyup(function(){
+             // recebe os valores do formul�rio
+             var qtd = $('#newQuantidade').val(),
+                 ocorrencia = $('#newOcorrencia').val(),
+                 valor = $('#newValorUnitario').val();
 
- function atualizarDadosPlanilha(){
-     $('#valorEntrePlanilhas').html('&nbsp;');
-     
-     <?php
-     // armazena idReadequacao somente no caso de planilha or�ament�ria
-     if(count($this->readequacao)>0){
+             // retira os pontos e as v�rgulas, deixando somente n�meros
+             valor = valor.replace(/\D/g, "")
+		          .replace(/(\d{0})(\d)/, "$1$2")
+             // adiciona o ponto na casa decimal
+		          .replace(/(\d)(\d{2})$/, "$1.$2");
 
-	 $idReadequacao = $this->readequacao[0]->idReadequacao;
-	 $dsJustificativa = $this->readequacao[0]->dsJustificativa;
-     } else {
-	 $idReadequacao = 0;
-	 $dsJustificativa = '';
-     }
-     ?>
-     if (<?php echo $idReadequacao; ?> === 0) {
-	 idReadequacao = $('#idReadequacao').val();
-     } else {
-	 idReadequacao = <?php echo $idReadequacao; ?>
-     }
-     // verifica se h� planilha ativa; se falso, cria uma nova planilha
-     $.ajax({
-	 url: "<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'verificar-planilha-ativa'), '', true) ?>",
-	 type: 'POST',
-	 data: {
-	     idPronac: <?php echo $this->idPronac; ?>,
-	     idReadequacao: idReadequacao
-	 },
-	 
-	 // ap�s carregar a planilha, monta planilha
-	 success: function(data) {
-	     jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-valor-entre-planilhas'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'valorEntrePlanilhas');
-	     jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'default', 'controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?php echo $this->idPronac; ?>&tipoPlanilha=6&link=true', '', 'planilhaOrcamentariaMontada');
+             // converte para float e adiciona precis�o decimal
+             qtd        = parseFloat(qtd).toFixed(2);
+             ocorrencia = parseFloat(ocorrencia).toFixed(2);
+             valor      = parseFloat(valor).toFixed(2);
 
-	     /* data = JSON.parse(data); */
-	     $('#idReadequacao').val(data.idReadequacao);
-	     $('#btn_excluir').removeClass('sumir');
-	     $('#btn_finalizar').removeClass('sumir');
-	     $('#adicionar_item_novo_municipio').removeClass('sumir');
-	     $('#btn_exclusao').attr('readequacao', data.idReadequacao);
-	     
-	 }
+             // vari�vel com o resultado
+             resultado = parseFloat(qtd * ocorrencia * valor).toFixed(2); // armazena o resultado
+
+             // se n�o for n�mero
+             if (isNaN(resultado))
+                 {
+                     resultado = '';
+                 }
+             // caso seja n�mero
+             else
+                 {
+                     // formata para real
+                     resultado = resultado.replace(/\D/g, "");
+                     resultado = resultado.replace(/(\d)(\d{2})$/, "$1,$2");
+                     resultado = resultado.replace(/(\d+)(\d{3},\d{2})$/g, "$1.$2");
+
+                     var q = (resultado.length - 3) / 3; // quantidade caracteres
+                     var c = 0; // contador
+                     while (q > c)
+                         {
+			     c++;
+			     resultado = resultado.replace(/(\d+)(\d{3}.*)/, "$1.$2");
+                         }
+                     resultado = resultado.replace(/^(0+)(\d)/g, "$2");
+                     resultado = 'R$ ' + resultado;
+                 } // fecha else
+
+             $('#newTotalCalculado').html(resultado);
+         });
+
+         $("#modalValorUnitario").priceFormat();
+         $("#newValorUnitario").priceFormat();
+         
+         CKEDITOR.replace( 'descJustificativa', { toolbar: [] } );
+         
+         
+         <?php if($this->idPerfil == 1111){ ?>
+             $('.restaurarItem').live('click', function(){
+                 var idPlanilha = $(this).attr('idPlanilha'),
+                     tpAcao = $(this).attr('tipo'),
+                     msg = 'Tem certeza que deseja restaurar o item exclu&iacute;do?';
+
+                 $("#msgAlerta").dialog("destroy");
+                 $("#msgAlerta").html(msg);
+                 $("#msgAlerta").dialog({
+                     resizable: false,
+                     width:320,
+                     modal: true,
+                     title: 'Alerta!',
+                     buttons : {
+                         'N\xE3o' : function(){
+                             $(this).dialog('close');
+                         },
+                         'Sim' : function(){
+                             $("#msgAlerta").dialog('close');
+                             $.ajax({
+                                 type: 'POST',
+                                 url: '<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'alteracoes-tecnicas-no-item'), '', true); ?>?idPronac=<?php echo $this->idPronac; ?>',
+                                 data: {
+                                     idPlanilha: idPlanilha,
+                                     tpAcao: tpAcao
+                                 },
+                                 success: function(data){
+                                     $("#msgAlerta").dialog("destroy");
+                                     atualizarDadosPlanilha();
+                                 }
+                             });
+                         }
+                     }
+                 });
+                 $('.ui-dialog-titlebar-close').remove();
+             });
+             <?php } ?>
      });
- }
- 
+     
+     function enviarformulario(){
+         var descJustificativa = CKEDITOR.instances['descJustificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,''),
+             texto = CKEDITOR.instances['descJustificativa'].getData(),
+             erro = 0,
+             msg = 'Favor preencher os dados obrigat&oacute;rios!';
+         
+         if (descJustificativa == ''){
+             erro++;
+         }
+         
+         if(texto.length > 6000){
+             erro++;
+             msg = 'O campo s&oacute; permite 5.000 caracteres!';
+         }
+         if (erro > 0) {
+             $("#msgAlerta").dialog("destroy");
+             $("#msgAlerta").html(msg);
+             $("#msgAlerta").dialog({
+                 resizable: false,
+                 title: 'Alerta!',
+                 width:340,
+                 height:170,
+                 modal: true,
+                 buttons : {
+                     'OK' : function(){
+                         $(this).dialog('close');
+                     }
+                 }
+             });
+             $('.ui-dialog-titlebar-close').remove();
+         } else {           
+	     $('#formReadequacao').submit();
+         }
+     }
+     
+     function finalizarformulario(){
+         var idReadequacao = $('#idReadequacao').val();
+         
+         window.location = "<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'finalizar-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>&idReadequacao=" + idReadequacao;
+     }
+     
+     function excluirReadequacao(){
+         var idReadequacao = $('#idReadequacao').val();
+         
+         window.location = "<?php echo $this->url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'excluir-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>&idReadequacao="+idReadequacao;
+     }
+
+     function atualizarDadosPlanilha(){
+         $('#valorEntrePlanilhas').html('&nbsp;');
+         
+         <?php
+         // armazena idReadequacao somente no caso de planilha or�ament�ria
+         if(count($this->readequacao)>0){
+
+	     $idReadequacao = $this->readequacao[0]->idReadequacao;
+	     $dsJustificativa = $this->readequacao[0]->dsJustificativa;
+         } else {
+	     $idReadequacao = 0;
+	     $dsJustificativa = '';
+         }
+         ?>
+         if (<?php echo $idReadequacao; ?> === 0) {
+	     idReadequacao = $('#idReadequacao').val();
+         } else {
+	     idReadequacao = <?php echo $idReadequacao; ?>
+         }
+         // verifica se h� planilha ativa; se falso, cria uma nova planilha
+         $.ajax({
+	     url: "<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'verificar-planilha-ativa'), '', true) ?>",
+	     type: 'POST',
+	     data: {
+	         idPronac: <?php echo $this->idPronac; ?>,
+	         idReadequacao: idReadequacao
+	     },
+	     
+	     // ap�s carregar a planilha, monta planilha
+	     success: function(data) {
+	         jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-valor-entre-planilhas'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'valorEntrePlanilhas');
+	         jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'default', 'controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?php echo $this->idPronac; ?>&tipoPlanilha=6&link=true', '', 'planilhaOrcamentariaMontada');
+
+	         /* data = JSON.parse(data); */
+	         $('#idReadequacao').val(data.idReadequacao);
+	         $('#btn_excluir').removeClass('sumir');
+	         $('#btn_finalizar').removeClass('sumir');
+	         $('#adicionar_item_novo_municipio').removeClass('sumir');
+	         $('#btn_exclusao').attr('readequacao', data.idReadequacao);
+	         
+	     }
+         });
+     }
+     
 </script>
 
 <!-- ========== IN�CIO BREADCRUMB (LINKS TOPO) ========== -->
@@ -938,15 +975,19 @@
             </tr>
         </table>
 
+        <?php if ($this->mensagemCustosVinculados != ""): ?>
+        <div class="yellow accent-4" style="padding:7px"><?php echo $this->mensagemCustosVinculados; ?></div>
+        <?php endif; ?>
+
         <table class="tabela btnIncluir <?php if (count($this->readequacao) > 0) : ?>sumir<?php endif; ?>">
-          <tr>
-	    <td class="destacar bold" style="font-size: 13px;">Incluir uma nova planilha or&ccedil;ament&aacute;ria</td>
-          </tr>
-	  <tr>
-            <td>
-              <input type="button" class="btn_incluir" id="IncluirReadequacao" />
-            </td>
-          </tr>
+            <tr>
+		<td class="destacar bold" style="font-size: 13px;">Incluir uma nova planilha or&ccedil;ament&aacute;ria</td>
+            </tr>
+	    <tr>
+		<td>
+		    <input type="button" class="btn_incluir" id="IncluirReadequacao" />
+		</td>
+            </tr>
         </table>
         
         <table class="tabela planilhaOrcamentaria sumir">
@@ -1003,13 +1044,13 @@
                 <td class="destacar bold" style="font-size: 13px;">Justificativa da Solicita&ccedil;&atilde;o <span class="red-text">*</span></td>
             </tr>
             <tr>
-              <td>
-		<textarea cols="80" id="descJustificativa" name="descJustificativa" rows="10">
+		<td>
+		    <textarea cols="80" id="descJustificativa" name="descJustificativa" rows="10">
 		  <?php if (count($this->readequacao) > 0): ?>
 		  <?php echo $this->readequacao[0]->dsJustificativa; ?>
 		  <?php endif; ?>
-		</textarea>
-	      </td>
+		    </textarea>
+		</td>
             </tr>
             <tr>
                 <td><span class="red-text">* Campo obrigatorio e permite o maximo de 5.000 caracteres</span></td>
@@ -1023,7 +1064,7 @@
 	    <?php if (count($this->readequacao) > 0): ?>	    
 	    <?php if (!empty($this->readequacao[0]->idArquivo)): ?>
 	    <tr>
-              <td><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'upload', 'action' => 'abrir')); ?>?id=<?php echo $this->readequacao[0]->idArquivo; ?>"><?php echo $this->readequacao[0]->nmArquivo; ?></a></td>
+		<td><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'upload', 'action' => 'abrir')); ?>?id=<?php echo $this->readequacao[0]->idArquivo; ?>"><?php echo $this->readequacao[0]->nmArquivo; ?></a></td>
 	    </tr>
 	    <?php endif; ?>
 	    <?php endif; ?>	    
@@ -1031,7 +1072,7 @@
                 <td><input type="file" name="arquivo" class="input_simples"> <span style="margin-left: 10px;" class="red-text">Somente arquivos .pdf</span></td>
             </tr>
         </table>
-    
+	
         <table class="tabela btnSalvar sumir">
             <tr>
                 <td class="centro">
@@ -1045,14 +1086,14 @@
         <table class="tabela">
             <tr>
                 <td class="centro">
-                  <input type="button" class="btn_finalizar sumir" id="btn_finalizar" title="Finalizar" />
-                  <input type="button" class="btn_exclusao sumir" id="btn_excluir" readequacao="<?php echo count($this->readequacao) > 0 ? $this->readequacao[0]->idReadequacao : ''; ?>" />
-                  <input type="button" class="btn_cancelar" id="btn_voltar" title="Voltar" />
+                    <input type="button" class="btn_finalizar sumir" id="btn_finalizar" title="Finalizar" />
+                    <input type="button" class="btn_exclusao sumir" id="btn_excluir" readequacao="<?php echo count($this->readequacao) > 0 ? $this->readequacao[0]->idReadequacao : ''; ?>" />
+                    <input type="button" class="btn_cancelar" id="btn_voltar" title="Voltar" />
                 </td>
             </tr>
         </table>
     </form>
-                                                                                                                
+    
     <!-- ========== Fim FORMUL�RIO ========== -->
 
     <?php //MODAL DE AVALIA��O DO ITEM ?>
@@ -1097,8 +1138,23 @@
         
         <table class="tabela">
             <tr>
-                <th colspan="6">Dados para a readequa&ccedil;&atilde;o</th>
+                <th colspan="3">Dados para a readequa&ccedil;&atilde;o</th>
             </tr>
+	    <tr class="centro">
+		<td colspan="6" class="destacar bold">Fonte de recursos</td>
+	    </tr>
+	    <tr>
+		<td colspan="6">
+		    <select class="select_simples w400 modalObrigatorios" name="modalFonteRecurso" id="modalFonteRecurso">
+                        <option value=""> - Selecione - </option>
+                        <?php foreach ($this->Recursos as $rec){ ?>
+                        <option value="<?php echo $rec->idverificacao; ?>"><?php echo $rec->verificacaodescricao; ?></option>
+                        <?php } ?>
+		    </select>
+		</td>
+
+	    </tr>
+	    
             <tr class="centro">
                 <td class="destacar bold">Unidade</td>
                 <td class="destacar bold">Qtd</td>
@@ -1109,7 +1165,7 @@
             </tr>
             <tr>
                 <td>
-                    <select class="select_simples w150 modalObrigatorios" name="modalUnidade" id="modalUnidade">
+		    <select class="select_simples w150 modalObrigatorios" name="modalUnidade" id="modalUnidade">
                         <option value=""> - Selecione - </option>
                         <?php foreach ($this->Unidade as $unit){ ?>
                         <option value="<?php echo $unit->idUnidade; ?>"><?php echo $unit->Descricao; ?></option>

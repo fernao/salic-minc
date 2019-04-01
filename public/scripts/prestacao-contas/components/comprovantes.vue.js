@@ -14,6 +14,7 @@ Vue.component('comprovantes', {
                     <li
                         v-for="dado in dados"
                         :key="dado.idComprovantePagamento"
+                        v-if="typeof dado !== 'undefined' && Object.keys(dado).length > 0"
                     >
                       <div class="collapsible-header">
                         Fornecedor: {{dado.fornecedor.nome}} - R$ {{valorFormatado(dado.valor)}}
@@ -102,6 +103,7 @@ Vue.component('comprovantes', {
         produto: null,
         stitemavaliado: null,
         uf: null,
+        idUf: null,
         idmunicipio: null,
         idplanilhaitem: null,
         etapa: null,
@@ -115,6 +117,7 @@ Vue.component('comprovantes', {
     },
     created() {
         let vue = this;
+
         this.$root.$on('novo-comprovante-nacional', function(data) {
             if(vue.tipo =='nacional'){
                 data.status='novo';
@@ -123,7 +126,10 @@ Vue.component('comprovantes', {
                     a[data._index]  = data;
                     vue.$data.dados = a;
                 } else {
+                    console.log(data._index);
+
                     Vue.set(vue.$data.dados, data._index, data);
+                    console.log(vue.$data.dados);
                 }
                 vue.valorComprovado = parseFloat(vue.valorcomprovado) + parseFloat(data.valor);
             }
@@ -184,6 +190,7 @@ Vue.component('comprovantes', {
                 idPlanilhaItem: this.idplanilhaitem,
                 produto: this.produto,
                 uf: this.uf,
+                idUf: this.idUf,
                 idmunicipio: this.idmunicipio,
                 etapa: this.etapa,
                 tipo: vue.tipo

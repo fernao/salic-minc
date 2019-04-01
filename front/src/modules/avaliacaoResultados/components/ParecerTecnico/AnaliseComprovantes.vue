@@ -1,6 +1,6 @@
 <template>
     <div>
-       AnaliseComprovantes 
+        AnaliseComprovantes
     </div>
 </template>
 
@@ -10,14 +10,17 @@ import ModalTemplate from '@/components/modal';
 
 export default {
     name: 'Painel',
+    components: {
+        ModalTemplate,
+    },
     data() {
         return {
             DadoNr: null,
         };
     },
-    components: {
-        ModalTemplate,
-    },
+    computed: mapGetters({
+        modalVisible: 'modal/default',
+    }),
     methods: {
         ...mapActions({
             criarRegistro: 'foo/criarRegistro',
@@ -30,8 +33,5 @@ export default {
             this.modalClose();
         },
     },
-    computed: mapGetters({
-        modalVisible: 'modal/default',
-    }),
 };
 </script>

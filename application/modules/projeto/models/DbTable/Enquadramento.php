@@ -30,6 +30,7 @@ class Projeto_Model_DbTable_Enquadramento extends MinC_Db_Table_Abstract
                     new Zend_Db_Expr('a.AnoProjeto + a.Sequencial AS Pronac'),
                     new Zend_Db_Expr('dbo.fnNomeDoProponente(a.IdPRONAC) AS Proponente'),
                     new Zend_Db_Expr('sac.dbo.fnVlAdequadoIncentivo(a.IdPRONAC) AS VlAdequadoIncentivo'),
+                    new Zend_Db_Expr('sac.dbo.fnvlAprovadoOriginal(a.IdPRONAC) AS VlAutorizadoACaptarIncentivo'),
                     new Zend_Db_Expr('sac.dbo.fnVlAdequadoOutrasFontes(a.IdPRONAC) AS VlAdequadoOutrasFontes'),
                     new Zend_Db_Expr('sac.dbo.fnVlTotalAdequado(a.IdPRONAC) AS VlTotalAdequado'),
                     new Zend_Db_Expr('sac.dbo.fnVlHomologadoIncentivo(a.IdPRONAC) AS VlHomologadoIncentivo'),
@@ -129,7 +130,7 @@ class Projeto_Model_DbTable_Enquadramento extends MinC_Db_Table_Abstract
 
         $sql->joinLeft(
             ['d' => 'tbReuniao'],
-            'c.NumeroReuniao = d.idNrReuniao',
+            'c.NumeroReuniao = d.NrReuniao',
             ['d.NrReuniao'],
             $this->_schema
         );
@@ -152,22 +153,22 @@ class Projeto_Model_DbTable_Enquadramento extends MinC_Db_Table_Abstract
             $this->_schema
         );
 
-        $sql->joinInner(
-            ['h'=> 'tbVerificaProjeto'],
-            'h.IdPRONAC = a.IdPRONAC',
-            ['h.stAnaliseProjeto'],
-            $this->_schema
-        );
+//        $sql->joinInner(
+//            ['h'=> 'tbVerificaProjeto'],
+//            'h.IdPRONAC = a.IdPRONAC',
+//            ['h.stAnaliseProjeto'],
+//            $this->_schema
+//        );
 
-        $sql->joinInner(
-            ['i' => 'Usuarios'],
-            'h.idUsuario = i.usu_codigo',
-            [
-                'usu_nome AS Tecnico',
-                new Zend_Db_Expr("DATEDIFF(day, h.dtrecebido, GETDATE()) AS tempoAnalise")
-            ],
-            'TABELAS.dbo'
-        );
+//        $sql->joinInner(
+//            ['i' => 'Usuarios'],
+//            'h.idUsuario = i.usu_codigo',
+//            [
+//                'usu_nome AS Tecnico',
+//                new Zend_Db_Expr("DATEDIFF(day, h.dtrecebido, GETDATE()) AS tempoAnalise")
+//            ],
+//            'TABELAS.dbo'
+//        );
 
         $sql->joinInner(
             ['j' => 'tbProjetoFase'],
@@ -180,9 +181,7 @@ class Projeto_Model_DbTable_Enquadramento extends MinC_Db_Table_Abstract
             $sql->where('a.NomeProjeto like ? OR a.AnoProjeto+a.Sequencial like ? OR d.NrReuniao like ?', '%'.$search['value'].'%');
         }
 
-        $sql->where('c.TipoParecer = ?', 1);
         $sql->where('c.stAtivo = ?', 1);
-        $sql->where('c.idTipoAgente = ?', 6);
         $sql->where('j.idNormativo > ?', 6);
         $sql->where('j.stEstado = ?', 1);
         $sql->where('sac.dbo.fnDtPortariaAprovacao(a.AnoProjeto,a.Sequencial) IS NOT NULL');

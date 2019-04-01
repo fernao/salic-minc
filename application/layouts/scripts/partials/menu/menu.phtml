@@ -151,6 +151,17 @@ $arrMenu['assinatura']['menu'][] = array(
 );
 
 $arrMenu['assinatura']['menu'][] = array(
+    'url' => $this->url(
+        array(
+            'module' => 'assinatura',
+            'controller' => 'documentos-devolvidos',
+            'action' => 'listar'
+        ), '', true),
+    'title' => 'Ir para Listar documentos devolvidos',
+    'label' => 'Listar Documentos Devolvidos'
+);
+
+$arrMenu['assinatura']['menu'][] = array(
     'grupo' => array(97),
     'url' => $this->url(
         array(
@@ -231,25 +242,19 @@ $arrMenu['acompanhamento']['menu'][] = array(
     'title' => 'Analisar Relat&oacute;rios Trimestrais',
     'label' => 'Analisar Relat&oacute;rios Trimestrais'
 );
+
 $arrMenu['acompanhamento']['menu'][] = array(
-    'grupo' => array(134, 135),
-    'url' => $this->url(array('controller' => 'pesquisarprojetofiscalizacao', 'action' => 'grid'), '', true),
+    'grupo' => array(
+        Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO,
+        Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO,
+        Autenticacao_Model_Grupos::COORDENADOR_FISCALIZACAO,
+        Autenticacao_Model_Grupos::TECNICO_FISCALIZACAO
+    ),
+    'url' => $this->url(array('module' => 'fiscalizacao', 'controller' => 'pesquisarprojetofiscalizacao', 'action' => 'grid'), '', true),
     'title' => 'Ir para Fiscalizar Projeto',
     'label' => 'Fiscalizar Projeto'
 );
 
-$arrMenu['acompanhamento']['menu'][] = array(
-    'grupo' => array(138),
-    'url' => $this->url(array('controller' => 'avaliaracompanhamentoprojeto', 'action' => 'index'), '', true),
-    'title' => 'Ir para Analisar Projeto Parecer',
-    'label' => 'Analisar Comprova&ccedil;&atilde;o do Objeto'
-);
-$arrMenu['acompanhamento']['menu'][] = array(
-    'grupo' => array(139, 148, 151),
-    'url' => $this->url(array('controller' => 'avaliaracompanhamentoprojeto', 'action' => 'index-tecnico'), '', true),
-    'title' => 'Ir para Analisar Projeto Parecer',
-    'label' => 'Analisar Comprova&ccedil;&atilde;o do Objeto'
-);
 $arrMenu['acompanhamento']['menu'][] = array(
     'grupo' => array(137),
     'url' => $this->url(array('controller' => 'parecerista', 'action' => 'configurar-pagamento-parecerista'), '', true),
@@ -899,7 +904,7 @@ if (isset ($auth['cpf'])) {
 </style>
 <div id="navbar-header">
     <nav class="">
-        <div class="nav-wrapper" style="margin: 0 auto; max-width: 960px">
+        <div class="nav-wrapper" style="margin: 0 auto; max-width: 1200px">
             <a id="menu-right" href="#" data-activates="nav-mobile" class="button-collapse right"><i
                         class="material-icons">menu</i></a>
             <ul class="left hide-on-med-and-down">

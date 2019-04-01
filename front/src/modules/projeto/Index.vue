@@ -1,11 +1,14 @@
 <template>
-    <div id="projeto">
-        <router-view></router-view>
+    <div
+        id="projeto"
+        class="template-vuetify"
+    >
+        <router-view/>
     </div>
 </template>
 
 <script>
-    export default {
-        name: 'Index',
-    };
+export default {
+    name: 'Index',
+};
 </script>

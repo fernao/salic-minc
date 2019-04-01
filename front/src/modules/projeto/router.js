@@ -13,7 +13,7 @@ import Proposta from './visualizar/components/incentivo/Proposta';
 import CertidoesNegativas from './visualizar/components/outrasInformacoes/CertidoesNegativas';
 import LocalRealizacaoDeslocamento from './visualizar/components/outrasInformacoes/LocalRealizacaoDeslocamento';
 import DocumentosAssinados from './visualizar/components/outrasInformacoes/DocumentosAssinados';
-import DadosComplementares from './visualizar/components/outrasInformacoes/DadosComplementares';
+import DadosComplementares from './visualizar/components/outrasInformacoes/DadosComplementaresView';
 import DocumentosAnexados from './visualizar/components/outrasInformacoes/DocumentosAnexados';
 import PlanoDistribuicaoIn2013 from './visualizar/components/outrasInformacoes/PlanoDistribuicaoIn2013';
 import HistoricoEncaminhamento from './visualizar/components/outrasInformacoes/HistoricoEncaminhamento';
@@ -21,11 +21,37 @@ import PlanoDistribuicaoIn2017 from './visualizar/components/outrasInformacoes/P
 import ProvidenciaTomada from './visualizar/components/outrasInformacoes/ProvidenciaTomada';
 import DiligenciaProjeto from './visualizar/components/outrasInformacoes/DiligenciaProjeto';
 import Tramitacao from './visualizar/components/outrasInformacoes/Tramitacao';
+import MarcasAnexadas from './visualizar/components/execucao/MarcasAnexadas';
+import DadosReadequacoes from './visualizar/components/execucao/DadosReadequacoes';
+import PedidoProrrogacao from './visualizar/components/execucao/PedidoProrrogacao';
+import DadosFiscalizacao from './visualizar/components/execucao/DadosFiscalizacao';
+import ContasBancarias from './visualizar/components/dadosBancarios/ContasBancarias';
+import ConciliacaoBancaria from './visualizar/components/dadosBancarios/ConciliacaoBancaria';
+import InconsistenciaBancaria from './visualizar/components/dadosBancarios/InconsistenciaBancaria';
+import Liberacao from './visualizar/components/dadosBancarios/Liberacao';
+import SaldoContas from './visualizar/components/dadosBancarios/SaldoContas';
+import ExtratosBancarios from './visualizar/components/dadosBancarios/ExtratosBancarios';
+import ExtratosBancariosConsolidado from './visualizar/components/dadosBancarios/ExtratosBancariosConsolidado';
+import Captacao from './visualizar/components/dadosBancarios/Captacao';
+import Devolucoes from './visualizar/components/dadosBancarios/Devolucoes';
+import PagamentosConsolidados from './visualizar/components/prestacaoContas/PagamentosConsolidados';
+import PagamentosUfMunicipio from './visualizar/components/prestacaoContas/PagamentosUfMunicipio';
+import ExecucaoReceitaDespesa from './visualizar/components/prestacaoContas/ExecucaoReceitaDespesa';
+import RelatorioFisico from './visualizar/components/prestacaoContas/RelatorioFisico';
+import RelacaoPagamento from './visualizar/components/prestacaoContas/RelacaoPagamento';
+import RelatorioCumprimentoObjeto from './visualizar/components/prestacaoContas/RelatorioCumprimentoObjeto';
+
+import Aprovacao from './visualizar/components/analiseAprovacao/Aprovacao';
+import Recurso from './visualizar/components/analiseAprovacao/Recurso';
+
+// import retirados do webpackChunkName
+import DadosProjeto from './visualizar/components/DadosProjeto';
+import Proponente from './visualizar/components/incentivo/Proponente';
 
 Vue.use(Router);
 
-const DadosProjeto = () => import(/* webpackChunkName: "dados-projeto" */ './visualizar/components/DadosProjeto');
-const Proponente = () => import(/* webpackChunkName: "proponente" */ './visualizar/components/incentivo/Proponente');
+// const DadosProjeto = () => import(/* webpackChunkName: "dados-projeto" */ './visualizar/components/DadosProjeto');
+// const Proponente = () => import(/* webpackChunkName: "proponente" */ './visualizar/components/incentivo/Proponente');
 
 const templateAjax = {
     template: '<div id="conteudo"></div>',
@@ -217,6 +243,174 @@ const routes = [
                 component: Tramitacao,
                 meta: {
                     title: 'Tramita&ccedil;&atilde;o',
+                },
+            },
+            {
+                path: 'marcas-anexadas',
+                name: 'MarcasAnexadas',
+                component: MarcasAnexadas,
+                meta: {
+                    title: 'Marcas Anexadas',
+                },
+            },
+            {
+                path: 'readequacoes',
+                name: 'DadosReadequacoes',
+                component: DadosReadequacoes,
+                meta: {
+                    title: 'Dados das Readequações',
+                },
+            },
+            {
+                path: 'pedido-prorrogacao',
+                name: 'PedidoProrrogacao',
+                component: PedidoProrrogacao,
+                meta: {
+                    title: 'Pedido de Prorrogação',
+                },
+            },
+            {
+                path: 'dados-fiscalizacao',
+                name: 'DadosFiscalizacao',
+                component: DadosFiscalizacao,
+                meta: {
+                    title: 'Dados Fiscalização',
+                },
+            },
+            {
+                path: 'contas-bancarias',
+                name: 'ContasBancarias',
+                component: ContasBancarias,
+                meta: {
+                    title: 'Contas Bancárias',
+                },
+            },
+            {
+                path: 'conciliacao-bancaria',
+                name: 'ConciliacaoBancaria',
+                component: ConciliacaoBancaria,
+                meta: {
+                    title: 'Conciliação Bancária',
+                },
+            },
+            {
+                path: 'inconsistencia-bancaria',
+                name: 'InconsistenciaBancaria',
+                component: InconsistenciaBancaria,
+                meta: {
+                    title: 'Inconsistência Bancária',
+                },
+            },
+            {
+                path: 'liberacao',
+                name: 'Liberecao',
+                component: Liberacao,
+                meta: {
+                    title: 'Liberação',
+                },
+            },
+            {
+                path: 'saldo-contas',
+                name: 'SaldoContas',
+                component: SaldoContas,
+                meta: {
+                    title: 'Saldo das Contas',
+                },
+            },
+            {
+                path: 'extratos-bancarios',
+                name: 'ExtratosBancarios',
+                component: ExtratosBancarios,
+                meta: {
+                    title: 'Extratos Bancários',
+                },
+            },
+            {
+                path: 'extratos-bancarios-consolidado',
+                name: 'ExtratosBancariosConsolidado',
+                component: ExtratosBancariosConsolidado,
+                meta: {
+                    title: 'Extratos Bancários Consolidado',
+                },
+            },
+            {
+                path: 'captacao',
+                name: 'Captacao',
+                component: Captacao,
+                meta: {
+                    title: 'Captação',
+                },
+            },
+            {
+                path: 'devolucoes',
+                name: 'Devolucoes',
+                component: Devolucoes,
+                meta: {
+                    title: 'Devoluções',
+                },
+            },
+            {
+                path: 'aprovacao',
+                name: 'Aprovacao',
+                component: Aprovacao,
+                meta: {
+                    title: 'Aprovação',
+                },
+            },
+            {
+                path: 'recurso',
+                name: 'Recurso',
+                component: Recurso,
+                meta: {
+                    title: 'Recurso',
+                },
+            },
+            {
+                path: 'pagamentos-consolidados',
+                name: 'PagamentosConsolidados',
+                component: PagamentosConsolidados,
+                meta: {
+                    title: 'Pagamentos Consolidados',
+                },
+            },
+            {
+                path: 'pagamentos-uf-municipio',
+                name: 'PagamentosUfMunicipio',
+                component: PagamentosUfMunicipio,
+                meta: {
+                    title: 'Pagamentos Por UF / Município',
+                },
+            },
+            {
+                path: 'execucao-receita-despesa',
+                name: 'ExecucaoReceitaDespesa',
+                component: ExecucaoReceitaDespesa,
+                meta: {
+                    title: 'Execução da Receita e Despesa',
+                },
+            },
+            {
+                path: 'relatorio-fisico',
+                name: 'RelatorioFisico',
+                component: RelatorioFisico,
+                meta: {
+                    title: 'Relatório Físico',
+                },
+            },
+            {
+                path: 'relacao-pagamento',
+                name: 'RelacaoPagamento',
+                component: RelacaoPagamento,
+                meta: {
+                    title: 'Relação de Pagamentos',
+                },
+            },
+            {
+                path: 'relatorio-cumprimento-objeto',
+                name: 'RelatorioCumprimentoObjeto',
+                component: RelatorioCumprimentoObjeto,
+                meta: {
+                    title: 'Relatório de cumprimento do Objeto',
                 },
             },
         ],

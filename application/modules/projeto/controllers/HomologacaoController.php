@@ -49,22 +49,26 @@ class Projeto_HomologacaoController extends Projeto_GenericController
         switch ($filtro) {
             case '':
                 $where['a.Situacao = ?'] = 'D50';
+                $where['c.TipoParecer = ?'] = 1;
                 $where['NOT EXISTS(SELECT TOP 1 * FROM SAC.dbo.tbDiligencia WHERE idPronac = a.IdPRONAC AND idTipoDiligencia = 181 AND DtSolicitacao IS NOT NULL AND DtResposta IS NULL AND stEstado = 0 AND stEnviado = \'S\')'] = '';
                 break;
             case 'diligenciados':
                 $where['a.Situacao = ?'] = 'D25';
+                $where['c.TipoParecer = ?'] = 1;
                 $where['EXISTS(SELECT TOP 1 * FROM SAC.dbo.tbDiligencia WHERE idPronac = a.IdPRONAC AND idTipoDiligencia = 181 AND DtSolicitacao IS NOT NULL AND DtResposta IS NULL AND stEstado = 0 AND stEnviado = \'S\')'] = '';
                 break;
             case 'respondidos':
                 $where['a.Situacao = ?'] = 'D50';
+                $where['c.TipoParecer = ?'] = 1;
                 $where['EXISTS(SELECT TOP 1 * FROM SAC.dbo.tbDiligencia WHERE idPronac = a.IdPRONAC AND idTipoDiligencia = 181 AND DtSolicitacao IS NOT NULL AND DtResposta IS NOT NULL AND stEstado = 0)'] = '';
                 break;
-//            case 'aguardando-recurso':
-//                $where['a.Situacao = \'D51\' OR (a.Situacao = \'D20\' AND EXISTS(SELECT TOP 1 idPronac from sac.dbo.tbRecurso where idPronac = a.IdPRONAC AND siFaseProjeto = 2 AND stEstado = 0))'] = '';
-//                break;
+            case 'aguardando-recurso':
+                $where['a.Situacao in (?)'] = ['D51'];
+                $where['NOT EXISTS(SELECT TOP 1 idPronac from sac.dbo.tbRecurso where idPronac = a.IdPRONAC AND siFaseProjeto = 2 AND (siRecurso = 9 OR tpSolicitacao = \'DR\'))'] = '';
+                break;
             case 'pos-recurso':
-                $where['a.Situacao = \'D51\' OR a.Situacao = \'D20\''] = '';
-                $where['EXISTS(SELECT TOP 1 idPronac from sac.dbo.tbRecurso where idPronac = a.IdPRONAC AND siFaseProjeto = 2 AND stEstado = 1)'] = '';
+                $where['a.Situacao in (?)'] = ['D51', 'D20'];
+                $where['EXISTS(SELECT TOP 1 idPronac from sac.dbo.tbRecurso where idPronac = a.IdPRONAC AND siFaseProjeto = 2 AND (siRecurso = 9 OR tpSolicitacao = \'DR\'))'] = '';
                 break;
         }
 
@@ -145,7 +149,7 @@ class Projeto_HomologacaoController extends Projeto_GenericController
                 'data' => $retorno['data'],
                 'status' => $retorno['status'],
                 'msg' => $mapper->getMessages(),
-                'close' => 0
+                'close' => isset($retorno['close']) ? $retorno['close'] : 0
             ]);
         } else {
             $idPronac = $this->getRequest()->getParam('id');
@@ -194,7 +198,9 @@ class Projeto_HomologacaoController extends Projeto_GenericController
             $mapper = new Projeto_Model_TbHomologacaoMapper();
             $arrPost = $this->getRequest()->getPost();
             $arrPost['stDecisao'] = (isset($arrPost['stDecisao'])) ? 2 : 1;
-            $arrPost['tpHomologacao'] = 1;
+            $arrPost['tpHomologacao'] = empty($arrPost['tpHomologacao'])
+                ? Projeto_Model_TbHomologacao::TP_HOMOLOGACAO_NORMAL : $arrPost['tpHomologacao'];
+
             $this->_helper->json([
                 'status' => $mapper->save($arrPost),
                 'msg' => $mapper->getMessages(),
@@ -242,8 +248,7 @@ class Projeto_HomologacaoController extends Projeto_GenericController
             'IdPRONAC' => $intIdPronac
         ]);
         $arrValue['parecerHomologacao'] = $dbTableHomologacao->getBy([
-            'idPronac' => $intIdPronac,
-            'tpHomologacao' => '1'
+            'idPronac' => $intIdPronac
         ]);
 
         if (isset($arrValue['IdPRONAC'])) {

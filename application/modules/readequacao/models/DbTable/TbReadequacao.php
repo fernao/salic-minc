@@ -71,6 +71,7 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
                     a.dsAvaliacao,
                     CAST(a.dsSolicitacao AS TEXT) AS dsSolicitacao,
                     CAST(a.dsJustificativa AS TEXT) AS dsJustificativa,
+                    a.siEncaminhamento,
                     a.idTipoReadequacao"
                 )
             )
@@ -177,6 +178,8 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
              'idTecnicoParecerista' => 'tbDistribuirReadequacao.idAvaliador',
              'nmTecnicoParecerista' => new Zend_Db_Expr("
        CASE
+         WHEN tbReadequacao.siEncaminhamento = 10
+           THEN '<b><font color=red>Assinatura do Coordenador (parecer de ' + usuarios.usu_nome + ')</font></b>'
 	     WHEN tbReadequacao.siEncaminhamento = 17
 		   THEN '<b><font color=red>Devolvida pelo CNIC</font></b>'
 	     WHEN tbReadequacao.siEncaminhamento = 18
@@ -494,7 +497,7 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
         $select->joinInner(
             array('c' => 'tbTipoReadequacao'),
             'c.idTipoReadequacao = a.idTipoReadequacao',
-            array(''),
+            ['c.dsReadequacao AS tipoReadequacao'],
             'SAC.dbo'
         );
         $select->joinLeft(
@@ -1201,7 +1204,8 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
                  GETDATE()) as qtDiasEmAnalise,
                  tbdistribuirReadequacao.idAvaliador,
                  usuarios.usu_nome as nmParecerista,
-                 tbdistribuirReadequacao.idUnidade as idOrgao"
+                 tbdistribuirReadequacao.idUnidade as idOrgao,
+                 tbdistribuirReadequacao.idDistribuirReadequacao"
                 )
             );
 
@@ -1466,7 +1470,7 @@ class Readequacao_Model_DbTable_TbReadequacao extends MinC_Db_Table_Abstract
     {
         $liberacao = new Liberacao();
         $projeto = new Projetos();
-        $tbCumprimentoObjeto = new tbCumprimentoObjeto();
+        $tbCumprimentoObjeto = new ComprovacaoObjeto_Model_DbTable_TbCumprimentoObjeto();
 
         $existeReadequacaoEmAndamento = $this->existeReadequacaoEmAndamento($idPronac);
         $contaLiberada = $liberacao->contaLiberada($idPronac);

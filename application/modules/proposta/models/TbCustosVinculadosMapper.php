@@ -137,6 +137,50 @@ class Proposta_Model_TbCustosVinculadosMapper extends MinC_Db_Mapper
         return $custosVinculados;
     }
 
+    public function obterCustosVinculadosReadequacao($idPronac)
+    {
+        if (!$idPronac) {
+            return;
+        }
+
+        $projetos = new Projetos();
+        $projeto = $projetos->buscar(['idPronac = ?' => $idPronac])->current();
+        $idPreProjeto = $projeto['idProjeto'];
+
+        $tbCustosVinculadosMapper = new Proposta_Model_TbCustosVinculadosMapper();
+        $custosVinculados = $tbCustosVinculadosMapper->obterCustosVinculadosPlanilhaProposta($idPreProjeto);
+
+        $readequacaoModelDbTable = new Readequacao_Model_DbTable_TbReadequacao();
+        $idReadequacao = $readequacaoModelDbTable->buscarIdReadequacaoAtiva(
+            $idPronac,
+            Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
+        );
+
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+        $itensEmReadequacao = $tbPlanilhaAprovacao->obterPlanilhaReadequacao($idReadequacao);
+
+        $totalParaDivulgacaoAdministracao = 0;
+
+        $etapasSomaDivulgacaoAdministracao = [
+            PlanilhaEtapa::ETAPA_PRE_PRODUCAO_PREPARACAO,
+            PlanilhaEtapa::ETAPA_PRODUCAO_EXECUCAO,
+            PlanilhaEtapa::ETAPA_POS_PRODUCAO,
+            PlanilhaEtapa::ETAPA_ASSESORIA_CONTABIL_JURIDICA,
+            PlanilhaEtapa::ETAPA_RECOLHIMENTOS
+        ];
+
+        foreach ($itensEmReadequacao as $item) {
+            if (in_array($item->idEtapa, $etapasSomaDivulgacaoAdministracao)
+                && $item->tpAcao != 'E'
+                && $item->nrFonteRecurso == Mecanismo::INCENTIVO_FISCAL_FEDERAL
+            ) {
+                $totalParaDivulgacaoAdministracao += $item->vlUnitario * $item->qtItem * $item->nrOcorrencia;
+            }
+        }
+
+        return $this->obterCustosVinculados($idPreProjeto, $totalParaDivulgacaoAdministracao);
+    }
+
     public function obterValoresDosItens($custosVinculados, $valorDoProjeto)
     {
         $custoAdicional = 0;
@@ -171,7 +215,6 @@ class Proposta_Model_TbCustosVinculadosMapper extends MinC_Db_Mapper
         return $custosVinculados;
     }
 
-
     public function obterCustosVinculadosPlanilhaProposta($idPreProjeto)
     {
         if (empty($idPreProjeto)) {
@@ -181,7 +224,7 @@ class Proposta_Model_TbCustosVinculadosMapper extends MinC_Db_Mapper
         $tbPlanilhaProposta = new Proposta_Model_DbTable_TbPlanilhaProposta();
         $valorDoProjeto = $tbPlanilhaProposta->somarPlanilhaPropostaPorEtapa(
             $idPreProjeto,
-            Mecanismo::INCENTIVO_FISCAL,
+            Mecanismo::INCENTIVO_FISCAL_FEDERAL,
             null,
             [
                 'idPlanilhaEtapa in (?)' => [
@@ -252,7 +295,7 @@ class Proposta_Model_TbCustosVinculadosMapper extends MinC_Db_Mapper
                 'idEtapa' => $item['idPlanilhaEtapa'],
                 'idPlanilhaItem' => $item['idPlanilhaItens'],
                 'Descricao' => '',
-                'Unidade' => '1',
+                'Unidade' => '15',
                 'Quantidade' => '1',
                 'Ocorrencia' => '1',
                 'ValorUnitario' => $item['valorUnitario'],
@@ -260,10 +303,10 @@ class Proposta_Model_TbCustosVinculadosMapper extends MinC_Db_Mapper
                 'TipoDespesa' => '0',
                 'TipoPessoa' => '0',
                 'contraPartida' => '0',
-                'FonteRecurso' => Mecanismo::INCENTIVO_FISCAL,
+                'FonteRecurso' => Mecanismo::INCENTIVO_FISCAL_FEDERAL,
                 'UfDespesa' => $item['idUF'],
                 'MunicipioDespesa' => $item['idMunicipio'],
-                'dsJustificativa' => '',
+                'dsJustificativa' => 'Item or&ccedil;ament&aacute;rio recalculado automaticamente conforme o percentual solicitado pelo proponente',
                 'stCustoPraticado' => 0,
                 'idUsuario' => 462
             );

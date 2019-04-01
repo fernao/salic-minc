@@ -10,11 +10,12 @@ export const state = {
     dadosTabelaTecnico: [],
     dadosHistoricoEncaminhamento: [],
     dadosDestinatarios: [],
+    diligenciasHistorico: [],
     mocks:
-    {
-        parecer: Parecer,
-        tipoAvaliacao: TipoAvaliacao,
-    },
+        {
+            parecer: Parecer,
+            tipoAvaliacao: TipoAvaliacao,
+        },
     parecer: {},
     projeto: {},
     proponente: {},
@@ -29,7 +30,7 @@ export const state = {
     dadosItemComprovacao: {},
     projetosParaDistribuir: {},
     getProjetosAssinatura: [],
-    getProjetosLaudoFinal: [],
+    getProjetosLaudoFinal: {},
     getProjetosLaudoAssinar: {},
     getProjetosLaudoEmAssinatura: {},
     getProjetosLaudoFinalizados: {},
@@ -41,9 +42,11 @@ export const state = {
     devolverProjeto: {},
     objetoParecer: {},
     itensBuscaComprovantes: {},
-    comprovantes: {},
+    comprovantes: [],
     projetosAssinarCoordenador: {},
     projetosAssinarCoordenadorGeral: {},
+    dashboard: {},
+    projetosSimilares: [],
 };
 
 export const mutations = {
@@ -71,7 +74,7 @@ export const mutations = {
         state.dadosTabela.push(registro);
     },
     [types.ATUALIZAR_REGISTRO_TABELA](state, registro) {
-        const dadosTabela = state.dadosTabela;
+        const { dadosTabela } = state;
 
         dadosTabela.forEach((value, index) => {
             if (registro.Codigo === value.Codigo) {
@@ -80,7 +83,7 @@ export const mutations = {
         });
     },
     [types.REMOVER_REGISTRO](state, registro) {
-        const dadosTabela = state.dadosTabela;
+        const { dadosTabela } = state.dadosTabela;
 
         dadosTabela.forEach((value, index) => {
             if (registro.Codigo === value.Codigo) {
@@ -94,6 +97,9 @@ export const mutations = {
     [types.PROJETOS_AVALIACAO_TECNICA](state, dados) {
         state.dadosTabelaTecnico = dados;
     },
+    [types.HISTORICO_DILIGENCIAS](state, diligencias) {
+        state.diligenciasHistorico = diligencias;
+    },
     [types.HISTORICO_ENCAMINHAMENTO](state, dados) {
         state.dadosHistoricoEncaminhamento = [];
         Object.values(dados).forEach((historico) => {
@@ -101,7 +107,8 @@ export const mutations = {
         });
     },
     [types.GET_TIPO_AVALIACAO](state, tipoAvaliacao) {
-        state.tipoAvaliacao = tipoAvaliacao[0];
+        const valor = tipoAvaliacao[0];
+        state.tipoAvaliacao = valor;
     },
     [types.LINK_REDIRECIONAMENTO_TIPO_AVALIACAO_RESULTADO](state, redirectLink) {
         state.redirectLink = redirectLink;
@@ -128,10 +135,12 @@ export const mutations = {
         state.dadosItemComprovacao = dados;
     },
     [types.ALTERAR_DADOS_ITEM_COMPROVACAO](state, params) {
-        const index = params.index;
-        delete params.index;
-        Object.keys(params).forEach((key) => {
-            state.dadosItemComprovacao.comprovantes[index][key] = params[key];
+        const { index } = params;
+        const valor = params;
+        delete valor.index;
+
+        Object.keys(valor).forEach((key) => {
+            state.dadosItemComprovacao.comprovantes[index][key] = valor[key];
         });
     },
     [types.SET_DADOS_PROJETOS_PARA_DISTRIBUIR](state, dados) {
@@ -177,6 +186,12 @@ export const mutations = {
     [types.SET_COMPROVANTES](state, dados) {
         state.comprovantes = dados;
     },
+    [types.EDIT_COMPROVANTE](state, comprovante) {
+        const index = state.comprovantes.findIndex(
+            item => item.idComprovantePagamento === comprovante.idComprovantePagamento,
+        );
+        Object.assign(state.comprovantes[index], comprovante);
+    },
     [types.SYNC_PROJETOS_ASSINAR_COORDENADOR](state, dados) {
         state.projetosAssinarCoordenador = dados;
     },
@@ -184,73 +199,48 @@ export const mutations = {
         state.projetosAssinarCoordenadorGeral = dados;
     },
     [types.ALTERAR_PLANILHA](state, params) {
-        const tiposAvaliacoes = {
-            avaliado: 1,
-            impugnado: 3,
-            aguardandoAnalise: 4,
-
+        const tiposXQuantidade = {
+            1: 0, // avaliado
+            3: 0, // impugnado
+            4: 0, // aguardando analise
         };
 
-        const copiaItem = _.cloneDeep(state
+        const copiaState = state
             .planilha[params.cdProduto]
             .etapa[params.etapa]
             .UF[params.cdUf]
             .cidade[params.idmunicipio]
-            .itens[params.stItemAvaliado][params.idPlanilhaItem]);
-        Object.values(tiposAvaliacoes).forEach((tipoAvaliacao) => {
-            if (typeof state
-                .planilha[params.cdProduto]
-                .etapa[params.etapa]
-                .UF[params.cdUf]
-                .cidade[params.idmunicipio]
-                .itens[tipoAvaliacao] !== 'undefined') {
-                Vue.delete(state
-                    .planilha[params.cdProduto]
-                    .etapa[params.etapa]
-                    .UF[params.cdUf]
-                    .cidade[params.idmunicipio]
-                    .itens[tipoAvaliacao], params.idPlanilhaItem);
-            }
+            .itens;
+
+        const copiaItem = _.cloneDeep(copiaState.todos[params.idPlanilhaItem]);
+
+        state.comprovantes.forEach((comprovante) => {
+            tiposXQuantidade[comprovante.stItemAvaliado] += 1;
         });
 
-        state.dadosItemComprovacao.comprovantes.forEach((valor) => {
-            copiaItem.stItemAvaliado = valor.stItemAvaliado;
-            if (typeof state
-                .planilha[params.cdProduto]
-                .etapa[params.etapa]
-                .UF[params.cdUf]
-                .cidade[params.idmunicipio]
-                .itens[valor.stItemAvaliado] === 'undefined') {
-                Vue.set(state
-                    .planilha[params.cdProduto]
-                    .etapa[params.etapa]
-                    .UF[params.cdUf]
-                    .cidade[params.idmunicipio]
-                    .itens, valor.stItemAvaliado, {});
+        Object.keys(tiposXQuantidade).forEach((tipo) => {
+            const quantidade = tiposXQuantidade[tipo];
+            if (quantidade === 0) {
+                if (typeof copiaState[tipo] !== 'undefined') {
+                    Vue.delete(copiaState[tipo], params.idPlanilhaItem);
+
+                    if (Object.keys(copiaState[tipo]).length === 0) {
+                        Vue.delete(copiaState, tipo);
+                    }
+                }
+                return;
             }
 
-            Vue.set(state
-                .planilha[params.cdProduto]
-                .etapa[params.etapa]
-                .UF[params.cdUf]
-                .cidade[params.idmunicipio]
-                .itens[valor.stItemAvaliado], params.idPlanilhaItem, copiaItem);
-        });
-
-        Object.values(tiposAvaliacoes).forEach((tipoAvaliacao) => {
-            if (Object.keys(state
-                .planilha[params.cdProduto]
-                .etapa[params.etapa]
-                .UF[params.cdUf]
-                .cidade[params.idmunicipio]
-                .itens[tipoAvaliacao]).length === 0) {
-                Vue.delete(state
-                    .planilha[params.cdProduto]
-                    .etapa[params.etapa]
-                    .UF[params.cdUf]
-                    .cidade[params.idmunicipio]
-                    .itens, tipoAvaliacao);
+            if (typeof copiaState[tipo] === 'undefined') {
+                Vue.set(copiaState, tipo, {});
             }
+            Vue.set(copiaState[tipo], params.idPlanilhaItem, copiaItem);
         });
+    },
+    [types.DASHBOARD_QUANTIDADE](state, dados) {
+        state.dashboard = dados;
+    },
+    [types.SYNC_PROJETOS_SIMILARES](state, dados) {
+        state.projetosSimilares = dados;
     },
 };

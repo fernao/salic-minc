@@ -1,9 +1,9 @@
 <template>
     <v-btn
+        :to="{ name: 'AnalisePlanilha', params:{ id: idPronac }}"
         flat
         icon
         color="primary"
-        :to="{ name: 'AnalisePlanilha', params:{ id: idPronac }}"
     >
         <v-tooltip bottom>
             <v-icon
@@ -20,8 +20,11 @@
 
 export default {
     name: 'AnalisarButton',
-    props: [
-        'idPronac',
-    ],
+    props: {
+        idPronac: {
+            type: String,
+            default: '',
+        },
+    },
 };
 </script>

@@ -337,6 +337,7 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
             )
         );
         $select->where('a.idPronac = ?', $idPronac);
+        $select->where(new Zend_Db_Expr('a.tpAcao <> ? OR a.tpAcao IS NULL'), 'E');
         $select->where('a.stAtivo = ?', 'S');
 
         if (!empty($nrFonteRecurso)) {
@@ -662,7 +663,7 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
             'SAC.dbo'
         );
         $select->joinInner(
-            ['e' => 'tbCumprimentoObjeto'],
+            ['e' => 'TbCumprimentoObjeto'],
             'd.IdPRONAC = e.idPronac',
             [''],
             'SAC.dbo'
@@ -848,7 +849,7 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
             'SAC.dbo'
         );
         $select->joinInner(
-            ['e' => 'tbCumprimentoObjeto'],
+            ['e' => 'TbCumprimentoObjeto'],
             'd.IdPRONAC = e.idPronac',
             [''],
             'SAC.dbo'
@@ -912,5 +913,126 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
         /* echo $select;die; */
 
         return $this->fetchAll($select);
+    }
+    
+    public function projetoContemEtapasCustosDivulgacao($idPronac)
+    {
+        $objQuery = $this->select();
+        $objQuery->setIntegrityCheck(false);
+        
+        $objQuery->from(
+            array(
+                'tbPlanilhaAprovacao' => $this->_name
+            ),
+            'idPronac',
+            $this->_schema
+        );
+
+        $objQuery->where('tbPlanilhaAprovacao.tpPlanilha = ?', 'CO');
+        $objQuery->where('tbPlanilhaAprovacao.idEtapa IN(?)', [
+            PlanilhaEtapa::ETAPA_CUSTOS_ADMINISTRATIVOS,
+            PlanilhaEtapa::ETAPA_DIVULGACAO_COMERCIALIZACAO
+        ]);
+        $objQuery->where('tbPlanilhaAprovacao.IdPRONAC = ?', $idPronac);
+        
+        $result = $this->fetchAll($objQuery);
+        
+        if (count($result > 0)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function obterPlanilhaReadequacao($idReadequacao)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+
+        $select->from(
+            array('a' => $this->_name),
+            '*'
+        );
+
+        $select->where('a.idReadequacao = ?', $idReadequacao);
+        
+        return $this->fetchAll($select);
+    }
+
+    public function obterValorRemuneracaoCaptacaoAprovado($idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        
+        $select->from(
+            array('a' => $this->_name),
+            'a.vlUnitario'
+        );
+
+        $idRemuneracaoCaptacao = 5249;
+        
+        $select->where('a.idPronac = ?', $idPronac);
+        $select->where('a.tpPlanilha = ?', 'CO');
+        $select->where('a.idPlanilhaItem = ?', $idRemuneracaoCaptacao);
+        
+        $result = $this->fetchRow($select);
+
+        if (!empty($result)) {
+            return $result['vlUnitario'];
+        }
+        return $result;
+    }
+
+    public function calculaSaldoReadequacaoBaseDeCusto($idPronac)
+    {
+
+        $baseDeCusto = [
+            PlanilhaEtapa::ETAPA_PRE_PRODUCAO_PREPARACAO,
+            PlanilhaEtapa::ETAPA_PRODUCAO_EXECUCAO,
+            PlanilhaEtapa::ETAPA_POS_PRODUCAO,
+            PlanilhaEtapa::ETAPA_ASSESORIA_CONTABIL_JURIDICA,
+            PlanilhaEtapa::ETAPA_RECOLHIMENTOS
+        ];
+
+        $tbReadequacao = new Readequacao_Model_DbTable_TbReadequacao();
+        $idReadequacao = $tbReadequacao->buscarIdReadequacaoAtiva(
+            $idPronac,
+            Readequacao_Model_DbTable_TbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
+        );
+        
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            ['a' => $this->_name],
+            [new Zend_Db_Expr('ROUND(SUM(a.qtItem*a.nrOcorrencia*a.vlUnitario), 2) AS Total')]
+        );
+        $select->where('a.IdPRONAC = ?', $idPronac);
+        $select->where('a.idReadequacao = ?', $idReadequacao);
+        $select->where('a.idEtapa IN(?)', $baseDeCusto);
+        $select->where('a.stAtivo = ?', 'N');
+        $select->where('a.tpAcao != ?', 'E');
+        $select->where('a.nrFonteRecurso = ?', Mecanismo::INCENTIVO_FISCAL_FEDERAL);
+        
+        $somaPlanilhaReadequada = $this->fetchRow($select)['Total'];
+
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            ['a' => $this->_name],
+            [new Zend_Db_Expr('ROUND(SUM(a.qtItem*a.nrOcorrencia*a.vlUnitario), 2) AS Total')]
+        );
+        $select->where('a.IdPRONAC = ?', $idPronac);
+        $select->where('a.idEtapa IN(?)', $baseDeCusto);
+        $select->where('a.stAtivo = ?', 'S');
+        $select->where('a.nrFonteRecurso = ?', Mecanismo::INCENTIVO_FISCAL_FEDERAL);
+        
+        $somaPlanilhaAtiva = $this->fetchRow($select)['Total'];
+        
+        if ($somaPlanilhaReadequada > $somaPlanilhaAtiva) {
+            return "COMPLEMENTACAO";
+        } else if ($somaPlanilhaReadequada == $somaPlanilhaAtiva) {
+            return "REMANEJAMENTO";
+        } else if ($somaPlanilhaReadequada < $somaPlanilhaAtiva) {
+            return "REDUCAO";
+        }
     }
 }

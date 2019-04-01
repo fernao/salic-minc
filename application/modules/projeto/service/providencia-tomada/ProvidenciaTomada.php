@@ -32,7 +32,7 @@ class ProvidenciaTomada implements \MinC\Servico\IServicoRestZend
         $pronacArray['p.IdPRONAC = ?'] = $idPronac;
 
         $tblHisSituacao = new \HistoricoSituacao();
-        $result = $tblHisSituacao->buscarHistoricosEncaminhamentoIdPronac($pronacArray, null, null, null, false);
+        $result = $tblHisSituacao->buscarHistoricosEncaminhamentoIdPronac($pronacArray, ['h.dtSituacao DESC'], null, null, false);
 
         $providenciaTomada = $this->montaArrayProvidenciaTomada($result);
         $resultArray['providenciaTomada'] = $providenciaTomada;
@@ -49,14 +49,9 @@ class ProvidenciaTomada implements \MinC\Servico\IServicoRestZend
         foreach ($providenciaTomada as $providencia) {
             $ProvidenciaTomada = $providencia['ProvidenciaTomada'];
             $usuario = $providencia['usuario'];
-            $objDateTimeDtSituacao = ' ';
-
-            if (!empty($providencia['DtSituacao'])) {
-                $objDateTimeDtSituacao = new \DateTime($providencia['DtSituacao']);
-                $objDateTimeDtSituacao = $objDateTimeDtSituacao->format('d/m/Y H:i:s');
-            }
+            
             $resultArray[] = [
-                'DtSituacao' => $objDateTimeDtSituacao,
+                'DtSituacao' => $providencia['DtSituacao'],
                 'Situacao' => $providencia['Situacao'],
                 'ProvidenciaTomada' => $ProvidenciaTomada,
                 'cnpjcpf' => $providencia['cnpjcpf'],

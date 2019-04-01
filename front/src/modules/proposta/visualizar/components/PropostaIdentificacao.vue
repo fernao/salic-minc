@@ -1,20 +1,26 @@
 <template>
-    <div class="dados-basicos" v-if="proposta">
+    <div
+        v-if="proposta"
+        class="dados-basicos">
         <div class="card">
             <div class="card-content">
                 <h5>Identifica&ccedil;&atilde;o</h5>
                 <div class="row">
-                    <div class="col s12 l3 m3" v-if="proposta.PRONAC">
+                    <div
+                        v-if="proposta.PRONAC"
+                        class="col s12 l3 m3">
                         <b>Pronac</b><br>
                         {{ proposta.PRONAC }}
                     </div>
-                    <div class="col s12 l3 m3" v-if="proposta.idPreProjeto">
+                    <div
+                        v-if="proposta.idPreProjeto"
+                        class="col s12 l3 m3">
                         <b>N&ordm; da proposta</b><br>
                         {{ proposta.idPreProjeto }}
                     </div>
                     <div class="col s12 l6 m6">
                         <b>Nome Projeto</b><br>
-                        <SalicTextoSimples :texto="proposta.NomeProjeto"></SalicTextoSimples>
+                        <SalicTextoSimples :texto="proposta.NomeProjeto"/>
                     </div>
                 </div>
             </div>
@@ -24,45 +30,59 @@
             <div class="card-content">
                 <h5>Informa&ccedil;&otilde;es complementares</h5>
                 <div class="row">
-                    <div class="col s12 l3 m3" v-if="proposta.Mecanismo">
+                    <div
+                        v-if="proposta.Mecanismo"
+                        class="col s12 l3 m3">
                         <b>Mecanismo</b><br>
                         {{ mecanismo }}
                     </div>
-                    <div class="col s12 l3 m3" v-if="proposta.DtInicioDeExecucao">
+                    <div
+                        v-if="proposta.DtInicioDeExecucao"
+                        class="col s12 l3 m3">
                         <b>In&iacute;cio Execu&ccedil;&atilde;o</b><br>
                         {{ dtInicioDeExecucao }}
                     </div>
-                    <div class="col s12 l3 m3" v-if="proposta.DtFinalDeExecucao">
+                    <div
+                        v-if="proposta.DtFinalDeExecucao"
+                        class="col s12 l3 m3">
                         <b>Final Execu&ccedil;&atilde;o</b><br>
                         {{ dtFinalDeExecucao }}
                     </div>
-                    <div class="col s12 l3 m3" v-if="proposta.stDataFixa">
+                    <div
+                        v-if="proposta.stDataFixa"
+                        class="col s12 l3 m3">
                         <b>Dt. Fixa</b><br>
                         {{ stDataFixa }}
                     </div>
                 </div>
-                <div class="divider"></div>
+                <div class="divider"/>
                 <div class="row">
                     <div class="col s12 l3 m3">
                         <b>Ag&ecirc;ncia banc&aacute;ria</b><br>
-                        <SalicTextoSimples :texto="proposta.AgenciaBancaria"></SalicTextoSimples>
+                        <SalicTextoSimples :texto="proposta.AgenciaBancaria"/>
                     </div>
-                    <div class="col s12 l3 m3" v-if="proposta.AreaAbrangencia">
+                    <div
+                        v-if="proposta.AreaAbrangencia"
+                        class="col s12 l3 m3">
                         <b>&Eacute; proposta audiovisual</b><br>
                         {{ areaAbrangencia }}
                     </div>
-                    <div class="col s12 l3 m3" v-if="proposta.tpProrrogacao">
+                    <div
+                        v-if="proposta.tpProrrogacao"
+                        class="col s12 l3 m3">
                         <b>Prorroga&ccedil;&atilde;o autom&aacute;tica</b><br>
                         {{ tpProrrogacao }}
                     </div>
                     <div class="col s12 l3 m3">
                         <b>Tipo de execu&ccedil;&atilde;o</b><br>
-                        <SalicTextoSimples :texto="proposta.TipoExecucao"></SalicTextoSimples>
+                        <SalicTextoSimples :texto="proposta.TipoExecucao"/>
                     </div>
                 </div>
             </div>
         </div>
-        <div v-if="proposta.NrAtoTombamento && proposta.NrAtoTombamento.length > 1" class="card">
+        <div
+            v-if="proposta.NrAtoTombamento && proposta.NrAtoTombamento.length > 1"
+            class="card">
             <div class="card-content">
                 <h5>Tombamento</h5>
                 <div class="row">
@@ -90,55 +110,22 @@ import { utils } from '@/mixins/utils';
 
 export default {
     name: 'PropostaIdentificacao',
+    components: {
+        SalicTextoSimples,
+    },
+    mixins: [
+        utils,
+    ],
     props: {
-        idpreprojeto: null,
+        idpreprojeto: {
+            type: null,
+            default: null,
+        },
         proposta: {
             type: Object,
             default() {
                 return {};
             },
-        },
-    },
-    mixins: [
-        utils,
-    ],
-    components: {
-        SalicTextoSimples,
-    },
-    methods: {
-        labelMecanismo(valor) {
-            switch (valor) {
-            case '1':
-            case 1:
-                return 'Mecenato';
-            default:
-                return 'Inv\xE1lido';
-            }
-        },
-        formatar_data(date) {
-            date = moment(date).format('DD/MM/YYYY');
-
-            return date;
-        },
-        labelEsfera(esfera) {
-            let string;
-
-            switch (esfera) {
-            case '1':
-                string = 'Municipal';
-                break;
-            case '2':
-                string = 'Estadual';
-                break;
-            case '3':
-                string = 'Federal';
-                break;
-            default:
-                string = 'N\xE3o informada';
-                break;
-            }
-
-            return string;
         },
     },
     computed: {
@@ -165,6 +152,42 @@ export default {
         },
         esferaTombamento() {
             return this.labelEsfera(this.proposta.EsferaTombamento);
+        },
+    },
+    methods: {
+        labelMecanismo(valor) {
+            switch (valor) {
+            case '1':
+            case 1:
+                return 'Mecenato';
+            default:
+                return 'Inv\xE1lido';
+            }
+        },
+        formatar_data(date) {
+            const dateValue = moment(date).format('DD/MM/YYYY');
+
+            return dateValue;
+        },
+        labelEsfera(esfera) {
+            let string;
+
+            switch (esfera) {
+            case '1':
+                string = 'Municipal';
+                break;
+            case '2':
+                string = 'Estadual';
+                break;
+            case '3':
+                string = 'Federal';
+                break;
+            default:
+                string = 'N\xE3o informada';
+                break;
+            }
+
+            return string;
         },
     },
 };

@@ -1,11 +1,13 @@
 <template>
-    <div v-if="valorFormatado && valorFormatado.length > 0" v-html="valorFormatado"></div>
-    <div v-else>0</div>
+    <span
+        v-if="valorFormatado && valorFormatado.length > 0"
+        v-html="valorFormatado"/>
+    <span v-else>0</span>
 </template>
 
 <script>
-    export default {
-        /* eslint-disable */
+export default {
+    /* eslint-disable */
         name: "SalicFormatarValor",
         props: ["valor"],
         computed: {

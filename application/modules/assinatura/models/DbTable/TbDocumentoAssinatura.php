@@ -342,8 +342,8 @@ class Assinatura_Model_DbTable_TbDocumentoAssinatura extends MinC_Db_Table_Abstr
             $this->_schema
         );
 
-        $objQuery->where('tbDocumentoAssinatura.stEstado = ?', 1);
-        $objQuery->where('tbDocumentoAssinatura.cdSituacao = ?', 2);
+        $objQuery->where('tbDocumentoAssinatura.stEstado = ?',  Assinatura_Model_TbDocumentoAssinatura::ST_ESTADO_DOCUMENTO_ATIVO);
+        $objQuery->where('tbDocumentoAssinatura.cdSituacao = ?', Assinatura_Model_TbDocumentoAssinatura::CD_SITUACAO_FECHADO_PARA_ASSINATURA);
         $objQuery->where('tbDocumentoAssinatura.IdPRONAC = ?', $idPronac);
         $objQuery->order('tbDocumentoAssinatura.dt_criacao ASC');
 
@@ -402,13 +402,13 @@ class Assinatura_Model_DbTable_TbDocumentoAssinatura extends MinC_Db_Table_Abstr
         
         $query->from(
             [$this->_name],
-            ['idDocumentoAssinatura' => new Zend_Db_Expr('ISNULL(TbAtoAdministrativo.idOrdemDaAssinatura, 0) + 2')],
+            ['ordemDaProximaAssinatura' => new Zend_Db_Expr('ISNULL(TbAtoAdministrativo.idOrdemDaAssinatura, 0) + 2')],
             $this->_schema
         );
 
         $query->joinInner(
             ["TbAssinatura" => "TbAssinatura"],
-            "(TbAssinatura.idDocumentoAssinatura = TbDocumentoAssinatura.idDocumentoAssinatura = TbAssinatura.idDocumentoAssinatura)",
+            "(TbAssinatura.idDocumentoAssinatura = TbDocumentoAssinatura.idDocumentoAssinatura)",
             [],
             $this->_schema
         );
@@ -423,8 +423,8 @@ class Assinatura_Model_DbTable_TbDocumentoAssinatura extends MinC_Db_Table_Abstr
         $query->where('TbDocumentoAssinatura.idDocumentoAssinatura = ?', $idDocumentoAssinatura);
         $query->where('TbDocumentoAssinatura.idPronac = ?', $idPronac);
         $query->order('TbAtoAdministrativo.idOrdemDaAssinatura DESC');
-        
-        $result = $this->fetchOne($query);
+
+        $db = Zend_Db_Table::getDefaultAdapter();
+        return $db->fetchOne($query);
     }
-    
 }

@@ -1,83 +1,112 @@
 <template>
-    <div id="conteudo">
+    <div>
         <div v-if="loading">
-            <Carregando :text="'Carregando Historico de Encaminhamentos'"></Carregando>
+            <Carregando :text="'Carregando Histórico Encaminhamento'"/>
         </div>
-        <div v-else-if="dados">
-            <IdentificacaoProjeto
-                    :pronac="dadosProjeto.Pronac"
-                    :nomeProjeto="dadosProjeto.NomeProjeto">
-            </IdentificacaoProjeto>
-            <table class="tabela" v-if="dados.Encaminhamentos.length > 0">
-                <thead>
-                <tr class="destacar">
-                    <th class="center">PRODUTO</th>
-                    <th class="center">UNIDADE</th>
-                    <th class="center">OBSERVA&Ccedil;&Atilde;O</th>
-                    <th class="center">DT. ENVIO</th>
-                    <th class="center">DT. RETORNO</th>
-                    <th class="center">QT. DIAS</th>
-                </tr>
-                </thead>
-                <tbody v-for="(dado, index) in dados.Encaminhamentos" :key="index">
-                <tr>
-                    <td class="center">{{ dado.Produto }}</td>
-                    <td class="center">{{ dado.Unidade }}</td>
-                    <td class="center" v-html="dado.Observacao">{{ dado.Observacao }}</td>
-                    <td class="center">{{ dado.DtEnvio }}</td>
-                    <td class="center">{{ dado.DtRetorno }}</td>
-                    <td class="center">{{ dado.qtDias }}</td>
-                </tr>
-                </tbody>
-            </table>
-            <div v-else>
-                <fieldset>
-                    <legend>Hist&oacute;rico Encaminhamento</legend>
-                    <div class="center">
-                        <em>Dados n&atilde;o informado.</em>
-                    </div>
-                </fieldset>
-            </div>
+        <div v-else-if="dados.Encaminhamentos">
+            <v-data-table
+                :headers="headers"
+                :items="dados.Encaminhamentos"
+                :pagination.sync="pagination"
+                :rows-per-page-items="[10, 25, 50, {'text': 'Todos', value: -1}]"
+                class="elevation-1 container-fluid"
+            >
+                <template
+                    slot="items"
+                    slot-scope="props">
+                    <td class="text-xs-left">{{ props.item.Produto }}</td>
+                    <td class="text-xs-left">{{ props.item.Unidade }}</td>
+                    <td
+                        class="text-xs-left"
+                        v-html="props.item.Observacao"/>
+                    <td class="text-xs-center pl-5">{{ props.item.DtEnvio | formatarData }}</td>
+                    <td class="text-xs-center pl-5">{{ props.item.DtRetorno | formatarData }}</td>
+                    <td class="text-xs-right">{{ props.item.qtDias }}</td>
+                </template>
+                <template
+                    slot="pageText"
+                    slot-scope="props">
+                    Items {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
+                </template>
+            </v-data-table>
         </div>
     </div>
 </template>
 <script>
-    import { mapActions, mapGetters } from 'vuex';
-    import Carregando from '@/components/Carregando';
-    import IdentificacaoProjeto from './IdentificacaoProjeto';
+import { mapActions, mapGetters } from 'vuex';
+import Carregando from '@/components/CarregandoVuetify';
+import { utils } from '@/mixins/utils';
 
-    export default {
-        name: 'HistoricoEncaminhamento',
-        data() {
-            return {
-                loading: true,
-            };
-        },
-        components: {
-            Carregando,
-            IdentificacaoProjeto,
-        },
-        computed: {
-            ...mapGetters({
-                dadosProjeto: 'projeto/projeto',
-                dados: 'projeto/historicoEncaminhamento',
-            }),
-        },
-        mounted() {
-            if (typeof this.dadosProjeto.idPronac !== 'undefined') {
-                this.buscarHistoricoEncaminhamento(this.dadosProjeto.idPronac);
-            }
-        },
-        watch: {
-            dados() {
-                this.loading = false;
+export default {
+    name: 'HistoricoEncaminhamento',
+    components: {
+        Carregando,
+    },
+    mixins: [utils],
+    data() {
+        return {
+            search: '',
+            pagination: {
+                rowsPerPage: 10,
+                sortBy: 'DtEnvio',
+                descending: true,
             },
+            selected: [],
+            loading: true,
+            headers: [
+                {
+                    text: 'PRODUTO',
+                    align: 'left',
+                    value: 'Produto',
+                },
+                {
+                    text: 'UNIDADE',
+                    align: 'left',
+                    value: 'Unidade',
+                },
+                {
+                    text: 'OBSERVAÇÃO',
+                    align: 'left',
+                    value: 'Observacao',
+                },
+                {
+                    text: 'DT. ENVIO',
+                    align: 'center',
+                    value: 'DtEnvio',
+                },
+                {
+                    text: 'DT. RETORNO',
+                    align: 'center',
+                    value: 'DtRetorno',
+                },
+                {
+                    text: 'QT. DIAS',
+                    align: 'center',
+                    value: 'qtDias',
+                },
+            ],
+        };
+    },
+    computed: {
+        ...mapGetters({
+            dadosProjeto: 'projeto/projeto',
+            dados: 'outrasInformacoes/historicoEncaminhamento',
+        }),
+    },
+    watch: {
+        dados() {
+            this.loading = false;
         },
-        methods: {
-            ...mapActions({
-                buscarHistoricoEncaminhamento: 'projeto/buscarHistoricoEncaminhamento',
-            }),
-        },
-    };
+    },
+    mounted() {
+        if (typeof this.dadosProjeto.idPronac !== 'undefined') {
+            this.buscarHistoricoEncaminhamento(this.dadosProjeto.idPronac);
+        }
+    },
+    methods: {
+        ...mapActions({
+            buscarHistoricoEncaminhamento: 'outrasInformacoes/buscarHistoricoEncaminhamento',
+        }),
+    },
+};
 </script>
-

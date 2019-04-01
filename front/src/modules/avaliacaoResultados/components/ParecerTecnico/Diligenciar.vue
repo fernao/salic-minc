@@ -1,74 +1,128 @@
 <template>
-    <v-container grid-list-xl>
-        <v-form ref="form" v-model="valid">
-            <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-                <v-toolbar dark color="green">
-                        <v-toolbar-title>Diligenciar</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <v-toolbar-items>
-                            <v-btn dark flat
-                                   @click.native="enviarDiligencia()"
-                                   :disabled="!valid"
-                                   :to="{ name: 'AnalisePlanilha', params:{ id:this.idPronac }}">Enviar</v-btn>
-                            <v-btn dark flat :to="{ name: 'AnalisePlanilha', params:{ id:this.idPronac }}">Cancelar</v-btn>
-                        </v-toolbar-items>
-                </v-toolbar>
-                <v-container grid-list-sm>
-                    <v-layout row wrap>
-                        <v-flex xs12 sm12 md12>
-                            <h2>{{projeto.AnoProjeto}}{{projeto.Sequencial}} - {{projeto.NomeProjeto}}</h2>
-                        </v-flex>
-                    </v-layout>
-                    <v-divider></v-divider>
-                </v-container>
-                <v-container grid-list>
-                    <v-layout wrap align-center>
-                        <v-flex>
-                            <label for="diligencia">Tipo de Diligencia *</label>
-                            <v-radio-group v-model="tpDiligencia"
-                                           :rules="diligenciaRules"
-                                           id="diligencia">
-                                <v-radio color="success" label="Somente itens recusados" value="645"></v-radio>
-                                <v-radio color="success" label="Todos os itens orçamentários" value="174"></v-radio>
-                            </v-radio-group>
-                        </v-flex>
-                    </v-layout>
-                    <v-flex>
-                        <label for="solicitacao">Solicitação *</label>
-                        <v-textarea v-model="solicitacao"
-                                    id="solicitacao"
-                                    color="green"
-                                    height="100px"
-                                    :rules="solicitacaoRules"
-                                    required="required">
-                        </v-textarea>
-                    </v-flex>
-                </v-container>
-            </v-dialog>
-        </v-form>
+    <v-container>
+        <v-layout
+            row
+            wrap>
+            <v-flex>
+                <v-dialog
+                    v-model="dialog"
+                    full-width
+                    scrollable
+                    fullscreen
+                    transition="dialog-bottom-transition"
+                >
+                    <v-card>
+                        <v-toolbar
+                            dark
+                            color="primary">
+                            <v-btn
+                                :to="{ name: 'AnalisePlanilha', params:{ id: idPronac }}"
+                                icon
+                                dark>
+                                <v-icon>close</v-icon>
+                            </v-btn>
+                            <v-toolbar-title>Avaliação Financeira - Diligenciar</v-toolbar-title>
+                            <v-spacer/>
+                        </v-toolbar>
+                        <v-card-text>
+                            <v-container>
+                                <v-card>
+                                    <v-card-title primary-title>
+                                        <div class="headline">
+                                            <b>Projeto:</b>
+                                            {{ projeto.AnoProjeto }}{{ projeto.Sequencial }} - {{ projeto.NomeProjeto }}
+                                        </div>
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-form
+                                            ref="form"
+                                            v-model="valid">
+                                            <label for="diligencia">Tipo de Diligencia *</label>
+                                            <v-radio-group
+                                                id="diligencia"
+                                                v-model="tpDiligencia"
+                                                :rules="diligenciaRules"
+                                            >
+                                                <v-radio
+                                                    color="success"
+                                                    label="Somente itens recusados"
+                                                    value="174"/>
+                                                <v-radio
+                                                    color="success"
+                                                    label="Todos os itens orçamentários"
+                                                    value="645"/>
+                                            </v-radio-group>
+                                            <div
+                                                v-show="solicitacaoRules.show"
+                                                class="text-xs-left">
+                                                <h4 :class="solicitacaoRules.color">{{ solicitacaoRules.msg }}*</h4>
+                                            </div>
+                                            <EditorTexto
+                                                :style="solicitacaoRules.backgroundColor"
+                                                :value="solicitacao"
+                                                required="required"
+                                                @editor-texto-input="inputSolicitacao($event)"
+                                                @editor-texto-counter="validarSolicitacao($event)"
+                                            />
+                                        </v-form>
+                                    </v-card-text>
+                                    <v-card-actions class="justify-center">
+                                        <v-btn
+                                            :disabled="!valid || !solicitacaoRules.enable"
+                                            :to="{ name: 'AnalisePlanilha', params:{ id: idPronac }}"
+                                            color="primary"
+                                            @click.native="enviarDiligencia()"
+                                        >
+                                            Enviar
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-container>
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
+            </v-flex>
+        </v-layout>
     </v-container>
 </template>
 
 <script>
-    import { mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import EditorTexto from '../components/EditorTexto';
 
-    export default {
-        data() {
-            return {
-                tpDiligencia: '',
-                solicitacao: '',
-                idPronac: this.$route.params.id,
-                valid: false,
-                dialog: true,
-                solicitacaoRules: [
-                    v => !!v || 'Solicitação é obrigatório!',
-                ],
-                diligenciaRules: [
-                    v => !!v || 'Tipo de diligencia é obrigatório!',
-                ],
-            };
+export default {
+    components: {
+        EditorTexto,
+    },
+    data() {
+        return {
+            tpDiligencia: '',
+            solicitacao: '',
+            idPronac: this.$route.params.id,
+            valid: false,
+            dialog: true,
+            solicitacaoRules: {
+                show: false,
+                color: '',
+                backgroundColor: '',
+                msg: '',
+                enable: false,
+            },
+            diligenciaRules: [
+                v => !!v || 'Tipo de diligencia é obrigatório!',
+            ],
+        };
+    },
+    computed:
+        {
+            ...mapGetters({
+                projeto: 'avaliacaoResultados/projeto',
+            }),
         },
-        methods:
+    created() {
+        this.getConsolidacao(this.idPronac);
+    },
+    methods:
         {
             ...mapActions({
                 requestEmissaoParecer: 'avaliacaoResultados/getDadosEmissaoParecer',
@@ -86,15 +140,30 @@
 
                 this.salvar(data);
             },
+            inputSolicitacao(e) {
+                this.solicitacao = e;
+                // this.validarSolicitacao(e);
+            },
+            validarSolicitacao(e) {
+                if (e < 1) {
+                    this.solicitacaoRules = {
+                        show: true,
+                        color: 'red--text',
+                        backgroundColor: { 'background-color': '#FFCDD2' },
+                        msg: 'A solicitação é obrigatória!',
+                        enable: false,
+                    };
+                }
+                if (e > 0) {
+                    this.solicitacaoRules = {
+                        show: false,
+                        color: '',
+                        backgroundColor: '',
+                        msg: '',
+                        enable: true,
+                    };
+                }
+            },
         },
-        computed:
-        {
-            ...mapGetters({
-                projeto: 'avaliacaoResultados/projeto',
-            }),
-        },
-        created() {
-            this.getConsolidacao(this.idPronac);
-        },
-    };
+};
 </script>

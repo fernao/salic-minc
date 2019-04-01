@@ -11,12 +11,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(registro, index) in dadosTabela" :key="index">
+                <tr
+                    v-for="(registro, index) in dadosTabela"
+                    :key="index">
                     <td>{{ registro.Codigo }}</td>
                     <td>{{ registro.DadoNr }}</td>
                     <td>
                         <div class="atualizar-action">
-                            <UpdateBar :registroAtivo="registro"/>
+                            <UpdateBar :registro-ativo="registro"/>
                         </div>
                         <div class="remover-action">
                             <a
@@ -41,9 +43,6 @@ import UpdateBar from './UpdateBar';
 
 export default {
     name: 'ListBar',
-    created() {
-        this.obterDadosTabela();
-    },
     components: {
         CreateBar,
         UpdateBar,
@@ -53,6 +52,9 @@ export default {
             dadosTabela: 'foo/dadosTabela',
         }),
     },
+    created() {
+        this.obterDadosTabela();
+    },
     methods: {
         ...mapActions({
             obterDadosTabela: 'foo/obterDadosTabela',
@@ -60,7 +62,7 @@ export default {
             removerRegistro: 'foo/removerRegistro',
         }),
         confirmationRemove(registro) {
-            const currentConfirm = confirm;
+            const currentConfirm = window.confirm;
             const trueResponse = currentConfirm('Deseja removerr esse registro?');
 
             if (trueResponse) {

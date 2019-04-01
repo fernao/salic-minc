@@ -1,79 +1,123 @@
 <template>
-    <div id="conteudo">
+    <div>
         <div v-if="loading">
-            <Carregando :text="'Carregando Providencia Tomada'"></Carregando>
+            <Carregando :text="'Carregando Providência Tomada'"/>
         </div>
-        <div v-else-if="dados">
-            <div v-if="dados.providenciaTomada">
-                <table class="tabela">
-                    <thead>
-                    <tr class="destacar">
-                        <th class="center">DT. SITUA&Ccedil;&Atilde;O</th>
-                        <th class="center">SITUA&Ccedil;&Atilde;O</th>
-                        <th class="center">PROVID&Ecirc;NCIA TOMADA</th>
-                        <th class="center">CPF</th>
-                        <th class="center">NOME</th>
-                    </tr>
-                    </thead>
-                    <tbody v-for="(dado, index) in dados.providenciaTomada" :key="index">
-                    <tr>
-                        <td class="center">{{ dado.DtSituacao }}</td>
-                        <td class="center">{{ dado.Situacao }}</td>
-                        <td class="center">{{ dado.ProvidenciaTomada }}</td>
-                        <td class="center">{{ dado.cnpjcpf }}</td>
-                        <td class="center">{{ dado.usuario }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div v-else>
-                <fieldset>
-                    <legend>Provid&ecirc;ncia Tomada</legend>
-                    <div class="center">
-                        <em>Dados n&atilde;o informado.</em>
-                    </div>
-                </fieldset>
-            </div>
+        <div v-else-if="dados.providenciaTomada">
+            <v-data-table
+                :headers="headers"
+                :items="dados.providenciaTomada"
+                :pagination.sync="pagination"
+                :rows-per-page-items="[10, 25, 50, {'text': 'Todos', value: -1}]"
+                class="elevation-1 container-fluid"
+            >
+                <template
+                    slot="items"
+                    slot-scope="props">
+                    <td class="text-xs-center pl-5">{{ props.item.DtSituacao | formatarData }}</td>
+                    <td class="text-xs-right">{{ props.item.Situacao }}</td>
+                    <td
+                        class="text-xs-left"
+                        v-html="props.item.ProvidenciaTomada"/>
+                    <td
+                        v-if="props.item.cnpjcpf"
+                        class="text-xs-left"
+                        style="width: 200px">
+                        {{ props.item.cnpjcpf | cnpjFilter }}
+                    </td>
+                    <td
+                        v-else
+                        class="text-xs-left">
+                        Nao se aplica.
+                    </td>
+                    <td
+                        class="text-xs-left"
+                        style="width: 200px">{{ props.item.usuario }}</td>
+                </template>
+                <template
+                    slot="pageText"
+                    slot-scope="props">
+                    Items {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
+                </template>
+            </v-data-table>
         </div>
     </div>
+
 </template>
+
 <script>
-    import { mapActions, mapGetters } from 'vuex';
-    import Carregando from '@/components/Carregando';
-    import IdentificacaoProjeto from './IdentificacaoProjeto';
+import { mapActions, mapGetters } from 'vuex';
+import Carregando from '@/components/CarregandoVuetify';
+import cnpjFilter from '@/filters/cnpj';
+import { utils } from '@/mixins/utils';
 
-    export default {
-        name: 'ProvidenciaTomada',
-        components: {
-            Carregando,
-            IdentificacaoProjeto,
-        },
-        data() {
-            return {
-                loading: true,
-            };
-        },
-        mounted() {
-            if (typeof this.dadosProjeto.idPronac !== 'undefined') {
-                this.buscarProvidenciaTomada(this.dadosProjeto.idPronac);
-            }
-        },
-        watch: {
-            dados() {
-                this.loading = false;
+export default {
+    components: {
+        Carregando,
+    },
+    filters: {
+        cnpjFilter,
+    },
+    mixins: [utils],
+    data() {
+        return {
+            search: '',
+            pagination: {
+                rowsPerPage: 10,
+                sortBy: 'DtSituacao',
+                descending: true,
             },
+            selected: [],
+            loading: true,
+            headers: [
+                {
+                    text: 'DT. SITUAÇÃO',
+                    align: 'center',
+                    value: 'DtSituacao',
+                },
+                {
+                    text: 'SITUAÇÃO',
+                    align: 'right',
+                    value: 'Situacao',
+                },
+                {
+                    text: 'PROVIDÊNCIA TOMADA',
+                    align: 'left',
+                    value: 'ProvidenciaTomada',
+                },
+                {
+                    text: 'CPF',
+                    align: 'left',
+                    value: 'cnpjcpf',
+                },
+                {
+                    text: 'NOME',
+                    align: 'left',
+                    value: 'usuario',
+                },
+            ],
+        };
+    },
+    computed: {
+        ...mapGetters({
+            dadosProjeto: 'projeto/projeto',
+            dados: 'outrasInformacoes/providenciaTomada',
+        }),
+    },
+    watch: {
+        dados() {
+            this.loading = false;
         },
-        computed: {
-            ...mapGetters({
-                dadosProjeto: 'projeto/projeto',
-                dados: 'projeto/providenciaTomada',
-            }),
-        },
-        methods: {
-            ...mapActions({
-                buscarProvidenciaTomada: 'projeto/buscarProvidenciaTomada',
-            }),
-        },
-    };
+    },
+    mounted() {
+        if (typeof this.dadosProjeto.idPronac !== 'undefined') {
+            this.buscarProvidenciaTomada(this.dadosProjeto.idPronac);
+        }
+    },
+    methods: {
+        ...mapActions({
+            buscarProvidenciaTomada: 'outrasInformacoes/buscarProvidenciaTomada',
+        }),
+    },
+};
 </script>
-

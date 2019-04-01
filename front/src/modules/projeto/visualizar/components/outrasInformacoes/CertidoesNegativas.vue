@@ -1,86 +1,113 @@
 <template>
-    <div id="conteudo">
+    <div>
         <div v-if="loading">
-            <Carregando :text="'Carregando Certidoes Negativas'"></Carregando>
+            <Carregando :text="'Carregando Certidoes Negativas'"/>
         </div>
-        <div v-else-if="dados">
-            <IdentificacaoProjeto :pronac="dadosProjeto.Pronac"
-                                  :nomeProjeto="dadosProjeto.NomeProjeto">
-            </IdentificacaoProjeto>
-            <div v-if="Object.keys(dados.certidoes).length > 0">
-                <table class="tabela">
-                    <thead>
-                    <tr class="destacar">
-                        <th class="center">CERTID&otilde;es</th>
-                        <th class="center">DATA DE EMISS&Atilde;O</th>
-                        <th class="center">DATA DE VALIDADE</th>
-                        <th class="center">PRONAC</th>
-                        <th class="center">SITUA&Ccedil;&Atilde;O</th>
-                    </tr>
-                    </thead>
-                    <tbody v-for="(dado, index) in dados.certidoes" :key="index">
-                    <tr>
-                        <td class="center" v-html="dado.dsCertidao"></td>
-                        <td class="center">{{ dado.DtEmissao }}</td>
-                        <td class="center">{{ dado.DtValidade }}</td>
-                        <td class="center">{{ dado.Pronac }}</td>
-                        <td class="center" v-if="dado.Situacao" v-html="dado.Situacao"></td>
-                        <td class="center" v-else>
-                            Vencida
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div v-else>
-                <fieldset>
-                    <legend>Certid&otilde;es Negativas</legend>
-                    <div class="center">
-                        <em>Dados n&atilde;o  informado.</em>
-                    </div>
-                </fieldset>
-            </div>
+        <div v-else-if="dados.certidoes">
+            <v-data-table
+                :pagination.sync="pagination"
+                :headers="headers"
+                :items="dados.certidoes"
+                class="elevation-1 container-fluid"
+            >
+                <template
+                    slot="items"
+                    slot-scope="props">
+                    <td
+                        class="text-xs-left"
+                        v-html="props.item.dsCertidao"/>
+                    <td class="text-xs-center pl-5">{{ props.item.DtEmissao | formatarData }}</td>
+                    <td class="text-xs-center pl-5">{{ props.item.DtValidade | formatarData }}</td>
+                    <td class="text-xs-right">{{ props.item.Pronac }}</td>
+                    <td
+                        v-if="props.item.Situacao"
+                        class="text-xs-left"
+                        v-html="props.item.Situacao"/>
+                    <td
+                        v-else
+                        class="text-xs-left">
+                        Vencida
+                    </td>
+                </template>
+                <template
+                    slot="pageText"
+                    slot-scope="props">
+                    Items {{ props.pageStart }} - {{ props.pageStop }} de {{ props.itemsLength }}
+                </template>
+            </v-data-table>
         </div>
     </div>
 </template>
 <script>
 
-    import { mapActions, mapGetters } from 'vuex';
-    import Carregando from '@/components/Carregando';
-    import IdentificacaoProjeto from './IdentificacaoProjeto';
+import { mapActions, mapGetters } from 'vuex';
+import Carregando from '@/components/CarregandoVuetify';
+import { utils } from '@/mixins/utils';
 
-    export default {
-        name: 'CertidoesNegativas',
-        data() {
-            return {
-                loading: true,
-            };
-        },
-        components: {
-            IdentificacaoProjeto,
-            Carregando,
-        },
-        mounted() {
-            if (typeof this.dadosProjeto.idPronac !== 'undefined') {
-                this.buscarCertidoesNegativas(this.dadosProjeto.idPronac);
-            }
-        },
-        watch: {
-            dados() {
-                this.loading = false;
+export default {
+    name: 'CertidoesNegativas',
+    components: {
+        Carregando,
+    },
+    mixins: [utils],
+    data() {
+        return {
+            search: '',
+            pagination: {
+                sortBy: 'DtEmissao',
+                descending: true,
             },
+            selected: [],
+            loading: true,
+            headers: [
+                {
+                    text: 'CERTIDÕES',
+                    align: 'left',
+                    value: 'dsCertidao',
+                },
+                {
+                    text: 'DATA DE EMISSÃO',
+                    align: 'center',
+                    value: 'DtEmissao',
+                },
+                {
+                    text: 'DATA DE VALIDADE',
+                    align: 'center',
+                    value: 'DtValidade',
+                },
+                {
+                    text: 'PRONAC',
+                    align: 'center',
+                    value: 'Pronac',
+                },
+                {
+                    text: 'SITUAÇÃO',
+                    align: 'left',
+                    value: 'Situacao',
+                },
+            ],
+        };
+    },
+    computed: {
+        ...mapGetters({
+            dadosProjeto: 'projeto/projeto',
+            dados: 'outrasInformacoes/certidoesNegativas',
+        }),
+    },
+    watch: {
+        dados() {
+            this.loading = false;
         },
-        computed: {
-            ...mapGetters({
-                dadosProjeto: 'projeto/projeto',
-                dados: 'projeto/certidoesNegativas',
-            }),
-        },
-        methods: {
-            ...mapActions({
-                buscarCertidoesNegativas: 'projeto/buscarCertidoesNegativas',
-            }),
-        },
-    };
+    },
+    mounted() {
+        if (typeof this.dadosProjeto.idPronac !== 'undefined') {
+            this.buscarCertidoesNegativas(this.dadosProjeto.idPronac);
+        }
+    },
+    methods: {
+        ...mapActions({
+            buscarCertidoesNegativas: 'outrasInformacoes/buscarCertidoesNegativas',
+        }),
+    },
+};
 </script>
-

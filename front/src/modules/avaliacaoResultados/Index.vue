@@ -1,14 +1,16 @@
 <template>
     <div id="app">
         <v-app :dark="isModoNoturno">
-            <SlNav></SlNav>
+            <SlNav/>
             <v-content>
-                <v-container fluid v-if="Object.keys(usuario).length > 0">
-                  <v-layout>
-                    <v-fade-transition mode="out-in">
-                        <router-view></router-view>
-                    </v-fade-transition>
-                  </v-layout>
+                <v-container
+                    v-if="Object.keys(usuario).length > 0"
+                    fluid>
+                    <v-layout>
+                        <v-fade-transition mode="out-in">
+                            <router-view/>
+                        </v-fade-transition>
+                    </v-layout>
                 </v-container>
             </v-content>
 
@@ -20,10 +22,10 @@
                 :timeout="2000"
                 @input="fecharSnackbar"
             >
-                {{ this.getSnackbar.text }}
+                {{ getSnackbar.text }}
             </v-snackbar>
-            <Rodape></Rodape>
-      </v-app>
+            <Rodape/>
+        </v-app>
     </div>
 </template>
 
@@ -35,15 +37,11 @@ import SlNav from './components/SlNav';
 export default {
     name: 'Index',
     components: { SlNav, Rodape },
-    methods: {
-        ...mapActions({
-            setSnackbar: 'noticias/setDados',
-            setUsuario: 'autenticacao/usuarioLogado',
-            obterModoNoturno: 'layout/obterModoNoturno',
-        }),
-        fecharSnackbar() {
-            this.setSnackbar({ ativo: false });
-        },
+    data() {
+        return {
+            dark: false,
+            snackbar: false,
+        };
     },
     computed: {
         ...mapGetters({
@@ -52,20 +50,28 @@ export default {
             usuario: 'autenticacao/getUsuario',
         }),
     },
+    watch: {
+        getSnackbar(val) {
+            this.snackbar = val.ativo;
+        },
+    },
+    created() {
+        this.recoverAction();
+    },
     mounted() {
         this.setSnackbar({ ativo: false, color: 'success' });
         this.setUsuario();
         this.obterModoNoturno();
     },
-    data() {
-        return {
-            dark: false,
-            snackbar: false,
-        };
-    },
-    watch: {
-        getSnackbar(val) {
-            this.snackbar = val.ativo;
+    methods: {
+        ...mapActions({
+            setSnackbar: 'noticias/setDados',
+            setUsuario: 'autenticacao/usuarioLogado',
+            obterModoNoturno: 'layout/obterModoNoturno',
+            recoverAction: 'autenticacao/recoverAction',
+        }),
+        fecharSnackbar() {
+            this.setSnackbar({ ativo: false });
         },
     },
 };

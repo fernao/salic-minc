@@ -28,7 +28,7 @@ class DiligenciaProposta implements \MinC\Servico\IServicoRestZend
     public function visualizarDiligenciaProposta()
     {
         $idPreProjeto = $this->request->idPreProjeto;
-        $idAvaliacaoProposta = (int) $this->request->idAvaliacaoProposta;
+        $idAvaliacaoProposta = (int) $this->request->id;
 
         if (empty($idAvaliacaoProposta) || empty($idPreProjeto)) {
             return [];
@@ -56,13 +56,10 @@ class DiligenciaProposta implements \MinC\Servico\IServicoRestZend
         $Resposta = $diligencia['Resposta'];
         $nomeProjeto = $diligencia['nomeProjeto'];
 
-        $objDateTimedataSolicitacao = new \DateTime($diligencia['dataSolicitacao']);
-        $objDateTimedataResposta = new \DateTime($diligencia['dataResposta']);
-
         $resultArray = [
             'idPreprojeto' => $diligencia['pronac'],
-            'dataSolicitacao' => $objDateTimedataSolicitacao->format('d/m/Y'),
-            'dataResposta' => $objDateTimedataResposta->format('d/m/Y'),
+            'dataSolicitacao' => $diligencia['dataSolicitacao'],
+            'dataResposta' => $diligencia['dataResposta'],
             'nomeProjeto' => $nomeProjeto,
             'Solicitacao' => $Solicitacao,
             'Resposta' => $Resposta,

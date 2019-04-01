@@ -193,6 +193,7 @@
                             },
                             success: function (data) {
                                 $("#modalItem").dialog("destroy");
+                                Materialize.toast(data.msg, 4000, 'green light-green accent-1 black-text');
                                 jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-valor-entre-planilhas'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'valorEntrePlanilhas');
                                 jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'default', 'controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?php echo $this->idPronac; ?>&tipoPlanilha=6&link=true', '', 'planilhaOrcamentariaMontada');
                             }
@@ -249,6 +250,7 @@
                         $('#modalValorUnitario').val(data.dadosPlanilhaEditavel.ValorUnitario.replace('R$ ', ''));
                         $('#modalDias').val(data.dadosPlanilhaEditavel.QtdeDias);
                         $('#modalJustificativa').val(data.dadosPlanilhaEditavel.Justificativa);
+                        $('#modalNrFonteRecurso').val(data.dadosPlanilhaEditavel.nrFonteRecurso);
                         $('#TotalCalculado').html(data.dadosPlanilhaEditavel.TotalSolicitado);
 
                         $('#campoIdPlanilha').attr('idPlanilha', idPlanilhaAprovacao);
@@ -276,6 +278,7 @@
                                         ValorUnitario = $('#modalValorUnitario').val(),
                                         QtdeDias = $('#modalDias').val(),
                                         Justificativa = $('#modalJustificativa').val(),
+                                        nrFonteRecurso = $('#modalNrFonteRecurso').val(),
                                         obrigatorios = 0,
                                         erros = 0;
 
@@ -334,10 +337,12 @@
                                                 ValorUnitario: ValorUnitario,
                                                 QtdeDias: QtdeDias,
                                                 Justificativa: Justificativa,
-                                                valorSolicitado: valorParaMsgErro
+                                                valorSolicitado: valorParaMsgErro,
+                                                nrFonteRecurso: nrFonteRecurso,
                                             },
                                             success: function (data) {
                                                 $("#modalItem").dialog("destroy");
+                                                Materialize.toast(data.msg, 4000, 'green light-green accent-1 black-text');
                                                 jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'readequacao', 'controller' => 'readequacoes', 'action' => 'carregar-valor-entre-planilhas'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'valorEntrePlanilhas');
                                                 jqAjaxLinkSemLoading('<?php echo $this->Url(array('module' => 'default', 'controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?php echo $this->idPronac; ?>&tipoPlanilha=6&link=true', '', 'planilhaOrcamentariaMontada');
                                             }
@@ -457,6 +462,10 @@
                         <td align="center"><?php echo $this->projeto->NomeProjeto; ?></td>
                     </tr>
                 </table>
+
+                <?php if ($this->mensagemCustosVinculados != ""): ?>
+                <div class="yellow accent-4" style="padding:7px"><?php echo $this->mensagemCustosVinculados; ?></div>
+                <?php endif; ?>
 
                 <table class="tabela">
                     <tr>
@@ -743,6 +752,8 @@
                                 <textarea id="modalJustificativa" class="textarea_simples modalObrigatorios" rows="3"
                                           style="width:98%" name="Justificativa"></textarea>
                             </td>
+
+                            <input type="hidden" id="modalNrFonteRecurso" name="nrFonteRecurso" value="">
                         </tr>
                     </table>
                 </div>

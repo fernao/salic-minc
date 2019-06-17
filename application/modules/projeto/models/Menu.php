@@ -615,6 +615,14 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
                     'grupo' => []
                 ];
             }
+
+            $menu['prestacaodecontas']['submenu'][] = [
+                'label' => 'Laudo Final',
+                'title' => 'Ir para Pagamentos Consolidados',
+                'link' => "/projeto/#/{$idPronacHash}/laudo-final",
+                'ajax' => false,
+                'grupo' => []
+            ];
         }
 
         # Readequacao
@@ -690,7 +698,7 @@ class Projeto_Model_Menu extends MinC_Db_Table_Abstract
             $menu['readequacao']['submenu'][] = [
                 'label' => 'Diversas',
                 'title' => 'Readequa&ccedil;&otilde;es Diversas',
-                'link' => '/readequacao/readequacoes/index/?idPronac=' . $idPronacHash,
+                'link' => '/#/readequacao/painel/' . $idPronacHash,
                 'ajax' => false,
                 'grupo' => []
             ];

@@ -75,6 +75,13 @@ export const utils = {
 
             return 'N\xE3o';
         },
+	isObject: function (el) {
+            return typeof el === "object";
+        },
+	converterParaReal: function (value) {
+            value = parseFloat(value);
+            return numeral(value).format('0,0.00');
+        },
         isDataExpirada(date) {
             return moment().diff(date, 'days') > 0;
         },
@@ -95,8 +102,20 @@ export const utils = {
             return agencia;
         },
         formatarConta(conta) {
-            // formato: 99999-9
-            return conta.toString().replace(/^\d{6}(.+)(\w{1})$/, "$1-$2");
+            if (!conta) {
+                return '';
+            }
+
+            // formato: 99.999.999-x
+            const regex = /^(?:0{1,})(\w+)(\w{1})$/;
+            const s = conta.toString().match(regex);
+            const n = s[1], t = n.length -1;
+            let novo = '';
+            for( var i = t, a = 1; i >=0; i--, a++ ){
+                var ponto = a % 3 === 0 && i > 0 ? '.' : '';
+                novo = ponto + n.charAt(i) + novo;
+            }
+            return `${novo}-${s[2]}`;
         },
         filtroFormatarParaReal(value) {
             const parsedValue = parseFloat(value);
